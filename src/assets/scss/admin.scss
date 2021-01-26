@@ -146,21 +146,21 @@ ul {
 .view {
 	display: flex;
 	flex-direction: column;
-	padding: 0 $spacer;
-	overflow-y: auto;
+	width: 100%;
 	min-height: 0;
-	.__header {
+	&__header {
 		background: $gray-200;
 		font-weight: $font-weight-bold;
 		box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-		margin-left: map-get($map: $spacers, $key: 1);
+		margin-left: map-get($map: $spacers, $key: 4);
 		padding: 0 $spacer $spacer $spacer;
 		min-height: 40px;
+		z-index: $zindex-sticky;
 		position: sticky;
 		top: 0;
-		z-index: $zindex-sticky;
 	}
-	.__body {
+	&__body {
+		overflow-y: auto;
 		padding-left: $spacer;
 		margin-bottom: 10px;
 		list-style: none;
@@ -179,10 +179,33 @@ ul {
 }
 
 .tree {
-	margin-bottom: 10px;
-	list-style: none;
-	margin-top: map-get($map: $spacers, $key: 4);
-	margin-right: $spacer;
+	display: contents;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 20px;
+	justify-content: flex-start;
+	flex-direction: column;
+}
+
+.trunk {
+	display: grid;
+	grid-auto-rows: max-content;
+	box-sizing: border-box;
+	min-width: 350px;
+	grid-gap: 10px;
+	padding: 20px;
+	padding-bottom: 0;
+	margin: 10px;
+	border-radius: 5px;
+	min-height: 200px;
+	transition: background-color 350ms ease;
+	grid-template-columns: repeat(var(--columns, 1), 1fr);
+
+	&:after {
+		content: '';
+		height: 10px;
+		grid-column-start: span var(--columns, 1);
+	}
 }
 
 .branch {
@@ -194,25 +217,16 @@ ul {
 }
 
 .node {
-	display: flex;
+	display: contents;
 	margin: ($spacer/2) 0;
-	align-items: baseline;
-}
-
-.node.child {
-	margin-left: 2rem;
+	align-items: center;
+	&.child {
+		margin-left: 2rem;
+	}
 }
 
 .node.branch {
 	margin-top: 2rem;
-}
-
-.drag-handle {
-	cursor: grab;
-}
-
-.drag-handle.dragging {
-	cursor: grabbing;
 }
 
 // .node:not(:only-child) {
@@ -344,15 +358,16 @@ ul {
 }
 
 .form-input {
-	background: rgba(0, 0, 0, 0.2);
-	color: #fff;
-	text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
+	// background: rgba(0, 0, 0, 0.2);
+	color: $gray-800;
+	// text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
 	display: block;
 	width: 269px;
 	height: 1rem;
 	padding: 15px;
 	margin-bottom: 10px;
 	outline: none;
+	border: none;
 	@extend .trans;
 	@extend .rounded;
 	&:focus {

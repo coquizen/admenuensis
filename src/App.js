@@ -1,13 +1,14 @@
 /** @format */
 
 import React from 'react'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
+import Routes from 'routes'
 import 'assets/scss/admin.scss'
 import Header from './components/layout/Header'
-import Home from './components/home'
 import SideBar from 'components/layout/SideBar'
-import Menu from 'components/menu'
-import { ModalProvider } from 'context/ModalProvider'
+
+import ModalProvider from 'context/ModalProvider'
+import DataProvider from 'context/DataProvider'
 
 const App = () => {
 	return (
@@ -17,11 +18,8 @@ const App = () => {
 					<SideBar />
 					<div className='page'>
 						<Header />
-						<div className='container'>
-							<Switch>
-								<Route exact path='/' component={Home} />
-								<Route exact path='/menu' component={Menu} />
-							</Switch>
+						<div className='page__body'>
+							<Routes />
 						</div>
 					</div>
 				</div>

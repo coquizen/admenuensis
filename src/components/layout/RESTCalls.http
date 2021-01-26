@@ -1,0 +1,9 @@
+GET http://localhost:8080/sections
+content-type: application/json
+
+###
+
+GET http://localhost:8080/sections/1
+content-type: application/json
+
+###

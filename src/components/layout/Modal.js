@@ -1,71 +1,69 @@
-import React, { useRef, useEffect, useState } from "react"
-import Portal from "./Portal"
+/** @format */
 
-const Modal = ({ open, onClose, title = "Edit", children }) => {
-  const [active, setActive] = useState(false)
-  const backdropRef = useRef(null)
+import React, { useRef, useEffect, useState } from 'react'
+import Portal from './Portal'
 
-  useEffect(() => {
-    const { current } = backdropRef
+const Modal = ({ open, onClose, title = 'Edit', children, ref }) => {
+	const [active, setActive] = useState(false)
+	const backdropRef = useRef(null)
 
-    const transitionEnd = () => setActive(open)
-    // if the event keypress is <esc>
-    const keyHandler = e => [27].indexOf(e.which) >= 0 && onClose()
+	useEffect(() => {
+		const { current } = backdropRef
 
-    const clickHandler = e => e.target === current && onClose()
+		const transitionEnd = () => setActive(open)
+		// if the event keypress is <esc>
+		const keyHandler = (e) => [27].indexOf(e.which) >= 0 && onClose()
 
-    if (current) {
-      current.addEventListener("transitionend", transitionEnd)
-      current.addEventListener("click", clickHandler)
-      window.addEventListener("keyup", keyHandler)
-    }
+		const clickHandler = (e) => e.target === current && onClose()
 
-    if (open) {
-      window.setTimeout(() => {
-        document.activeElement.blur()
-        setActive(open)
-        document.querySelector("#___gatsby").setAttribute("inert", "true")
-      }, 10)
-    }
+		if (current) {
+			current.addEventListener('transitionend', transitionEnd)
+			current.addEventListener('click', clickHandler)
+			window.addEventListener('keyup', keyHandler)
+		}
 
-    return () => {
-      if (current) {
-        current.removeEventListener("transitionend", transitionEnd)
-        current.removeEventListener("click", clickHandler)
-      }
-      document.querySelector("#___gatsby").removeAttribute("inert")
-      window.removeEventListener("keyup", keyHandler)
-    }
-  }, [open, onClose])
+		if (open) {
+			window.setTimeout(() => {
+				document.activeElement.blur()
+				setActive(open)
+				document.querySelector('#root').setAttribute('inert', 'true')
+			}, 10)
+		}
 
-  return (
-    <React.Fragment>
-      {(open || active) && (
-        <Portal className="modal-portal">
-          <div
-            ref={backdropRef}
-            className={`overlay ${active && open && "active"}`}
-          >
-            <div className="modal-wrapper">
-              <div className="modal-dialog">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h5 className="modal-title">{title}</h5>
-                    <button
-                      aria-label="Close Modal"
-                      type="button"
-                      className="btn-close"
-                      onClick={onClose}
-                    ></button>
-                  </div>
-                  <div className="modal-body">{children}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Portal>
-      )}
-    </React.Fragment>
-  )
+		return () => {
+			if (current) {
+				current.removeEventListener('transitionend', transitionEnd)
+				current.removeEventListener('click', clickHandler)
+			}
+			document.querySelector('#root').removeAttribute('inert')
+			window.removeEventListener('keyup', keyHandler)
+		}
+	}, [open, onClose])
+
+	return (
+		<React.Fragment>
+			{(open || active) && (
+				<Portal className='modal-portal'>
+					<div ref={backdropRef} className={`overlay ${active && open && 'active'}`}>
+						<div className='modal-wrapper'>
+							<div className='modal-dialog'>
+								<div className='modal-content'>
+									<div className='modal-header'>
+										<h5 className='modal-title'>{title}</h5>
+										<button
+											aria-label='Close Modal'
+											type='button'
+											className='btn-close'
+											onClick={onClose}></button>
+									</div>
+									<div className='modal-body'>{children}</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</Portal>
+			)}
+		</React.Fragment>
+	)
 }
 export default Modal

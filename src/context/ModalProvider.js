@@ -2,7 +2,7 @@
 
 import React, { createContext, useState, useContext, createRef } from 'react'
 import Modal from 'components/layout/Modal'
-import SectionForm from 'components/menu/SectionForm'
+import { SectionForm } from 'components/forms'
 import useReactContextDevTool from 'hooks/useReactContextDevTool'
 
 const ModalContext = createContext()
@@ -17,11 +17,16 @@ const MODAL_TYPES = {
 
 const ModalProvider = ({ children }) => {
 	const [open, setIsOpen] = useState(false)
-	const [ModalComponent, setModalComponent] = useState(undefined)
+	const [propsData, setPropsData] = useState(null)
+	const [ModalComponent, setModalComponent] = useState(null)
 	const modalRef = createRef()
-	let modalChildren
-	const insertComponent = (comp) => {
+
+	let ModalChildren
+
+	const insertComponent = (comp, data) => {
+		console.log(`comp: ${comp}`)
 		setModalComponent(MODAL_TYPES[comp])
+		setPropsData(data)
 		setIsOpen(true)
 	}
 
@@ -31,7 +36,7 @@ const ModalProvider = ({ children }) => {
 	}
 
 	if (open) {
-		modalChildren = <ModalComponent ref={modalRef} />
+		ModalChildren = () => <ModalComponent ref={modalRef} data={propsData} />
 	}
 
 	useReactContextDevTool({
@@ -40,9 +45,11 @@ const ModalProvider = ({ children }) => {
 		values: { insertComponent, onClose },
 	})
 	return (
-		<ModalContext.Provider value={{ insertComponent: insertComponent, onClose: onClose }}>
+		<ModalContext.Provider value={{ insertComponent, onClose }}>
 			{children}
-			<Modal open={open} onClose={onClose} children={modalChildren} />
+			<Modal open={open} onClose={onClose}>
+				{ModalChildren && <ModalChildren />}
+			</Modal>
 		</ModalContext.Provider>
 	)
 }
@@ -55,4 +62,5 @@ const useModal = () => {
 	}
 }
 
-export { useModal, ModalProvider, ModalContext }
+export default ModalProvider
+export { useModal }
