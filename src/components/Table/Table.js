@@ -59,16 +59,18 @@ const Table = ({
 	const [overIndex, setOverIndex] = useState(null)
 
 	useEffect(() => {
-		fetch('/sections')
+		fetch('/mapped-sections')
 			.then((response) => response.json())
 			.then(({ data }) => {
 				var amendedData = {}
-				Object.keys(data).map((parentID) => {
+				Object.keys(data).forEach((parentID) => {
+					console.log(data)
 					amendedData[parentID] = []
-					data[parentID].map((item) => {
+					data[parentID].forEach((item) => {
 						amendedData[parentID].push(item.id)
 					})
 				})
+				amendedData[VOID_ID] = []
 				setMenuData(amendedData)
 			})
 	}, [])
