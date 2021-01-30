@@ -3,18 +3,23 @@
 import React, { useRef, useEffect, useState } from 'react'
 import Portal from './Portal'
 
-const Modal = ({ open, onClose, title = 'Edit', children, ref }) => {
+const ModalWrapper = ({ open, onClose, title = 'Edit', children, ref }) => {
 	const [active, setActive] = useState(false)
 	const backdropRef = useRef(null)
+
+	const closeModal = () => {
+		setActive(false)
+		onClose()
+	}
 
 	useEffect(() => {
 		const { current } = backdropRef
 
 		const transitionEnd = () => setActive(open)
 		// if the event keypress is <esc>
-		const keyHandler = (e) => [27].indexOf(e.which) >= 0 && onClose()
+		const keyHandler = (e) => [27].indexOf(e.which) >= 0 && closeModal()
 
-		const clickHandler = (e) => e.target === current && onClose()
+		const clickHandler = (e) => e.target === current && closeModal()
 
 		if (current) {
 			current.addEventListener('transitionend', transitionEnd)
@@ -38,26 +43,24 @@ const Modal = ({ open, onClose, title = 'Edit', children, ref }) => {
 			document.querySelector('#root').removeAttribute('inert')
 			window.removeEventListener('keyup', keyHandler)
 		}
-	}, [open, onClose])
+	}, [open])
 
 	return (
 		<React.Fragment>
-			{(open || active) && (
+			{open && (
 				<Portal className='modal-portal'>
 					<div ref={backdropRef} className={`overlay ${active && open && 'active'}`}>
-						<div className='modal-wrapper'>
-							<div className='modal-dialog'>
-								<div className='modal-content'>
-									<div className='modal-header'>
-										<h5 className='modal-title'>{title}</h5>
-										<button
-											aria-label='Close Modal'
-											type='button'
-											className='btn-close'
-											onClick={onClose}></button>
-									</div>
-									<div className='modal-body'>{children}</div>
+						<div className='modal-dialog modal-lg'>
+							<div className='custom-modal-content'>
+								<div className='modal-header'>
+									<h5 className='modal-title'>{title}</h5>
+									<button
+										aria-label='Close Modal'
+										type='button'
+										className='btn-close'
+										onClick={onClose}></button>
 								</div>
+								{children}
 							</div>
 						</div>
 					</div>
@@ -66,4 +69,4 @@ const Modal = ({ open, onClose, title = 'Edit', children, ref }) => {
 		</React.Fragment>
 	)
 }
-export default Modal
+export default ModalWrapper

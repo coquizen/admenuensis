@@ -26,6 +26,7 @@ const SortableItemWrapper = ({
 
 	return (
 		<Item
+			itemID={id}
 			ref={setNodeRef}
 			value={value}
 			dragging={isDragging}

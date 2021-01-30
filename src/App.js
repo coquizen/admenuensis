@@ -12,19 +12,21 @@ import DataProvider from 'context/DataProvider'
 
 const App = () => {
 	return (
-		<ModalProvider>
-			<Router>
-				<div className='app-wrapper'>
-					<SideBar />
-					<div className='page'>
-						<Header />
-						<div className='page__body'>
-							<Routes />
+		<DataProvider>
+			<ModalProvider>
+				<Router>
+					<div className='app-wrapper'>
+						<SideBar />
+						<div className='page'>
+							<Header />
+							<div className='page__body'>
+								<Routes />
+							</div>
 						</div>
 					</div>
-				</div>
-			</Router>
-		</ModalProvider>
+				</Router>
+			</ModalProvider>
+		</DataProvider>
 	)
 }
 export default App

@@ -119,33 +119,33 @@ const Table = ({
 
 		if (activeContainer !== overContainer) {
 			setMenuData((items) => {
-				const activeItems = items[activeContainer]
-				const overItems = items[overContainer]
-				const overIndex = overItems.indexOf(overId)
-				const activeIndex = activeItems.indexOf(active.id)
+				const activeItemsID = menuData[activeContainer]
+				const overItemsID = menuData[overContainer]
+				const overIndex = overItemsID.indexOf(overId)
+				const activeIndex = activeItemsID.indexOf(active.id)
 
 				let newIndex
 
-				if (overId in items) {
-					newIndex = overItems.length + 1
+				if (overId in menuData) {
+					newIndex = overItemsID.length + 1
 				} else {
 					const isBelowLastItem =
 						over &&
-						overIndex === overItems.length - 1 &&
+						overIndex === overItemsID.length - 1 &&
 						draggingRect.offsetTop > over.rect.offsetTop + over.rect.height
 
 					const modifier = isBelowLastItem ? 1 : 0
 
-					newIndex = overIndex >= 0 ? overIndex + modifier : overItems.length + 1
+					newIndex = overIndex >= 0 ? overIndex + modifier : overItemsID.length + 1
 				}
 
 				return {
-					...items,
-					[activeContainer]: [...items[activeContainer].filter((item) => item !== active.id)],
+					...menuData,
+					[activeContainer]: [...menuData[activeContainer].filter((itemID) => itemID !== active.id)],
 					[overContainer]: [
-						...items[overContainer].slice(0, newIndex),
-						items[activeContainer][activeIndex],
-						...items[overContainer].slice(newIndex, items[overContainer].length),
+						...menuData[overContainer].slice(0, newIndex),
+						menuData[activeContainer][activeIndex],
+						...menuData[overContainer].slice(newIndex, items[overContainer].length),
 					],
 				}
 			})
@@ -154,6 +154,9 @@ const Table = ({
 
 	const handleDragEnd = ({ active, over }) => {
 		const activeContainer = findContainer(active.id)
+		console.log(`active.id: ${active.id}`)
+		console.log(`over.id: ${over.id}`)
+		console.log(`activeContainer: ${activeContainer}`)
 
 		if (!activeContainer) {
 			setActiveId(null)
@@ -164,7 +167,7 @@ const Table = ({
 
 		if (overId === VOID_ID) {
 			setMenuData((items) => ({
-				...(trashable && over.id === VOID_ID ? items : dragOverlaydItems),
+				...(trashable && over.id === VOID_ID ? menuData : dragOverlaydItems),
 				[VOID_ID]: [],
 			}))
 			setActiveId(null)
@@ -172,6 +175,7 @@ const Table = ({
 		}
 
 		const overContainer = findContainer(overId)
+		console.log(`overContainer: ${overContainer}`)
 
 		if (activeContainer && overContainer) {
 			const activeIndex = menuData[activeContainer].indexOf(active.id)
@@ -179,8 +183,8 @@ const Table = ({
 
 			if (activeIndex !== overIndex) {
 				setMenuData((items) => ({
-					...items,
-					[overContainer]: arrayMove(items[overContainer], activeIndex, overIndex),
+					...menuData,
+					[overContainer]: arrayMove(menuData[overContainer], activeIndex, overIndex),
 				}))
 			}
 		}
@@ -209,38 +213,39 @@ const Table = ({
 			onDragCancel={handleDragCancel}
 			modifiers={modifiers}>
 			<div className='table-view'>
-				{Object.keys(menuData)
-					.filter((key) => key !== VOID_ID)
-					.map((containerId) => (
-						<SortableContext key={containerId} items={menuData[containerId]} strategy={strategy}>
-							<DroppableContainer
-								id={containerId}
-								items={menuData[containerId]}
-								getStyle={getContainerStyle}>
-								{menuData[containerId].map((item, index) => {
-									return (
-										<SortableItemWrapper
-											key={item}
-											id={item}
-											index={index}
-											style={getItemStyles}
-											wrapperStyle={wrapperStyle}
-											renderItem={renderItem}
-											containerId={containerId}
-											getIndex={getIndex}
-											value={item}
-										/>
-									)
-								})}
-							</DroppableContainer>
-						</SortableContext>
-					))}
+				{menuData &&
+					Object.keys(menuData)
+						.filter((key) => key !== VOID_ID)
+						.map((containerId) => (
+							<SortableContext key={containerId} items={menuData[containerId]} strategy={strategy}>
+								<DroppableContainer
+									id={containerId}
+									items={menuData[containerId]}
+									getStyle={getContainerStyle}>
+									{menuData[containerId].map((itemID, index) => {
+										console.log(`itemID: ${itemID}`)
+										return (
+											<SortableItemWrapper
+												key={itemID}
+												id={itemID}
+												index={index}
+												style={getItemStyles}
+												wrapperStyle={wrapperStyle}
+												renderItem={renderItem}
+												containerId={containerId}
+												getIndex={getIndex}
+											/>
+										)
+									})}
+								</DroppableContainer>
+							</SortableContext>
+						))}
 			</div>
 			{createPortal(
 				<DragOverlay>
 					{activeId ? (
 						<Item
-							value={activeId}
+							itemID={activeId}
 							style={getItemStyles({
 								containerId: findContainer(activeId),
 								overIndex: -1,
@@ -253,7 +258,7 @@ const Table = ({
 								isDragOverlay: true,
 							})}
 							index={getIndex(activeId)}
-							wrapperStyle={wrapperStyle({ index: 0 })}
+							wrapperStyle={wrapperStyle(getIndex(activeId))}
 							renderItem={renderItem}
 							dragOverlay
 						/>

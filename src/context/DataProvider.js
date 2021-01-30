@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useAsync } from 'react-async-hook'
-import { fetchSectionByID } from 'utils/api'
+import * as api from 'utils/api'
 
 const DataContext = createContext()
 
@@ -12,18 +12,29 @@ const DataContext = createContext()
 //      }
 // }
 const DataProvider = ({ children }) => {
-	// const menuSectionData = useAsync(fetchSections)
-	const sectionByIDData = (id) => fetchSectionByID(id)
-	// const updateIndex = ({ parent_id, current_Index, new_index }) => {
+	const [allSectionsData, setAllSectionsData] = useState(null)
+	const [mappedSections, setMappedSections] = useState(null)
+	const [parentingSections, setParentingSections] = useState(null)
+	useEffect(() => {
+		api.fetchSections().then((data) => setAllSectionsData(data))
+	}, [])
 
-	//     const oldIndexMap = mappedSections[parent_id].map((subSection, index) => ({[index]: subSection.}) )
-	//     if (new_index === 0) {
+	useEffect(() => {
+		api.fetchMappedSections().then((data) => setMappedSections(data))
+	}, [])
 
-	//     }
+	useEffect(() => {
+		if (allSectionsData !== null) {
+			const parents = allSectionsData.filter((section) => section.section_parent_id !== undefined)
+			setParentingSections(parents)
+		}
+	}, [allSectionsData])
 
-	//
-
-	return <DataContext.Provider value={{ sectionByIDData }}>{children}</DataContext.Provider>
+	return (
+		<DataContext.Provider value={{ allSectionsData, parentingSections, parentingSections, mappedSections, ...api }}>
+			{children}
+		</DataContext.Provider>
+	)
 }
 
 const useData = () => {

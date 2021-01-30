@@ -9,6 +9,7 @@ export const Item = memo(
 	forwardRef(
 		(
 			{
+				itemID,
 				color,
 				dragOverlay,
 				dragging,
@@ -30,10 +31,10 @@ export const Item = memo(
 			},
 			ref
 		) => {
-			// const { sectionByIDData } = useData()
-			// const itemData = sectionByIDData(value.id)
-			// const [data, setData] = useState(value)
-			const [itemData, setItemData] = useState(null)
+			// const { allSectionsData } = useData()
+			// const itemData = allSectionsData.find((section) => section.id === id)
+			const [itemData, setItemData] = useState()
+			// const [itemData, setItemData] = useState(value)
 			const [isSubSection, setIsSubSection] = useState(false)
 
 			useEffect(() => {
@@ -48,8 +49,6 @@ export const Item = memo(
 				}
 			}, [dragOverlay])
 
-			index && console.log(`index: ${index}`)
-			itemData && console.log(`itemData: ${itemData.section_parent_id}`)
 			useLayoutEffect(() => {
 				if (index === 0) {
 					setIsSubSection(false)
@@ -59,7 +58,7 @@ export const Item = memo(
 			}, [index, itemData])
 
 			useEffect(() => {
-				fetch(`/sections/${value}`)
+				fetch(`/sections/${itemID}`)
 					.then((response) => response.json())
 					.then(({ data }) => setItemData(data))
 			}, [])

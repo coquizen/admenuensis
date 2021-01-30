@@ -341,6 +341,10 @@ ul {
 			transition-duration: 350ms;
 		}
 	}
+	& .custom-modal-content {
+		@extend .modal-content;
+		background-color: $gray-300;
+	}
 }
 
 .trans {
@@ -377,10 +381,41 @@ ul {
 
 .form-row {
 	display: flex;
-	align-items: center;
+	align-items: baseline;
 	justify-content: space-between;
 }
 
+.custom-form-label {
+	margin-right: 5rem;
+}
 .form-switch.form-switch-sm {
 	@include switch();
+}
+
+.float {
+	position: fixed;
+	bottom: 40px;
+	right: 40px;
+}
+
+.section-switches {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	margin-left: $spacer * 5;
+}
+.custom-control-right {
+	padding-right: 24px;
+	padding-left: 0;
+	margin-left: 0;
+	margin-right: 0;
+}
+.custom-control-right .custom-control-label::after {
+	right: -1.5rem;
+	left: auto;
+}
+
+.custom-control-right .custom-control-label::before {
+	right: -2.35rem;
+	left: auto;
 }
