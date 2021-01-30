@@ -8,9 +8,17 @@ const Switch = forwardRef(({ name, label }, ref) => {
 
 	// const onChange = (newvalue) => setIsChecked(newvalue)
 
+	// return (
+	// 	<div className='custom-control custom-switch'>
+	// 		<label className='custom-control-label' htmlFor={name}>
+	// 			{label}
+	// 		</label>
+	// 		<input name={name} className='custom-control-input' type='checkbox' id={name} ref={ref} />
+	// 	</div>
+	// )
 	return (
 		<div className='custom-control custom-switch right'>
-			<input name={name} className='custom-control-input' type='checkbox' id={name} ref={ref} />
+			<input type='checkbox' class='custom-control-input' id={name} ref={ref} />
 			<label className='custom-control-label' htmlFor={name}>
 				{label}
 			</label>

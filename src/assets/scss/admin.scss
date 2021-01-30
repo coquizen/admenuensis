@@ -5,7 +5,8 @@ $enable-gradients: true;
 $enable-negative-margins: true;
 
 @import '~bootstrap/scss/bootstrap';
-
+@import './variables';
+@import './custom-forms';
 $body-color: $gray-200;
 $link-decoration: none;
 
@@ -404,6 +405,7 @@ ul {
 	align-items: flex-end;
 	margin-left: $spacer * 5;
 }
+
 .custom-control-right {
 	padding-right: 24px;
 	padding-left: 0;
