@@ -18,7 +18,7 @@ const Switch = forwardRef(({ name, label }, ref) => {
 	// )
 	return (
 		<div className='custom-control custom-switch right'>
-			<input type='checkbox' class='custom-control-input' id={name} ref={ref} />
+			<input type='checkbox' className='custom-control-input' id={name} name={name} ref={ref} />
 			<label className='custom-control-label' htmlFor={name}>
 				{label}
 			</label>

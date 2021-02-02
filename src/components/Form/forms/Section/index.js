@@ -1,38 +1,25 @@
 /** @format */
 
-import React, { forwardRef, useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { useModal } from 'context/ModalProvider'
+import React, { useEffect, useState } from 'react'
 import { useData } from 'context/DataProvider'
-import { DropDownMenu } from './components/DropDownMenu'
-import { Switch } from './components/Switch'
-const SectionForm = forwardRef(({ data }, ref) => {
-	const { allSectionsData } = useData()
-	const [allSections, setAllSections] = useState(allSectionsData)
-	const { register, handleSubmit } = useForm()
-	const { onClose } = useModal()
+import { Switch } from 'components/Form'
+import { DropDownMenu } from 'components/Form'
 
-	const closeModal = (e) => {
-		e.preventDefault()
-		onClose()
-	}
+const Section = ({ register, dataID = 0 }) => {
+	const [data, setData] = useState(null)
+	const { fetchSectionByID, parentingSections } = useData()
+
 	useEffect(() => {
-		setAllSections(allSectionsData)
-	}, [allSectionsData])
-
-	const close = (e) => {
-		e.preventDefault()
-		onClose()
-	}
-
-	const onSubmit = (e) => (data) => {
-		alert(data)
-		closeModal(e)
-	}
+		if (dataID) {
+			setData(null)
+			return
+		}
+		fetchSectionByID(dataID).then((data) => setData(data))
+	}, [dataID])
 
 	return (
-		<form ref={ref} onSubmit={() => handleSubmit(onSubmit)}>
-			<div className='modal-body'>
+		<React.Fragment>
+			<div className='custom-modal-body'>
 				<div className='form-row'>
 					<label htmlFor='section-name' className='custom-form-label'>
 						Name
@@ -74,18 +61,10 @@ const SectionForm = forwardRef(({ data }, ref) => {
 					<label htmlFor='select-parent-section' className='custom-form-label'>
 						Parent Group
 					</label>
-					<DropDownMenu items={allSections} />
+					<DropDownMenu items={parentingSections} />
 				</div>
 			</div>
-			<div className='modal-footer'>
-				<button type='button' className='btn btn-secondary' onClick={close}>
-					Cancel
-				</button>
-				<button input='button' type='submit' className='btn btn-primary'>
-					Save changes
-				</button>
-			</div>
-		</form>
+		</React.Fragment>
 	)
-})
-export default SectionForm
+}
+export default Section

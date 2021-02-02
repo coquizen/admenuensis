@@ -5,7 +5,6 @@ import ReactDOM from 'react-dom'
 import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
-import { debugContextDevtool } from 'context/DebugContext'
 
 const container = document.getElementById('root')
 ReactDOM.render(<App />, container)

@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Table from 'components/Table/Table'
-import { PublishButton } from 'components/PublishButton'
+import { PublishButton } from 'components/Table/PublishButton'
 // import { useData } from 'context/DataProvider'
 const Menu = () => {
 	// const { result, error, loading } = menuSectionData

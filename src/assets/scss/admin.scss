@@ -308,45 +308,175 @@ ul {
 	font-size: smaller;
 }
 
+@keyframes fadeIn {
+	0% {
+		background: rgba(0, 0, 0, 0);
+	}
+	100% {
+		background: rgba(0, 0, 0, 0.7);
+	}
+}
+
+@keyframes fadeOut {
+	0% {
+		background: rgba(0, 0, 0, 0.7);
+	}
+	100% {
+		background: rgba(0, 0, 0, 0);
+	}
+}
+
+@keyframes scaleUp {
+	0% {
+		transform: scale(0.8) translateY(1000px);
+		opacity: 0;
+	}
+	100% {
+		transform: scale(1) translateY(0px);
+		opacity: 1;
+	}
+}
+
+@keyframes scaleDown {
+	0% {
+		transform: scale(1) translateY(0px);
+		opacity: 1;
+	}
+	100% {
+		transform: scale(0.8) translateY(1000px);
+		opacity: 0;
+	}
+}
+
 .overlay {
 	position: fixed;
 	top: 0;
 	right: 0;
 	bottom: 0;
 	left: 0;
-	opacity: 0;
-	backdrop-filter: blur(100px);
-	transition: all 100ms cubic-bezier(0.4, 0, 0.2, 1);
-	transition-delay: 200ms;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	z-index: $zindex-modal-backdrop;
-	& .modal-wrapper {
-		box-shadow: $modal-content-box-shadow-sm-up;
-		border-radius: 2px;
-		transform: translateY(100px);
-		transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+	overflow: hidden;
+	transition: all 100ms cubic-bezier(0.4, 0, 0.2, 1);
+	background: rgba(0, 0, 0, 0);
+	animation: fadeIn 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+
+	& .custom-modal-dialog {
+		position: relative;
+		width: 75%;
+		height: subtract(100%, $modal-dialog-margin * 2);
+		margin: $modal-dialog-margin;
 		opacity: 0;
-	}
-	&.active {
-		transition-duration: 250ms;
-		transition-delay: 0ms;
-		opacity: 1;
-		background: rgba($color: #000000, $alpha: 0.8);
-		& .modal-wrapper {
-			transform: translateY(0);
-			opacity: 1;
-			border-color: $modal-content-border-color;
-			transition-delay: 150ms;
-			transition-duration: 350ms;
-		}
+		animation: scaleUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
 	}
 	& .custom-modal-content {
-		@extend .modal-content;
-		background-color: $gray-300;
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		width: 100%; // Ensure `.modal-content` extends the full width of the parent `.modal-dialog`
+		// counteract the pointer-events: none; in the .modal-dialog
+		color: $modal-content-color;
+		pointer-events: auto;
+		background-color: $modal-content-bg;
+		background-clip: padding-box;
+		border: $modal-content-border-width solid $modal-content-border-color;
+		@include border-radius($modal-content-border-radius);
+		@include box-shadow($modal-content-box-shadow-xs);
+		// Remove focus outline from opened modal
+		outline: 0;
+	}
+	& .custom-modal-header {
+		display: flex;
+		flex-shrink: 0;
+		align-items: center;
+		justify-content: space-between; // Put modal header elements (title and dismiss) on opposite ends
+		padding: $modal-header-padding;
+		border-bottom: $modal-header-border-width solid $modal-header-border-color;
+		@include border-top-radius($modal-content-inner-border-radius);
+
+		.btn-close {
+			padding: ($modal-header-padding-y / 2) ($modal-header-padding-x / 2);
+			margin: ($modal-header-padding-y / -2) ($modal-header-padding-x / -2) ($modal-header-padding-y / -2) auto;
+		}
+	}
+	& .custom-modal-body {
+		position: relative;
+		// Enable `flex-grow: 1` so that the body take up as much space as possible
+		// when there should be a fixed height on `.modal-dialog`.
+		flex: 1 1 auto;
+		padding: $modal-inner-padding;
+	}
+	& .custom-modal-footer {
+		display: flex;
+		flex-wrap: wrap;
+		flex-shrink: 0;
+		align-items: center; // vertically center
+		justify-content: flex-end; // Right align buttons with flex property because text-align doesn't work on flex items
+		padding: $modal-inner-padding - $modal-footer-margin-between / 2;
+		border-top: $modal-footer-border-width solid $modal-footer-border-color;
+		@include border-bottom-radius($modal-content-inner-border-radius);
+
+		// Place margin between footer elements
+		// This solution is far from ideal because of the universal selector usage,
+		// but is needed to fix https://github.com/twbs/bootstrap/issues/24800
+		> * {
+			margin: $modal-footer-margin-between / 2;
+		}
+	}
+
+	&.close {
+		animation: fadeOut 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+		& .custom-modal-dialog {
+			animation: scaleDown 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+		}
 	}
 }
+
+.modal-active {
+	animation: zoomOut 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+// .overlay {
+// 	position: fixed;
+// 	top: 0;
+// 	right: 0;
+// 	bottom: 0;
+// 	left: 0;
+// 	opacity: 0;
+// 	backdrop-filter: blur(100px);
+// 	transition: all 100ms cubic-bezier(0.4, 0, 0.2, 1);
+// 	transition-delay: 200ms;
+// 	display: flex;
+// 	align-items: center;
+// 	justify-content: center;
+// 	z-index: $zindex-modal-backdrop;
+// 	& .modal-wrapper {
+// 		box-shadow: $modal-content-box-shadow-sm-up;
+// 		border-radius: 2px;
+// 		transform: translateY(100px);
+// 		transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+// 		opacity: 0;
+// 	}
+// 	&.active {
+// 		transition-duration: 250ms;
+// 		transition-delay: 0ms;
+// 		opacity: 1;
+// 		background: rgba($color: #000000, $alpha: 0.8);
+// 		& .modal-wrapper {
+// 			transform: translateY(0);
+// 			opacity: 1;
+// 			border-color: $modal-content-border-color;
+// 			transition-delay: 150ms;
+// 			transition-duration: 350ms;
+// 		}
+// 	}
+// 	& .custom-modal-content {
+// 		@extend .modal-content;
+// 		background-color: $gray-300;
+// 	}
+// }
 
 .trans {
 	-webkit-transition: all 1s ease-in-out;

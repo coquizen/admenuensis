@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { useAsync } from 'react-async-hook'
+
 import * as api from 'utils/api'
 
 const DataContext = createContext()
@@ -31,7 +31,7 @@ const DataProvider = ({ children }) => {
 	}, [allSectionsData])
 
 	return (
-		<DataContext.Provider value={{ allSectionsData, parentingSections, parentingSections, mappedSections, ...api }}>
+		<DataContext.Provider value={{ allSectionsData, parentingSections, mappedSections, ...api }}>
 			{children}
 		</DataContext.Provider>
 	)

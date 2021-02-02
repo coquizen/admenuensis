@@ -1,7 +1,7 @@
 /** @format */
 
 import React from 'react'
-import { Handle } from 'components/Table/Item/components/Handle'
+import { Handle } from 'components/Table/Handle'
 import { useData } from 'context/DataProvider'
 import { useModal } from 'context/ModalProvider'
 

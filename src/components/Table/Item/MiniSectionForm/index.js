@@ -3,10 +3,11 @@
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDotCircle, faEdit, faEllipsisH, faImage } from '@fortawesome/free-solid-svg-icons'
-import { Handle } from 'components/Table/Item/components/Handle'
+import { Handle } from 'components/Table/Handle'
 import { useData } from 'context/DataProvider'
 import { useModal } from 'context/ModalProvider'
-import { SectionForm } from 'components/forms'
+import Form from 'components/Form'
+import { Section } from 'components/Form/forms'
 
 const MiniSectionForm = ({ data, listeners, attributes, value }) => {
 	const { updateSectionByID } = useData()
@@ -24,7 +25,7 @@ const MiniSectionForm = ({ data, listeners, attributes, value }) => {
 
 	const handleClick = (e) => {
 		e.preventDefault()
-		insertComponent(<SectionForm data={data} />)
+		insertComponent(<Form form={<Section dataID={id} />} />)
 	}
 
 	const handleTitleChange = (e) => {

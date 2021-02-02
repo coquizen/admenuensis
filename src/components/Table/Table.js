@@ -22,7 +22,7 @@ import {
 } from '@dnd-kit/sortable'
 
 import { Item, List, SortableItemWrapper } from 'components/Table'
-
+import { fetchMappedSections } from 'utils/api'
 function DroppableContainer({ children, columns = 1, id, items, getStyle = () => ({}) }) {
 	const { over, isOver, setNodeRef } = useDroppable({
 		id,
@@ -57,22 +57,20 @@ const Table = ({
 	const [dragOverlaydItems, setClonedItems] = useState(null)
 	const [activeId, setActiveId] = useState(null)
 	const [overIndex, setOverIndex] = useState(null)
-
+	const [queue, setQueue] = useState([])
 	useEffect(() => {
-		fetch('/mapped-sections')
-			.then((response) => response.json())
-			.then(({ data }) => {
-				var amendedData = {}
-				Object.keys(data).forEach((parentID) => {
-					console.log(data)
-					amendedData[parentID] = []
-					data[parentID].forEach((item) => {
-						amendedData[parentID].push(item.id)
-					})
+		fetchMappedSections().then((data) => {
+			var amendedData = {}
+			Object.keys(data).forEach((parentID) => {
+				console.log(data)
+				amendedData[parentID] = []
+				data[parentID].forEach((item) => {
+					amendedData[parentID].push(item.id)
 				})
-				amendedData[VOID_ID] = []
-				setMenuData(amendedData)
 			})
+			amendedData[VOID_ID] = []
+			setMenuData(amendedData)
+		})
 	}, [])
 
 	const sensors = useSensors(
@@ -81,6 +79,7 @@ const Table = ({
 			coordinateGetter: sortableKeyboardCoordinates,
 		})
 	)
+
 	const findContainer = (id) => {
 		if (id in menuData) {
 			return id
@@ -139,6 +138,15 @@ const Table = ({
 					newIndex = overIndex >= 0 ? overIndex + modifier : overItemsID.length + 1
 				}
 
+				setQueue(
+					queue.concat({
+						oldParent: activeContainer,
+						newParent: overContainer,
+						oldIndex: activeIndex,
+						newIndex: overIndex,
+					})
+				)
+
 				return {
 					...menuData,
 					[activeContainer]: [...menuData[activeContainer].filter((itemID) => itemID !== active.id)],
@@ -165,6 +173,7 @@ const Table = ({
 
 		const overId = over.id || VOID_ID
 
+		// Trash
 		if (overId === VOID_ID) {
 			setMenuData((items) => ({
 				...(trashable && over.id === VOID_ID ? menuData : dragOverlaydItems),
@@ -175,7 +184,6 @@ const Table = ({
 		}
 
 		const overContainer = findContainer(overId)
-		console.log(`overContainer: ${overContainer}`)
 
 		if (activeContainer && overContainer) {
 			const activeIndex = menuData[activeContainer].indexOf(active.id)
