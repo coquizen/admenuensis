@@ -2,7 +2,6 @@
 import React, { memo, forwardRef, useState, useEffect, useLayoutEffect } from 'react'
 import classNames from 'classnames'
 import styles from './Item.module.scss'
-import { Handle } from '../Handle'
 import MiniSectionForm from './MiniSectionForm'
 import { useData } from 'context/DataProvider'
 export const Item = memo(
@@ -31,12 +30,10 @@ export const Item = memo(
 			},
 			ref
 		) => {
-			// const { allSectionsData } = useData()
-			// const itemData = allSectionsData.find((section) => section.id === id)
-			const [itemData, setItemData] = useState()
-			// const [itemData, setItemData] = useState(value)
-			const [isSubSection, setIsSubSection] = useState(false)
+			const [ isSubSection, setIsSubSection ] = useState(false)
+			const { allSectionsData } = useData()
 
+			const itemData = allSectionsData.find((section) => section.id == itemID)
 			useEffect(() => {
 				if (!dragOverlay) {
 					return
@@ -55,13 +52,7 @@ export const Item = memo(
 				} else {
 					setIsSubSection(true)
 				}
-			}, [index, itemData])
-
-			useEffect(() => {
-				fetch(`/sections/${itemID}`)
-					.then((response) => response.json())
-					.then(({ data }) => setItemData(data))
-			}, [])
+			}, [index])
 
 			return (
 				<li

@@ -1,67 +1,81 @@
 /** @format */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useData } from 'context/DataProvider'
 import { Switch } from 'components/Form'
 import { DropDownMenu } from 'components/Form'
 
-const Section = ({ register, dataID = 0 }) => {
-	const [data, setData] = useState(null)
-	const { fetchSectionByID, parentingSections } = useData()
+
+const defaultValues = {
+	id: '',
+	title: '',
+	description: '',
+	active: true,
+	visible: true,
+
+}
+
+const Section = ({ dataID = 0, setValue, reset, register }) => {
+	const { allSectionsData } = useData()
+	const data = dataID == 0 ? defaultValues : allSectionsData.find((section) => dataID == section.id)
 
 	useEffect(() => {
-		if (dataID) {
-			setData(null)
-			return
+		if (dataID === 0) {
+			setValue(defaultValues)
+		} else {
+			const parsedData = {
+				id: dataID,
+				title: data.title,
+				description: data.description === undefined ? '' : data.description,
+				active: data.active === undefined ? true : data.active,
+				visible: data.visible === undefined ? true : data.visible,
+				section_parent_id: data.section_parent_id === undefined ? null : data.section_parent_id,
+			}
+			reset(parsedData)
 		}
-		fetchSectionByID(dataID).then((data) => setData(data))
-	}, [dataID])
+	}, [defaultValues, reset])
+
 
 	return (
 		<React.Fragment>
+			<input name='id' ref={register} type='hidden'></input>
 			<div className='custom-modal-body'>
 				<div className='form-row'>
-					<label htmlFor='section-name' className='custom-form-label'>
+					<label htmlFor='title' className='custom-form-label'>
 						Name
 					</label>
 					<input
-						name='section-name'
-						ref={(register, { required: true })}
+						name='title'
+						ref={register}
 						type='text'
 						className='form-input'
-						id='section-name'
-						placeholder='Please enter section name e.g. Desserts'
-						value={data && data.title}></input>
+						id='title'
+						placeholder='Please enter section name e.g. Desserts'></input>
 				</div>
 				<hr />
 				<div className='form-row'>
-					<label htmlFor='section-description' className='custom-form-label'>
+					<label htmlFor='description' className='custom-form-label'>
 						Description
 					</label>
 					<input
 						type='text'
 						name='description'
 						className='form-input'
-						id='section-description'
+						id='description'
 						rows='3'
-						ref={register}
-						value={data && data.description}></input>
+						ref={register}></input>
 				</div>
 				<hr />
 				<div className='form-row'>
 					<div>Other Settings</div>
 					<div className='section-switches'>
-						<Switch label='Disable' name='isDisabled' ref={register} />
-						<Switch label='Visible' name='isVisible' ref={register} />
-						<Switch label='Time Restricted' name='isRestricted' ref={register} />
+						<Switch label='Disable' name='active' ref={register} />
+						<Switch label='Visible' name='visible' ref={register} />
 					</div>
 				</div>
 				<hr />
 				<div className='form-row'>
-					<label htmlFor='select-parent-section' className='custom-form-label'>
-						Parent Group
-					</label>
-					<DropDownMenu items={parentingSections} />
+					<DropDownMenu itemID={data.id} />
 				</div>
 			</div>
 		</React.Fragment>

@@ -75,19 +75,7 @@ const ModalProvider = ({ children }) => {
 						ref={modalRef}
 						className={`overlay ${closing ? 'close' : ''}`}
 						onTransitionEnd={onClosingTransitionEnd}>
-						<div className='custom-modal-dialog'>
-							<div className='custom-modal-content'>
-								<div className='custom-modal-header'>
-									<h5 className='custom-modal-title'>Form</h5>
-									<button
-										aria-label='Close Modal'
-										type='button'
-										className='btn-close'
-										onClick={closeModal}></button>
-								</div>
-								{ModalComponent}
-							</div>
-						</div>
+						{ModalComponent}
 					</div>
 				</Portal>
 			)}

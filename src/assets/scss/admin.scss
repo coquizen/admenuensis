@@ -365,7 +365,7 @@ ul {
 
 	& .custom-modal-dialog {
 		position: relative;
-		width: 75%;
+		width: auto;
 		height: subtract(100%, $modal-dialog-margin * 2);
 		margin: $modal-dialog-margin;
 		opacity: 0;
