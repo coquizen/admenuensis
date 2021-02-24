@@ -4,23 +4,22 @@ import React, { useEffect } from 'react'
 import { useData } from 'context/DataProvider'
 import { Switch } from 'components/Form'
 import { DropDownMenu } from 'components/Form'
-
 const defaultValues = {
 	id: '',
-	uuid: '',
 	title: '',
 	description: '',
+	parent_section_id: '',
+	price: '',
 	active: true,
 	visible: true,
-	section_parent_id: null,
 }
 
-const Section = ({ uuid, setValue, reset, register }) => {
-	const { getSectionDataByID } = useData()
-	const data = uuid === 'blank' ? defaultValues : getSectionDataByID(uuid)
+const Item = ({ uuid, setValue, reset, register }) => {
+	const { getItemDataByID } = useData()
+	const data = uuid === '' ? defaultValues : getItemDataByID(uuid)
 
 	useEffect(() => {
-		if (uuid === undefined) {
+		if (uuid === 'blank') {
 			setValue(defaultValues)
 		} else {
 			// const data = allSectionsData.find(section => section.id == dataID)
@@ -28,13 +27,14 @@ const Section = ({ uuid, setValue, reset, register }) => {
 				id: data.id,
 				title: data.title,
 				description: data.description === undefined ? '' : data.description,
+				price: data.price === undefined ? '' : data.price / 100,
 				active: data.active === undefined ? true : data.active,
 				visible: data.visible === undefined ? true : data.visible,
-				section_parent_id: data.section_parent_id === undefined ? '' : data.section_parent_id,
+				parent_section_id: data.section_parent_id === undefined ? '' : data.section_parent_id,
 			}
 			reset(parsedData)
 		}
-	}, [defaultValues, reset, data])
+	}, [reset, data, uuid, setValue])
 
 	return (
 		<React.Fragment>
@@ -67,13 +67,21 @@ const Section = ({ uuid, setValue, reset, register }) => {
 				</div>
 				<hr />
 				<div className='form-row'>
+					<label className='visually-hidden' htmlFor='price'>
+						Price
+					</label>
+					<div className='input-group input-price'>
+						<div className='input-group-text'>$</div>
+						<input type='number' className='form-control' name='price' ref={register} />
+					</div>
+				</div>
+				<div className='form-row'>
 					<div>Other Settings</div>
 					<div className='section-switches'>
 						<Switch label='Disable' name='active' ref={register} />
 						<Switch label='Visible' name='visible' ref={register} />
 					</div>
 				</div>
-				<hr />
 				<div className='form-row'>
 					<DropDownMenu name='section_parent_id' ref={register} itemID={uuid} />
 				</div>
@@ -81,4 +89,5 @@ const Section = ({ uuid, setValue, reset, register }) => {
 		</React.Fragment>
 	)
 }
-export default Section
+
+export default Item

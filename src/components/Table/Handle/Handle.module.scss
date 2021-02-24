@@ -1,13 +1,16 @@
 /** @format */
 
 $focused-outline-color: #4c9ffe;
+$box-shadow: 0 0.1rem 1rem rgba(#000, 0.15);
 
 .Handle {
 	display: flex;
-	padding-left: 15px;
 	flex: 0 0 auto;
 	margin-left: auto;
 	touch-action: none;
+	border-width: 2px;
+	border: #000;
+	margin: 5px;
 	cursor: var(--cursor, grab);
 
 	svg {

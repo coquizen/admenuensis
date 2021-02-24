@@ -7,11 +7,11 @@ import { useModal } from 'context/ModalProvider'
 
 const Form = ({ form }) => {
 	const { closeModal } = useModal()
-	const { updateSectionByID } = useData()
+	const { updateSection } = useData()
 	const { register, handleSubmit, reset, setValue } = useForm({ shouldUnregister: false })
 
 	const onSubmit = (data) => {
-		updateSectionByID(data)
+		updateSection(data)
 		closeModal()
 	}
 

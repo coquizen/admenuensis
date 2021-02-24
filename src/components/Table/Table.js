@@ -12,18 +12,12 @@ import {
 	useSensors,
 	useSensor,
 } from '@dnd-kit/core'
-import {
-	SortableContext,
-	useSortable,
-	arrayMove,
-	sortableKeyboardCoordinates,
-	verticalListSortingStrategy,
-	rectSwappingStrategy,
-} from '@dnd-kit/sortable'
+import { SortableContext, arrayMove, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable'
 
-import { Item, List, SortableItemWrapper } from 'components/Table'
-import { fetchMappedSections } from 'utils/api'
-function DroppableContainer({ children, columns = 1, id, items, getStyle = () => ({}) }) {
+import { List, SortableNodeWrapper, Node } from 'components/Table'
+import { useData } from 'context/DataProvider'
+import { flattenRoot } from 'utils/flattenTree'
+const DroppableContainer = ({ children, columns = 1, id, items, getStyle = () => ({}) }) => {
 	const { over, isOver, setNodeRef } = useDroppable({
 		id,
 	})
@@ -36,8 +30,14 @@ function DroppableContainer({ children, columns = 1, id, items, getStyle = () =>
 	)
 }
 
+
 const defaultContainerStyle = ({ isOverContainer }) => ({
-	marginTop: 40,
+	marginTop: '2rem',
+	backgroundColor: isOverContainer ? 'rgb(235,235,235,1)' : 'rgba(246,246,246,1)',
+})
+
+const iconContainerStyle = ({ isOverContainer }) => ({
+	marginTop: '-1rem',
 	backgroundColor: isOverContainer ? 'rgb(235,235,235,1)' : 'rgba(246,246,246,1)',
 })
 
@@ -51,28 +51,20 @@ const Table = ({
 	modifiers,
 	renderItem,
 	trashable,
-	strategy = rectSwappingStrategy,
+	strategy = verticalListSortingStrategy,
 }) => {
-	const [menuData, setMenuData] = useState({})
+	const { reSortTable, rootSections, getSectionDataByID } = useData()
+	const [isBefore, setIsBefore] = useState(false)
+	const [menuData, setMenuData] = useState(null)
 	const [dragOverlaydItems, setClonedItems] = useState(null)
 	const [activeId, setActiveId] = useState(null)
 	const [overIndex, setOverIndex] = useState(null)
-	const [queue, setQueue] = useState([])
-	useEffect(() => {
-		fetchMappedSections().then((data) => {
-			var amendedData = {}
-			Object.keys(data).forEach((parentID) => {
-				console.log(data)
-				amendedData[parentID] = []
-				data[parentID].forEach((item) => {
-					amendedData[parentID].push(item.id)
-				})
-			})
-			amendedData[VOID_ID] = []
-			setMenuData(amendedData)
-		})
-	}, [])
 
+	useEffect(() => {
+		var flattened = []
+		rootSections.forEach((root) => flattened.push(flattenRoot(root)))
+		setMenuData(flattened)
+	}, [rootSections])
 	const sensors = useSensors(
 		useSensor(PointerSensor),
 		useSensor(KeyboardSensor, {
@@ -80,22 +72,15 @@ const Table = ({
 		})
 	)
 
-	const findContainer = (id) => {
-		if (id in menuData) {
-			return id
-		}
-
-		return Object.keys(menuData).find((key) => menuData[key].includes(id))
-	}
+	const findContainer = (id) => Object.keys(menuData).filter((key) => menuData[key].find((node) => node.id === id))[0]
 
 	const getIndex = (id) => {
 		const container = findContainer(id)
-
 		if (!container) {
 			return -1
 		}
 
-		const index = menuData[container].indexOf(id)
+		const index = menuData[ container ].map((obj, index) => { if (obj.id === id) { return index } })
 
 		return index
 	}
@@ -107,7 +92,7 @@ const Table = ({
 
 	const handleDragOver = ({ active, over, draggingRect }) => {
 		const overId = over.id || VOID_ID
-		setOverIndex(overId)
+
 		const overContainer = findContainer(overId)
 
 		const activeContainer = findContainer(active.id)
@@ -117,10 +102,10 @@ const Table = ({
 		}
 
 		if (activeContainer !== overContainer) {
-			setMenuData((items) => {
-				const activeItemsID = menuData[activeContainer]
-				const overItemsID = menuData[overContainer]
-				const overIndex = overItemsID.indexOf(overId)
+			setMenuData((menuData) => {
+				const activeItemsID = menuData[activeContainer].map((item) => item.id)
+				const overItemsID = menuData[overContainer].map((item) => item.id)
+				const overindex = overItemsID.indexOf(overId)
 				const activeIndex = activeItemsID.indexOf(active.id)
 
 				let newIndex
@@ -130,33 +115,23 @@ const Table = ({
 				} else {
 					const isBelowLastItem =
 						over &&
-						overIndex === overItemsID.length - 1 &&
+						overindex === overItemsID.length - 1 &&
 						draggingRect.offsetTop > over.rect.offsetTop + over.rect.height
 
 					const modifier = isBelowLastItem ? 1 : 0
-
-					newIndex = overIndex >= 0 ? overIndex + modifier : overItemsID.length + 1
+					console.log(modifier)
+					setIsBefore(!modifier)
+					newIndex = overindex >= 0 ? overindex + modifier : overItemsID.length + 1
 				}
 
-				setQueue(
-					queue.concat({
-						oldParent: activeContainer,
-						newParent: overContainer,
-						oldIndex: activeIndex,
-						newIndex: overIndex,
-					})
-				)
 
-				return {
-					...menuData,
-					[activeContainer]: [...menuData[activeContainer].filter((itemID) => itemID !== active.id)],
-					[overContainer]: [
-						...menuData[overContainer].slice(0, newIndex),
-						menuData[activeContainer][activeIndex],
-						...menuData[overContainer].slice(newIndex, items[overContainer].length),
-					],
-				}
-			})
+				console.log(newIndex)
+				menuData[overContainer].splice(newIndex, 0, menuData[activeContainer][activeIndex])
+					menuData[activeContainer] = [...menuData[activeContainer].filter((item) => item.id !== active.id)]
+					console.log(menuData)
+				return menuData
+			}
+			)
 		}
 	}
 
@@ -174,32 +149,31 @@ const Table = ({
 		const overId = over.id || VOID_ID
 
 		// Trash
-		if (overId === VOID_ID) {
-			setMenuData((items) => ({
-				...(trashable && over.id === VOID_ID ? menuData : dragOverlaydItems),
-				[VOID_ID]: [],
-			}))
-			setActiveId(null)
-			return
-		}
+		// if (overId === VOID_ID) {
+		// 	setMenuData((menuData) => ({
+		// 		...(trashable && over.id === VOID_ID ? menuData : dragOverlaydItems),
+		// 		[VOID_ID]: [],
+		// 	}))
+		// 	setActiveId(null)
+		// 	return
+		// }
 
 		const overContainer = findContainer(overId)
 
 		if (activeContainer && overContainer) {
-			const activeIndex = menuData[activeContainer].indexOf(active.id)
-			const overIndex = menuData[overContainer].indexOf(overId)
+			const activeIndex = menuData[activeContainer].map((item) => item.id).indexOf(active.id)
+			const overIndex = menuData[overContainer].map((item) => item.id).indexOf(overId)
 
 			if (activeIndex !== overIndex) {
-				setMenuData((items) => ({
-					...menuData,
-					[overContainer]: arrayMove(menuData[overContainer], activeIndex, overIndex),
-				}))
+				setMenuData((menuData) => {
+					menuData[ overContainer ] = arrayMove(menuData[ overContainer ], activeIndex, overIndex)
+					return menuData
+				})
 			}
 		}
-
+		// reSortTable(activeId, overId, isBefore)
 		setActiveId(null)
 	}
-
 	const handleDragCancel = () => {
 		if (dragOverlaydItems) {
 			// Reset items to their original state in case items have been
@@ -210,6 +184,7 @@ const Table = ({
 		setActiveId(null)
 		setClonedItems(null)
 	}
+
 
 	return (
 		<DndContext
@@ -222,38 +197,41 @@ const Table = ({
 			modifiers={modifiers}>
 			<div className='table-view'>
 				{menuData &&
-					Object.keys(menuData)
-						.filter((key) => key !== VOID_ID)
-						.map((containerId) => (
-							<SortableContext key={containerId} items={menuData[containerId]} strategy={strategy}>
+					menuData.map((container, index) => {
+						return (
+							<SortableContext
+								key={container[0].id}
+								id={container[0].title}
+								items={container.map(({ id }) => id)}
+								strategy={strategy}>
 								<DroppableContainer
-									id={containerId}
-									items={menuData[containerId]}
+									items={container.filter(({ id }) => id)}
 									getStyle={getContainerStyle}>
-									{menuData[containerId].map((itemID, index) => {
-										console.log(`itemID: ${itemID}`)
-										return (
-											<SortableItemWrapper
-												key={itemID}
-												id={itemID}
+									{container.map((child, index) => (
+										<>
+											<SortableNodeWrapper
+												id={child.id}
+												key={child.title}
+												dataID={child.id}
+												depth={child.depth}
 												index={index}
 												style={getItemStyles}
 												wrapperStyle={wrapperStyle}
 												renderItem={renderItem}
-												containerId={containerId}
-												getIndex={getIndex}
+												getIndex={() => getIndex(child.id)}
 											/>
-										)
-									})}
+										</>
+									))}
 								</DroppableContainer>
 							</SortableContext>
-						))}
+						)
+					})}
 			</div>
 			{createPortal(
 				<DragOverlay>
 					{activeId ? (
-						<Item
-							itemID={activeId}
+						<Node
+							dataID={activeId}
 							style={getItemStyles({
 								containerId: findContainer(activeId),
 								overIndex: -1,
@@ -321,3 +299,52 @@ function Trash() {
 }
 
 export default Table
+
+// {subcontainer.subsections.length > 0 &&
+// 	subcontainer.subsections.
+// 		.map((subsection, subsectionIndex) => (
+// 		<>
+// 			<SortableNodeWrapper
+// 				id={`section-${subsection.id}`}
+// 				key={`section-${subsection.id}`}
+// 				dataID={`section-${subsection.id}`}
+// 				index={index}
+// 				isSubSection={true}
+// 				style={getItemStyles}
+// 				wrapperStyle={wrapperStyle}
+// 				renderItem={renderItem}
+// 				containerId={subcontainer.id}
+// 				getIndex={() => getIndex(subsection.id)}
+// 			/>
+// 			{subsection.items.length > 0 && (
+// 				<SortableContext
+// 					items={subsection.items
+// 						.sort((a, b) => a.list_order > b.list_order)
+// 						.map((item) => item.id)}
+// 					strategy={strategy}>
+// 					<DroppableContainer
+// 						id={subsection.id}
+// 						items={subsection.items
+// 							.sort((a, b) => a.list_order > b.list_order)
+// 							.map((item) => item.id)}
+// 						getStyle={iconContainerStyle}>
+// 						{subsection.items
+// 							.sort((a, b) => a.list_order > b.list_order)
+// 							.map((item) => (
+// 								<SortableNodeWrapper
+// 									id={`item-${item.id}`}
+// 									key={`item-${item.id}`}
+// 									dataID={`item-${item.id}`}
+// 									index={index}
+// 									style={getItemStyles}
+// 									wrapperStyle={wrapperStyle}
+// 									renderItem={renderItem}
+// 									containerId={subsection.id}
+// 									getIndex={() => getIndex(item.id)}
+// 								/>
+// 							))}
+// 					</DroppableContainer>
+// 				</SortableContext>
+// 			)}
+// 		</>
+// 	))}

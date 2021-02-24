@@ -9,9 +9,12 @@ import { useModal } from 'context/ModalProvider'
 import Form from 'components/Form'
 import { Section } from 'components/Form/forms'
 
-const MiniSectionForm = ({ data, listeners, attributes, value }) => {
-	const { updateSectionByID } = useData()
-	const { id, title } = data
+const defaults = { title: '', price: null, section_id: 1 }
+const MiniSectionForm = ({ uuid, listeners, attributes }) => {
+	const { updateSection, getSectionDataByID } = useData()
+	const data = uuid === '' ? defaults : getSectionDataByID(uuid)
+	const { title, section_parent_id } = data
+	const [isSubsection, setIsSubsection] = useState(section_parent_id)
 	const [sectionTitle, setSectionTitle] = useState(title)
 	const [isChanged, setIsChanged] = useState(false)
 	const { insertComponent } = useModal()
@@ -25,39 +28,37 @@ const MiniSectionForm = ({ data, listeners, attributes, value }) => {
 
 	const handleClick = (e) => {
 		e.preventDefault()
-		insertComponent(<Form form={<Section dataID={id} />} />)
+		insertComponent(<Form form={<Section uuid={uuid} />} />)
 	}
 
 	const handleTitleChange = (e) => {
 		if (e.charCode === 13 && isChanged) {
-			const response = updateSectionByID(id, { id: id, title: sectionTitle })
+			updateSection({ id: uuid, title: sectionTitle })
 			setIsChanged(false)
 		}
 	}
 
 	const onLostFocus = (e) => {
 		if (e.currentTarget === e.target && isChanged) {
-			updateSectionByID(id, { id: id, title: sectionTitle })
+			updateSection({ id: uuid, title: sectionTitle })
 			setIsChanged(false)
 		}
 	}
 
 	return (
-		<div className='node'>
+		<div className='node-section'>
 			<Handle listeners={listeners} attributes={attributes} />
-			<button type='button' className='btn btn-sm ms-auto disabled'>
-				<FontAwesomeIcon icon={faImage} fixedWidth />
-			</button>
-			<input
-				placeholder='Type section name, e.g. Dinner or Appetizer'
-				className='node-input'
-				type='text'
-				value={sectionTitle}
-				onChange={onChange}
-				onKeyPress={handleTitleChange}
-				onBlur={onLostFocus}
-			/>
-
+			<div className='node-input'>
+				<input
+					placeholder='Type section name, e.g. Dinner or Appetizer'
+					type='text'
+					className='node-title-input'
+					value={sectionTitle}
+					onChange={onChange}
+					onKeyPress={handleTitleChange}
+					onBlur={onLostFocus}
+				/>
+			</div>
 			<button type='button' className='btn btn-sm'>
 				<FontAwesomeIcon icon={faDotCircle} fixedWidth />
 			</button>

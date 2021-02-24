@@ -1,6 +1,6 @@
 /** @format */
 
-export { Item } from './Item'
-export { default as SortableItemWrapper } from './Item/SortableItemWrapper'
+export { Node } from './Node'
+export { default as SortableNodeWrapper } from './Node/SortableWrapper'
 export { List } from './List'
 export { default as Table } from './Table'

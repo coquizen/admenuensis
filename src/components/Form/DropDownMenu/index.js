@@ -1,35 +1,26 @@
 /** @format */
 
-import React, { useState } from 'react'
+import React, { useState, forwardRef } from 'react'
 import { useData } from 'context/DataProvider'
 
-const DropDownMenu = ({ name, ref, itemID }) => {
+const DropDownMenu = forwardRef(({ name, itemID }, ref) => {
 	const { parentingSections } = useData()
-	const [isOpen, setIsOpen] = useState(false)
-
-	const toggle = () => {
-		setIsOpen(!isOpen)
-	}
 
 	return (
 		<div className='dropdown'>
-			<button className='btn btn-sm dropdown-toggle' type='button' onClick={toggle}>
-				Select Parent Section
-			</button>
-			<ul className={`dropdown-menu ${isOpen ? 'show' : ''}`} name={name}>
+			<select className='form-select' name={name} ref={ref}>
+				<option className='dropdown-item' value='null'>{`<< No parent section selected >>`}</option>
 				{parentingSections.map(
 					(parent) =>
 						parent.id !== itemID && (
-							<li key={parent.slug} id={parent.id}>
-								<button className='dropdown-item' type='button'>
-									{parent.title}
-								</button>
-							</li>
+							<option key={`${parent.id}`} value={parent.id} className='dropdown-iten'>
+								{parent.title}
+							</option>
 						)
 				)}
-			</ul>
+			</select>
 		</div>
 	)
-}
+})
 
 export default DropDownMenu
