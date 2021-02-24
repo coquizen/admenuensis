@@ -1,5 +1,8 @@
 /** @format */
 
+const headers = {
+	'Content-Type': 'application/json',
+}
 export const fetchSections = () => {
 	return fetch('/sections')
 		.then((response) => response.json())
@@ -14,21 +17,34 @@ export const fetchMappedSections = () => {
 		.catch((error) => console.error(error))
 }
 
-export const fetchSectionByID = (id) => {
+export const fetchSection = (id) => {
 	return fetch(`/sections/${id}`)
 		.then((response) => response.json())
 		.then((data) => data.data)
 }
 
-export const fetchItemByID = (id) => {
+export const reSortTable = (activeID, overID, isBefore) => {
+	return fetch(`/swap-sections`, {
+		method: 'PATCH',
+		headers,
+		body: JSON.stringify({ activeID, overID, isBefore }),
+	})
+}
+
+export const fetchItems = () => {
+	return fetch(`/items`)
+		.then((response) => response.json())
+		.then((data) => data.data)
+}
+export const fetchItem = (id) => {
 	return fetch(`/items/${id}`)
 		.then((response) => response.json())
 		.then((data) => data.data)
 		.catch((error) => console.error(error))
 }
 
-export const updateSectionByID = (id, data) => {
-	return fetch(`/sections/${id}`, {
+export const updateSection = (data) => {
+	return fetch(`/sections/${data.id}`, {
 		method: 'PATCH',
 		headers: {
 			'Content-Type': 'application/json',
@@ -42,12 +58,10 @@ export const updateSectionByID = (id, data) => {
 		})
 }
 
-export const updateItemByID = (id, data) => {
-	return fetch(`/items/${id}`, {
+export const updateItem = (data) => {
+	return fetch(`/items/${data.id}`, {
 		method: 'PATCH',
-		headers: {
-			'Content-Type': 'application/json',
-		},
+		headers,
 		body: JSON.stringify(data),
 	})
 		.then((response) => response.json())

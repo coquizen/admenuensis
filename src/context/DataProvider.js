@@ -6,32 +6,56 @@ import * as api from 'utils/api'
 
 const DataContext = createContext()
 
-// const dataReducer = (state, action) => {
-//     switch (action.type) {
-//         case 'SWAP_ORDER':
-//      }
-// }
 const DataProvider = ({ children }) => {
 	const [allSectionsData, setAllSectionsData] = useState(null)
 	const [mappedSections, setMappedSections] = useState(null)
-	const [parentingSections, setParentingSections] = useState(null)
+	const [allItemsData, setAllItemsData] = useState(null)
+	const [isDirty, setIsDirty] = useState(true)
 	useEffect(() => {
-		api.fetchSections().then((data) => setAllSectionsData(data))
-	}, [])
+		if (isDirty) {
+			api.fetchSections().then((data) => setAllSectionsData(data))
+			api.fetchMappedSections().then((data) => setMappedSections(data))
 
-	useEffect(() => {
-		api.fetchMappedSections().then((data) => setMappedSections(data))
-	}, [])
-
-	useEffect(() => {
-		if (allSectionsData !== null) {
-			const parents = allSectionsData.filter((section) => section.section_parent_id !== undefined)
-			setParentingSections(parents)
+			api.fetchItems().then((data) => setAllItemsData(data))
+			setIsDirty(false)
 		}
-	}, [allSectionsData])
+	}, [isDirty])
+	const getSectionDataByID = (id) => allSectionsData && allSectionsData.find((section) => section.id === id)
+
+	const getItemDataByID = (id) => allItemsData && allItemsData.find((item) => item.id === id)
+
+	const rootSections =
+		allSectionsData &&
+		allSectionsData.filter((section) => section.section_parent_id === '00000000-0000-0000-0000-000000000000')
+
+	var allData = {}
+	allData['section'] = allSectionsData
+	allData['item'] = allItemsData
+
+	const reSortTable = (activeID, overID, isBefore) => {
+		api.reSortTable(activeID, overID, isBefore).then(setIsDirty(true))
+	}
+
+	const updateSection = (data) => {
+		api.updateSection(data).then(setIsDirty(true))
+	}
+	const updateItem = (data) => {
+		api.updateItem(data).then(setIsDirty(true))
+	}
 
 	return (
-		<DataContext.Provider value={{ allSectionsData, parentingSections, mappedSections, ...api }}>
+		<DataContext.Provider
+			value={{
+				allSectionsData,
+				rootSections,
+				mappedSections,
+				reSortTable,
+				updateSection,
+				getItemDataByID,
+				getSectionDataByID,
+				updateItem,
+				allData,
+			}}>
 			{children}
 		</DataContext.Provider>
 	)

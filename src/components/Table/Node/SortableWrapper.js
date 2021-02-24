@@ -3,30 +3,34 @@
 // import React from 'react';
 import React, { useEffect, useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
-import { Item } from 'components/Table/Item'
+import { Node } from 'components/Table/Node'
 
-const SortableItemWrapper = ({
+const SortableNodeWrapper = ({
 	id,
+	dataID,
+	type,
 	index,
 	handle,
+	depth,
 	style,
 	containerId,
-	getIndex,
+	getIndex = () => ({}),
 	wrapperStyle = () => ({}),
 	renderItem,
+	isSubSection,
 	value,
 	...props
 }) => {
-	const { setNodeRef, listeners, isDragging, isSorting, over, overIndex, transform, transition } = useSortable({
-		id,
-	})
+	const { setNodeRef, listeners, isDragging, isSorting, over, overIndex, transform, transition } = useSortable({ id })
 
 	const mounted = useMountStatus()
 	const mountedWhileDragging = isDragging && !mounted
-
+	const unmounting = !isDragging && !mounted
 	return (
-		<Item
-			itemID={id}
+		<Node
+			dataID={dataID}
+			depth={depth}
+			type={type}
 			ref={setNodeRef}
 			value={value}
 			dragging={isDragging}
@@ -36,17 +40,18 @@ const SortableItemWrapper = ({
 			wrapperStyle={wrapperStyle({ index })}
 			style={style({
 				index,
-				value: id,
+				value: dataID,
 				isDragging,
 				isSorting,
 				overIndex: over ? getIndex(over.id) : overIndex,
 				containerId,
 			})}
+			fadeIn={mountedWhileDragging}
 			transition={transition}
 			transform={transform}
-			fadeIn={mountedWhileDragging}
 			listeners={listeners}
 			renderItem={renderItem}
+			isSubSection={isSubSection}
 		/>
 	)
 }
@@ -56,8 +61,7 @@ const useMountStatus = () => {
 
 	useEffect(() => {
 		const timeout = setTimeout(() => setIsMounted(true), 500)
-
-		return () => clearTimeout(timeout)
+		return () => clearTimeout()
 	}, [])
 
 	return isMounted
@@ -77,4 +81,5 @@ function getColor(id) {
 			return undefined
 	}
 }
-export default SortableItemWrapper
+
+export default SortableNodeWrapper
