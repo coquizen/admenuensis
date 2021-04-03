@@ -4,7 +4,7 @@ import React from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import Routes from 'routes'
 import 'assets/scss/admin.scss'
-import Header from './components/layout/Header'
+import { Header } from './components/layout'
 import SideBar from 'components/layout/SideBar'
 
 import ModalProvider from 'context/ModalProvider'
