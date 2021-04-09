@@ -1,0 +1,15 @@
+/** @format */
+
+@import '~bootstrap/scss/bootstrap';
+
+.Header {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	height: 64px;
+	position: -webkit-sticky;
+	position: sticky;
+	z-index: $zindex-sticky;
+	top: 0;
+	background-color: $gray-400;
+}

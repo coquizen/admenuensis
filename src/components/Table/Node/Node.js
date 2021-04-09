@@ -2,8 +2,8 @@
 import React, { memo, forwardRef, useState, useEffect, useLayoutEffect } from 'react'
 import classNames from 'classnames'
 import styles from './Node.module.scss'
-import MiniSectionForm from './MiniSectionForm'
-import MiniItemForm from './MiniItemForm'
+import MiniSectionForm from './MiniSectionForm/MiniSectionForm'
+import MiniItemForm from './MiniItemForm/MiniItemForm'
 import { useData } from 'context/DataProvider'
 
 const Node = memo(

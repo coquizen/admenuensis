@@ -1,0 +1,44 @@
+@import '../../../../assets/scss/admin';
+
+.node-section {
+  display: contents;
+  margin: ($spacer/2) 0;
+  align-items: center;
+  &.child {
+    margin-left: 2rem;
+  }
+  &.node-new {
+    background-color: rgba(10, 10, 10, 0.45);
+  }
+}
+
+.node-item {
+  display: contents;
+  margin: ($spacer/2) 0;
+  align-items: center;
+  font-size: $input-font-size-xs;
+}
+
+.node-input {
+  flex-grow: 1;
+  @extend .input-transition;
+  .node-title-input {
+    width: 100%;
+    outline: none;
+    border: none;
+    @extend .input-transition;
+
+    &:focus {
+      background-color: blue;
+    }
+  }
+
+  &.node-input-item {
+    font-size: $input-font-size-xs;
+  }
+
+  &:focus-within {
+    background-color: $gray-900;
+    border: rgba(10, 10, 10, 0.946);
+  }
+}
