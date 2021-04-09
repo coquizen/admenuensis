@@ -50,10 +50,9 @@ const Table = ({
 	wrapperStyle = () => ({}),
 	modifiers,
 	renderItem,
-	trashable,
 	strategy = verticalListSortingStrategy,
 }) => {
-	const { reSortTable, rootSections, getSectionDataByID } = useData()
+	const { menus, rootSections, getSectionDataByID } = useData()
 	const [isBefore, setIsBefore] = useState(false)
 	const [menuData, setMenuData] = useState(null)
 	const [dragOverlaydItems, setClonedItems] = useState(null)
@@ -185,7 +184,6 @@ const Table = ({
 		setClonedItems(null)
 	}
 
-
 	return (
 		<DndContext
 			sensors={sensors}
@@ -196,36 +194,91 @@ const Table = ({
 			onDragCancel={handleDragCancel}
 			modifiers={modifiers}>
 			<div className='table-view'>
-				{menuData &&
-					menuData.map((container, index) => {
+				{menus &&
+					menus.map((container, index) => {
+						const items = [container, container.subsections?.map((subsection) => subsection), container.items?.map((item) => item)].flat().filter((el) => el != undefined)
+						const itemIDs = items.map(item => item.id)
 						return (
 							<SortableContext
-								key={container[0].id}
-								id={container[0].title}
-								items={container.map(({ id }) => id)}
+								key={container.id}
+								id={container.title}
+								items={[container.id]}
 								strategy={strategy}>
 								<DroppableContainer
-									items={container.filter(({ id }) => id)}
+									items={[container.id]}
 									getStyle={getContainerStyle}>
-									{container.map((child, index) => (
+										<SortableNodeWrapper
+											id={container.id}
+											key={container.title}
+											dataID={container.id}
+											index={index}
+											style={getItemStyles}
+											wrapperStyle={wrapperStyle}
+											renderItem={renderItem}
+											getIndex={() => getIndex(container.id)}
+										/>
 										<>
-											<SortableNodeWrapper
-												id={child.id}
-												key={child.title}
-												dataID={child.id}
-												depth={child.depth}
-												index={index}
-												style={getItemStyles}
-												wrapperStyle={wrapperStyle}
-												renderItem={renderItem}
-												getIndex={() => getIndex(child.id)}
-											/>
-										</>
-									))}
+										{container.subsections != undefined && (
+											<SortableContext id={container.id} items={container.subsections.map(({id}) => id)} strategy={strategy}>
+												<DroppableContainer items={container.subsections.map(({id}) => id)}>
+													{container.subsections.map((subsection, subindex) => (
+														<>
+													<SortableNodeWrapper
+														id={subsection.id}
+														key={subsection.title}
+														dataID={subsection.id}
+														index={subindex}
+														style={getItemStyles}
+														wrapperStyle={wrapperStyle}
+														renderItem={renderItem}
+														getIndex={() => getIndex(subsection.id)}
+													/>
+															{subsection.items != undefined && (
+																<SortableContext id={subsection.items[0].id} items={subsection.items.map(({id})=> id)} strategyy={strategy}>
+																	<DroppableContainer items={subsection.items.map(({id}) => id)}>
+																		{subsection.items.map((item, itemindex) => (
+																			<SortableNodeWrapper
+																				id={item.id}
+																				key={item.title}
+																				dataID={item.id}
+																				index={itemindex}
+																				style={getItemStyles}
+																				wrapperStyle={wrapperStyle}
+																				renderItem={renderItem}
+																				getIndex={() => getIndex(item.id)}
+																			/>
+																		))}
+																	</DroppableContainer>
+																</SortableContext>
+															)}
+														</>
+													))}
+												</DroppableContainer>
+											</SortableContext>
+										)}
+											{container.items != undefined && (
+												<SortableContext id={container.id} items={container.items.map(({id})=> id)} strategy={strategy}>
+													<DroppableContainer items={container.items.map(({id})=> id)}>
+														{container.items.map((item, itemindex) => (
+															<SortableNodeWrapper
+																id={item.id}
+																key={item.title}
+																dataID={item.id}
+																index={itemindex}
+																style={getItemStyles}
+																wrapperStyle={wrapperStyle}
+																renderItem={renderItem}
+																getIndex={() => getIndex(item.id)}
+															/>
+														))}
+													</DroppableContainer>
+												</SortableContext>
+											)}
+									</>
 								</DroppableContainer>
 							</SortableContext>
-						)
-					})}
+						)}
+					)}
 			</div>
 			{createPortal(
 				<DragOverlay>
