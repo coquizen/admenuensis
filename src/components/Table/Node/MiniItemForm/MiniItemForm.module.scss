@@ -45,9 +45,11 @@ ul {
     background-color: $gray-900;
     border: rgba(10, 10, 10, 0.946);
   }
-
 }
 
+.ButtonGroup {
+  padding: .25rem;
+}
 .PriceInput {
   border: none;
   appearance: none;

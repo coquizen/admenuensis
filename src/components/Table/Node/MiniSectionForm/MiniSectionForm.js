@@ -76,20 +76,22 @@ const MiniSectionForm = ({ uuid, listeners, attributes, isBlank = false }) => {
 					onBlur={onLostFocus}
 					disabled={isBlank}
 				/>
-				<button disabled={isBlank} type='button' className='btn btn-sm'>
-					<FontAwesomeIcon icon={faDotCircle} fixedWidth />
-				</button>
-				<button disabled={isBlank} type='button' className='btn btn-sm' onClick={handleClick}>
-					<FontAwesomeIcon icon={faEdit} fixedWidth />
-				</button>
-				<button disabled={isBlank} type='button' className='btn btn-sm'>
-					<FontAwesomeIcon icon={faEllipsisH} fixedWidth />
-				</button>
-				{isBlank &&
-					<button type='button' className='btn btn-sm' onClick={handleClick}>
-						<FontAwesomeIcon icon={faPlus} fixedWidth />
+				<div classsName={styles.ButtonGroup}>
+					<button disabled={isBlank} type='button' className='btn btn-sm'>
+						<FontAwesomeIcon icon={faDotCircle} fixedWidth />
 					</button>
-				}
+					<button disabled={isBlank} type='button' className='btn btn-sm' onClick={handleClick}>
+						<FontAwesomeIcon icon={faEdit} fixedWidth />
+					</button>
+					<button disabled={isBlank} type='button' className='btn btn-sm'>
+						<FontAwesomeIcon icon={faEllipsisH} fixedWidth />
+					</button>
+					{isBlank &&
+						<button type='button' className='btn btn-sm' onClick={handleClick}>
+							<FontAwesomeIcon icon={faPlus} fixedWidth />
+						</button>
+					}
+				</div>
 			</div>
 		</div>
 	)

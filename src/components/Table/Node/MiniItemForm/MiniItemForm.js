@@ -93,16 +93,17 @@ const MiniItemForm = ({ uuid, listeners, attributes, isBlank = false }) => {
 						onBlur={onLostFocus}
 					/>
 				</div>
-
-				<button type="button" className="btn btn-sm">
-					<FontAwesomeIcon icon={faDotCircle} fixedWidth />
-				</button>
-				<button type="button" className="btn btn-sm" onClick={handleClick}>
-					<FontAwesomeIcon icon={faEdit} fixedWidth />
-				</button>
-				<button type="button" className="btn btn-sm">
-					<FontAwesomeIcon icon={faEllipsisH} fixedWidth />
-				</button>
+				<div className={styles.ButtonGroup}>
+					<button type="button" className="btn btn-sm">
+						<FontAwesomeIcon icon={faDotCircle} fixedWidth />
+					</button>
+					<button type="button" className="btn btn-sm" onClick={handleClick}>
+						<FontAwesomeIcon icon={faEdit} fixedWidth />
+					</button>
+					<button type="button" className="btn btn-sm">
+						<FontAwesomeIcon icon={faEllipsisH} fixedWidth />
+					</button>
+				</div>
 
 			</div>
 		</div>

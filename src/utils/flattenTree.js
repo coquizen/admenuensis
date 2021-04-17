@@ -1,17 +1,17 @@
 /** @format */
 
-export const flattenRoot = (tree) => {
-	var flattenedTree = []
+export default (tree) => {
+	let flattenedTree = []
 	flattenedTree.push({ ...tree, depth: 0, index: -1 })
 	tree.subsections &&
 		tree.subsections
-			.sort((a, b) => a.list_order > b.list_order)
+			.sort((a, b) => a.list_order < b.list_order)
 			.forEach((subsection, index) => {
 				flattenedTree.push({ ...subsection, depth: 1, index })
 
 				subsection.items &&
 					subsection.items
-						.sort((a, b) => a.list_order > b.list_order)
+						.sort((a, b) => a.list_order < b.list_order)
 						.forEach((item, index) => {
 							flattenedTree.push({
 								...item,

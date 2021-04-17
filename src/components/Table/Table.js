@@ -13,9 +13,8 @@ import {
 	useSensor,
 } from '@dnd-kit/core'
 import styles from './Table.module.scss'
-
+import {default as flattenMenu} from 'utils/flattenTree'
 import { SortableContext, arrayMove, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable'
-
 import { List, SortableNodeWrapper, Node } from 'components/Table'
 import MiniSectionForm from 'components/Table/Node/MiniSectionForm'
 import MiniItemForm from 'components/Table/Node/MiniItemForm'
@@ -64,9 +63,9 @@ const Table = ({
 	const [ overIndex, setOverIndex ] = useState(null)
 
 	useEffect(() => {
-		// var flattened = []
-		// rootSections.forEach((root) => flattened.push(flattenRoot(root)))
-		setMenuData(menus)
+		let flattened = []
+		menus.forEach((menu) => flattened.push(flattenMenu(menu)))
+		setMenuData(flattened)
 	}, [ menus ])
 
 	const sensors = useSensors(
@@ -193,6 +192,8 @@ const Table = ({
 		setClonedItems(null)
 	}
 
+	console.table(menuData)
+
 	return (
 		<>
 			<List>
@@ -210,10 +211,10 @@ const Table = ({
 				<div className={styles.Table}>
 					{menus && <SortableContext
 						id='root'
-						items={menus.map((menu) => menu).sort((a, b) => a.list_order > b.list_order).map(({ id }) => id)}
+						items={menus.map((menu) => menu).sort((a, b) => a.list_order < b.list_order).map(({ id }) => id)}
 						strategy={strategy}>
 						<DroppableContainer
-							items={menus.map((menu) => menu).sort((a, b) => a.list_order > b.list_order).map(({ id }) => id)}
+							items={menus.map((menu) => menu).sort((a, b) => a.list_order < b.list_order).map(({ id }) => id)}
 							getStyle={getContainerStyle}
 						>{menus.sort((a, b) => a.list_order > b.list_order).map((menu, index) => (
 							<div key={menu.id}>
