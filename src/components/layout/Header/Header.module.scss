@@ -1,15 +1,20 @@
 /** @format */
 
-@import '~bootstrap/scss/bootstrap';
+@import '../../../assets/scss/admin';
 
 .Header {
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
-	height: 64px;
+	height: 0px;
 	position: -webkit-sticky;
 	position: sticky;
 	z-index: $zindex-sticky;
 	top: 0;
 	background-color: $gray-400;
+	transition: height 0.3s ease-in-out;
+	&.Show {
+		min-height: 64px;
+		max-height: 64px;
+	}
 }

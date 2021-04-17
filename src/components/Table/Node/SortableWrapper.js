@@ -34,7 +34,6 @@ const SortableNodeWrapper = ({
 			ref={setNodeRef}
 			value={value}
 			dragging={isDragging}
-			sorting={isSorting}
 			handle={handle}
 			index={index}
 			wrapperStyle={wrapperStyle({ index })}
@@ -47,6 +46,7 @@ const SortableNodeWrapper = ({
 				containerId,
 			})}
 			fadeIn={mountedWhileDragging}
+			fadeOut={unmounting}
 			transition={transition}
 			transform={transform}
 			listeners={listeners}
@@ -57,7 +57,7 @@ const SortableNodeWrapper = ({
 }
 
 const useMountStatus = () => {
-	const [isMounted, setIsMounted] = useState(false)
+	const [ isMounted, setIsMounted ] = useState(false)
 
 	useEffect(() => {
 		const timeout = setTimeout(() => setIsMounted(true), 500)

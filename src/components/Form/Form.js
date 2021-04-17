@@ -15,21 +15,26 @@ const Form = ({ form }) => {
 		closeModal()
 	}
 
+	const onCloseModal = (event) => {
+		event.preventDefault()
+		closeModal()
+	}
+
 	return (
 		<React.Fragment>
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<div className='custom-modal-dialog'>
-					<div className='custom-modal-content'>
-						<div className='custom-modal-header'>
+				<div className='modal-dialog'>
+					<div className='container'>
+						<div className='modal-header'>
 							<h5 className='custom-modal-title'>Form</h5>
 							<button
 								aria-label='Close Modal'
 								type='button'
-								className='btn-close'
-								onClick={closeModal}></button>
+								className='btn btn-secondary'
+								onClick={onCloseModal}></button>
 						</div>
 						{React.cloneElement(form, { setValue: setValue, reset: reset, register: register })}
-						<div className='custom-modal-footer'>
+						<div className='modal-footer'>
 							<button type='button' className='btn btn-secondary' onClick={closeModal}>
 								Cancel
 							</button>

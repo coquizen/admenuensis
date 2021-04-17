@@ -2,22 +2,37 @@
 
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faDotCircle, faEdit, faEllipsisH, faImage } from '@fortawesome/free-solid-svg-icons'
+import { faDotCircle, faEdit, faEllipsisH, faImage, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { Handle } from 'components/Table/Handle'
 import { useData } from 'context/DataProvider'
 import { useModal } from 'context/ModalProvider'
 import Form from 'components/Form'
 import { Section } from 'components/Form/forms'
-import './MiniSectionForm.module.scss'
+import classnames from 'classnames'
+import styles from './MiniSectionForm.module.scss'
 
 const defaults = { title: '', price: null, section_id: 1 }
-const MiniSectionForm = ({ uuid, listeners, attributes }) => {
+const MiniSectionForm = ({ uuid, listeners, attributes, isBlank = false }) => {
+
 	const { updateSection, getSectionDataByID } = useData()
-	const data = uuid === '' ? defaults : getSectionDataByID(uuid)
+	let data
+	switch (isBlank) {
+		case true:
+			data = defaults
+			break;
+		case false:
+			data = getSectionDataByID(uuid)
+			break;
+		default:
+			console.error("we shouldn't be here. How did you get here?!")
+	}
+
 	const { title, section_parent_id } = data
-	const [isSubsection, setIsSubsection] = useState(section_parent_id)
-	const [sectionTitle, setSectionTitle] = useState(title)
-	const [isChanged, setIsChanged] = useState(false)
+
+	const [ isSubsection, setIsSubsection ] = useState(section_parent_id)
+	const [ sectionTitle, setSectionTitle ] = useState(title)
+	const [ isChanged, setIsChanged ] = useState(false)
+
 	const { insertComponent } = useModal()
 
 	const onChange = (e) => {
@@ -29,7 +44,8 @@ const MiniSectionForm = ({ uuid, listeners, attributes }) => {
 
 	const handleClick = (e) => {
 		e.preventDefault()
-		insertComponent(<Form form={<Section uuid={uuid} />} />)
+		const section = isBlank ? <Section uuid='' /> : <Section uuid={uuid} />
+		insertComponent(<Form form={section} />)
 	}
 
 	const handleTitleChange = (e) => {
@@ -47,28 +63,34 @@ const MiniSectionForm = ({ uuid, listeners, attributes }) => {
 	}
 
 	return (
-		<div className='node-section'>
-			<Handle listeners={listeners} attributes={attributes} />
-			<div className='node-input'>
+		<div className={styles.NodeWrapper}>
+			<div className={styles.Node}>
+				{!isBlank && <Handle listeners={listeners} attributes={attributes} />}
 				<input
 					placeholder='Type section name, e.g. Dinner or Appetizer'
 					type='text'
-					className='node-title-input'
+					className={classnames(styles.NodeInput, isBlank && styles.NodeNew)}
 					value={sectionTitle}
 					onChange={onChange}
 					onKeyPress={handleTitleChange}
 					onBlur={onLostFocus}
+					disabled={isBlank}
 				/>
+				<button disabled={isBlank} type='button' className='btn btn-sm'>
+					<FontAwesomeIcon icon={faDotCircle} fixedWidth />
+				</button>
+				<button disabled={isBlank} type='button' className='btn btn-sm' onClick={handleClick}>
+					<FontAwesomeIcon icon={faEdit} fixedWidth />
+				</button>
+				<button disabled={isBlank} type='button' className='btn btn-sm'>
+					<FontAwesomeIcon icon={faEllipsisH} fixedWidth />
+				</button>
+				{isBlank &&
+					<button type='button' className='btn btn-sm' onClick={handleClick}>
+						<FontAwesomeIcon icon={faPlus} fixedWidth />
+					</button>
+				}
 			</div>
-			<button type='button' className='btn btn-sm'>
-				<FontAwesomeIcon icon={faDotCircle} fixedWidth />
-			</button>
-			<button type='button' className='btn btn-sm' onClick={handleClick}>
-				<FontAwesomeIcon icon={faEdit} fixedWidth />
-			</button>
-			<button type='button' className='btn btn-sm'>
-				<FontAwesomeIcon icon={faEllipsisH} fixedWidth />
-			</button>
 		</div>
 	)
 }

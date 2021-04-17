@@ -3,30 +3,26 @@
 import React from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import Routes from 'routes'
-import 'assets/scss/admin.scss'
+import { default as Providers } from 'context'
 import { Header } from './components/layout'
+import styles from './App.module.scss'
 import SideBar from 'components/layout/SideBar'
-
-import ModalProvider from 'context/ModalProvider'
-import DataProvider from 'context/DataProvider'
 
 const App = () => {
 	return (
-		<DataProvider>
-			<ModalProvider>
-				<Router>
-					<div className='app-wrapper'>
-						<SideBar />
-						<div className='page'>
-							<Header />
-							<div className='page__body'>
-								<Routes />
-							</div>
+		<Providers>
+			<Router>
+				<div className={styles.AppWrapper}>
+					<SideBar />
+					<div className={styles.Page}>
+						<Header />
+						<div className={styles.Content}>
+							<Routes />
 						</div>
 					</div>
-				</Router>
-			</ModalProvider>
-		</DataProvider>
+				</div>
+			</Router>
+		</Providers>
 	)
 }
 export default App

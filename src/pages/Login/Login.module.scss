@@ -1,0 +1,272 @@
+/** @format */
+
+//@import '../../assets/scss/admin';
+//
+///** Classes **/
+//.input-transition {
+//  -webkit-transition: all 300ms ease;
+//  -moz-transition: all 300s ease;
+//  -o-transition: all 300s ease;
+//  transition: all 300s ease;
+//}
+//.modal-dialog {
+//
+//
+//  .container {
+//    outline: 0;
+//    border: none;
+//    position: relative;
+//
+//    .modal-header {
+//      height: 15%;
+//      position: relative;
+//      text-align: center;
+//    }
+//  }
+//}
+//    .InputContainer {
+//      width: 100%;
+//      border-radius: 10px;
+//    }
+//
+//    .Input {
+//      // background: rgba(0, 0, 0, 0.2);
+//      color: $gray-800;
+//      // text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
+//      display: block;
+//      width: 269px;
+//      height: 1rem;
+//      padding: 15px;
+//      margin-bottom: 10px;
+//      outline: none;
+//      border: none;
+//      @extend .input-transition;
+//
+//      &:focus {
+//        background: rgba(0, 0, 0, 0.1);
+//      }
+//
+//
+//      .node-title-input {
+//        width: 100%;
+//        outline: none;
+//        border: none;
+//        @extend .input-transition;
+//
+//        &:focus {
+//          background-color: blue;
+//        }
+//      }
+//
+//      &.node-input-item {
+//        font-size: $input-font-size-xs;
+//      }
+//
+//      &:focus-within {
+//        background-color: $gray-900;
+//        border: rgba(10, 10, 10, 0.946);
+//      }
+//    }
+//
+//
+//    .Button {
+//      font-style: oblique;
+//      font-size: 18px;
+//      line-height: 1.2;
+//      text-transform: uppercase;
+//
+//      display: -webkit-box;
+//      display: -webkit-flex;
+//      display: -moz-box;
+//      display: -ms-flexbox;
+//      display: flex;
+//      justify-content: center;
+//      align-items: center;
+//      padding: 0 20px;
+//      min-width: 160px;
+//      height: 42px;
+//      -webkit-transition: all 0.4s;
+//      -o-transition: all 0.4s;
+//      -moz-transition: all 0.4s;
+//      transition: all 0.4s;
+//    }
+//
+//    .Button::before {
+//      content: "";
+//      display: block;
+//      position: absolute;
+//
+//      width: 100%;
+//      height: 100%;
+//      top: 0;
+//      left: 0;
+//      opacity: 0;
+//
+//      -webkit-transition: all 0.4s;
+//      -o-transition: all 0.4s;
+//      -moz-transition: all 0.4s;
+//      transition: all 0.4s;
+//    }
+//
+//    .Button:hover {
+//      background-color: transparent;
+//    }
+//
+//    .Button:hover:before {
+//      opacity: 1;
+//    }
+//
+//    .LoginContainer {
+//      position: absolute;
+//      top: 0;
+//      bottom: 0;
+//      left: 0;
+//      right: 0;
+//      margin: auto;
+//      width: 33%;
+//      height: 20%;
+//      animation: scaleUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+//    }
+//
+//    .LoginContainer::before {
+//      content: "";
+//      display: block;
+//      position: absolute;
+//      width: 100%;
+//      height: 100%;
+//      top: 0;
+//      left: 0;
+//      background-color: rgba(0, 0, 0, 0.65);
+//    }
+//
+//    .LoginHeader {
+//      display: flex;
+//      flex-shrink: 0;
+//      align-items: center;
+//      justify-content: space-between; // Put modal header elements (title and dismiss) on opposite ends
+//      padding: $modal-header-padding;
+//      border-bottom: $modal-header-border-width solid $modal-header-border-color;
+//      @include border-top-radius($modal-content-inner-border-radius);
+//
+//      .LoginTitle {
+//        font-size: 28px;
+//        color: #fff;
+//        line-height: 1.2;
+//        text-align: center;
+//        text-transform: uppercase;
+//        display: block;
+//      }
+//    }
+//
+//    .LoginBody {
+//      position: relative;
+//      // Enable `flex-grow: 1` so that the body take up as much space as possible
+//      // when there should be a fixed height on `.modal-dialog`.
+//      flex: 1 1 auto;
+//      padding: $modal-inner-padding;
+//    }
+//
+//    .LoginFooter {
+//      width: 100%;
+//      display: -webkit-box;
+//      display: -webkit-flex;
+//      display: -moz-box;
+//      display: -ms-flexbox;
+//      display: flex;
+//      flex-wrap: wrap;
+//      justify-content: center;
+//    }
+@import '../../assets/scss/admin';
+@import '../../assets/scss/custom';
+
+.LoginWrapper {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: $gray-200;
+  align-items: center;
+  justify-content: center;
+
+  .LoginContainer {
+    //top: 0;
+    //bottom: 0;
+    //left: 0;
+    //right: 0;
+    //border: #1D1F20;
+    //height: 200px;
+    //width: 200px;
+    position: relative;
+    width: auto;
+    background-color: $off-white;
+    .LoginHeader {
+      @extend .modal-header;
+      height: 32px;
+      background-color: $dark-blue;
+      color: $off-white;
+    }
+
+    .LoginBody {
+      @extend .modal-body;
+      flex-direction: column;
+
+      .LoginInputs {
+        @extend .input-group;
+        flex-direction: column;
+
+        .LoginLabel {
+          @extend .form-label;
+        }
+        .LoginInput {
+          @extend .input-transition;
+          flex-grow: 1;
+          font-size: $input-font-size-xs;
+          border: none;
+          margin-top: 0.25rem;
+          margin-bottom: 0.25rem;
+          &:focus {
+            background-color: $gray-900;
+            color: lighten($off-white, 5);
+            border: $light-blue;
+          }
+        }
+      }
+    }
+    .LoginFooter {
+      height: auto;
+    }
+  }
+}
+
+.ButtonGroup {
+  display: flex;
+  justify-content: space-evenly;
+  margin-bottom: 1rem;
+}
+
+.Button {
+  @include font-size($input-font-size-xs);
+  @include border-radius($input-border-radius-sm);
+  @extend .input-transition;
+  text-decoration: none;
+  padding: 4px;
+  border: none;
+  &.ButtonCancel {
+    background-color: $red;
+    color: $off-white;
+    &:hover {
+      background-color: darken($red, 5);
+    }
+  }
+  &.ButtonSubmit {
+    background-color: $light-grey;
+    color: $off-white;
+    &:hover {
+      background-color: darken($light-grey, 5);
+    }
+  }
+}
+
+.Rejected {
+  color: $red;
+  font-style: italic;
+}

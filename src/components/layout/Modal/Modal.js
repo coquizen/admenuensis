@@ -1,7 +1,9 @@
 /** @format */
 
 import React, { useRef, useLayoutEffect } from 'react'
+import classnames from 'classnames'
 import Portal from '../Portal/Portal'
+import styles from './Modal.module.scss'
 
 const Modal = ({ closing, onClosingTransitionEnd, closeModal, isOpen, children }) => {
 	const modalRef = useRef(null)
@@ -33,13 +35,13 @@ const Modal = ({ closing, onClosingTransitionEnd, closeModal, isOpen, children }
 			document.querySelector('#root').removeAttribute('inert')
 			window.removeEventListener('keyup', keyHandler)
 		}
-	}, [ isOpen ])
+	}, [ isOpen, closeModal ])
 
 	return (
 		<Portal>
 			<div
 				ref={modalRef}
-				className={`overlay ${closing ? 'close' : ''}`}
+				className={classnames(styles.Overlay, closing && styles.Close)}
 				onTransitionEnd={onClosingTransitionEnd}>
 				{children}
 			</div>

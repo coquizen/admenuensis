@@ -17,13 +17,13 @@ const Node = memo(
 				dragging,
 				disabled,
 				fadeIn,
+				fadeOut,
 				handle,
 				height,
 				index,
 				listeners,
 				attributes,
 				renderItem,
-				sorting,
 				style,
 				transition,
 				transform,
@@ -45,9 +45,9 @@ const Node = memo(
 				return () => {
 					document.body.style.cursor = ''
 				}
-			}, [dragOverlay])
+			}, [ dragOverlay ])
 
-			const type = Object.keys(allData).filter((key) => allData[key].find((node) => node.id === dataID))[0]
+			const type = Object.keys(allData).filter((key) => allData[ key ].find((node) => node.id === dataID))[ 0 ]
 
 			// useLayoutEffect(() => {
 			// 	if (type === 'section') {
@@ -64,7 +64,7 @@ const Node = memo(
 					className={classNames(
 						styles.Wrapper,
 						fadeIn && styles.fadeIn,
-						sorting && styles.sorting,
+						fadeOut && styles.fadeOut,
 						dragOverlay && styles.dragOverlay
 					)}
 					style={{
@@ -83,7 +83,6 @@ const Node = memo(
 						className={classNames(
 							styles.Item,
 							dragging && styles.dragging,
-							styles.withHandle,
 							dragOverlay && styles.dragOverlay,
 							disabled && styles.disabled,
 							color && styles.color
@@ -121,7 +120,6 @@ const Item = memo(
 				listeners,
 				attributes,
 				renderItem,
-				sorting,
 				style,
 				transition,
 				transform,
@@ -144,14 +142,13 @@ const Item = memo(
 				return () => {
 					document.body.style.cursor = ''
 				}
-			}, [dragOverlay])
+			}, [ dragOverlay ])
 
 			return (
 				<li
 					className={classNames(
 						styles.Wrapper,
 						fadeIn && styles.fadeIn,
-						sorting && styles.sorting,
 						dragOverlay && styles.dragOverlay
 					)}
 					style={{
@@ -169,7 +166,6 @@ const Item = memo(
 						className={classNames(
 							styles.Item,
 							dragging && styles.dragging,
-							styles.withHandle,
 							dragOverlay && styles.dragOverlay,
 							disabled && styles.disabled,
 							color && styles.color

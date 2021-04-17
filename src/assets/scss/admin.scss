@@ -1,27 +1,14 @@
 /** @format */
 
+@import "~bootstrap/scss/bootstrap";
 $enable-shadows: true;
 $enable-gradients: true;
 $enable-negative-margins: true;
 
-@import '~bootstrap/scss/bootstrap';
+@import "~bootstrap/scss/bootstrap";
 @import './variables';
 @import './custom-forms';
-$body-color: $gray-200;
-$link-decoration: none;
 
-$input-btn-padding-y-xs: $input-btn-padding-y-sm * (1/1.5) !default;
-$input-btn-padding-x-xs: $input-btn-padding-y-sm * (1/1.5) !default;
-$btn-padding-y-xs: $input-btn-padding-y-xs !default;
-$btn-padding-x-xs: $input-btn-padding-x-xs !default;
-$btn-font-size-xs: $font-size-base * 0.8125 !default;
-$btn-border-radius-xs: 0.225 !default;
-$input-padding-y-xs: $input-btn-padding-y-xs;
-$input-padding-x-xs: $input-btn-padding-x-xs;
-$input-font-size-xs: $btn-font-size-xs;
-$input-border-radius-xs: $btn-border-radius-xs;
-
-$orange-transparent: #fd7d1440;
 .input-group-xs > .node-input,
 .input-group-xs > .btn,
 .input-group-xs > .btn-group > .btn {
@@ -29,6 +16,9 @@ $orange-transparent: #fd7d1440;
 	@include font-size($input-font-size-xs);
 	@include border-radius($input-border-radius-xs);
 }
+
+$focused-outline-color: #4c9ffe;
+$box-shadow: 0 0.1rem 1rem rgba(#000, 0.15);
 
 @mixin switch($res: 'sm') {
 	$index: 1rem;
@@ -54,6 +44,17 @@ $orange-transparent: #fd7d1440;
 	}
 }
 
+// 3. Include remainder of required Bootstrap stylesheets
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+
+// 4. Include any optional Bootstrap components as you like
+@import "~bootstrap/scss/root";
+@import "~bootstrap/scss/type";
+@import "~bootstrap/scss/images";
+@import "~bootstrap/scss/containers";
+@import "~bootstrap/scss/grid";
 @keyframes fadeIn {
 	0% {
 		background: rgba(0, 0, 0, 0);
@@ -100,9 +101,11 @@ $orange-transparent: #fd7d1440;
 	-o-transition: all 300s ease;
 	transition: all 300s ease;
 }
+
 body {
 	font-family: 'Open Sans', sans-serif;
 	height: 100vh;
+	color: $gray-500;
 }
 
 a {
@@ -117,7 +120,7 @@ a:hover {
 }
 
 span {
-	display: inline-f;
+	display: inline-flex;
 }
 
 ul {
@@ -134,95 +137,10 @@ ul {
 	width: 100%;
 }
 
-.app-wrapper {
-	@extend .d-flex;
-	@extend .align-items-stretch;
-	height: 100vh;
-}
-
-.sidebar-container {
-	min-width: 64px;
-	max-width: 64px;
-	-webkit-transition: all 0.3s;
-	-moz-transition: all 0.3s;
-	-o-transition: all 0.3s;
-	transition: all 0.3s;
-	@include media-breakpoint-down(md) {
-		margin-left: -64px;
-	}
-	.sidebar-link {
-		@extend .rounded;
-		@extend .rounded-3;
-		font-size: $h3-font-size;
-		padding: $spacer;
-		color: $gray-200;
-	}
-}
-
-.page {
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-	&__header {
-		display: flex;
-		justify-content: space-around;
-		align-items: center;
-		height: 64px;
-		position: -webkit-sticky;
-		position: sticky;
-		z-index: $zindex-sticky;
-		top: 0;
-		background-color: $gray-400;
-	}
-	&__body {
-		display: inline-flex;
-		min-height: 0;
-		-webkit-transition: all 0.3s;
-		-moz-transition: all 0.3s;
-		-o-transition: all 0.3s;
-		transition: all 0.3s;
-	}
-}
-
 .menu-canvas {
 	display: inline-flex;
 	padding: $spacer;
 	width: 100%;
-}
-
-.view {
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-	min-height: 0;
-	&__header {
-		background: $gray-200;
-		font-weight: $font-weight-bold;
-		box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-		margin-left: map-get($map: $spacers, $key: 4);
-		padding: 0 $spacer $spacer $spacer;
-		min-height: 40px;
-		z-index: $zindex-sticky;
-		position: sticky;
-		top: 0;
-	}
-	&__body {
-		overflow-y: auto;
-		padding-left: $spacer;
-		margin-bottom: 10px;
-		list-style: none;
-		font-weight: $font-weight-light;
-	}
-}
-
-.table-view {
-	width: 100%;
-	@extend .view;
-}
-
-.side-view {
-	width: 256px;
-	@extend .view;
 }
 
 .tree {
@@ -259,79 +177,6 @@ ul {
 	}
 }
 
-.branch {
-	margin-bottom: map-get($map: $spacers, $key: 5);
-}
-
-.leaf {
-	padding-left: map-get($map: $spacers, $key: 5);
-}
-
-.node.branch {
-	margin-top: 2rem;
-}
-
-// .node:not(:only-child) {
-// 	&:not(:first-child) {
-// 		@extend .input-group-sm;
-// 		padding-left: map-get($map: $spacers, $key: 5);
-// 	}
-// }
-
-.node > .branch {
-	padding-left: map-get($map: $spacers, $key: 5) * 2;
-}
-
-.node-header {
-	display: flex;
-	margin: map-get($map: $spacers, $key: 3) 0;
-	align-items: center;
-}
-
-.node-header:not(:only-child) {
-	&:first-child {
-		padding-top: map-get($map: $spacers, $key: 2);
-		& i {
-			font-size: $btn-font-size-sm;
-		}
-		& .node-input[type='text'] {
-			font-size: $input-font-size-sm;
-			padding-top: 0.25rem;
-		}
-	}
-	&:not(:first-child) {
-		@extend .input-group-xs;
-		padding-left: map-get($map: $spacers, $key: 4);
-	}
-	& .node-input[type='text'] {
-		font-size: $input-font-size-xs;
-		padding-top: 0.25rem;
-	}
-}
-
-.node > .branch {
-	padding-left: map-get($map: $spacers, $key: 5) * 2;
-}
-
-.node-section {
-	display: contents;
-	margin: ($spacer/2) 0;
-	align-items: center;
-	&.child {
-		margin-left: 2rem;
-	}
-	&.node-new {
-		background-color: rgba(10, 10, 10, 0.45);
-	}
-}
-
-.node-item {
-	display: contents;
-	margin: ($spacer/2) 0;
-	align-items: center;
-	font-size: $input-font-size-xs;
-}
-
 .node-input {
 	flex-grow: 1;
 	@extend .input-transition;
@@ -352,166 +197,73 @@ ul {
 		border: rgba(10, 10, 10, 0.946);
 	}
 }
-// .node-input[type="text"] {
-//   display: inline-block;
-//   color: black;
-//   padding: 0 $spacer;
-//   width: 250px;
-//   box-sizing: border-box;
-//   background-color: rgba(0, 0, 0, 0.25);
-//   border: none;
-//   border-radius: 2px;
-//   margin: 10px auto;
-//   transition: background-color 0.5s ease;
-//   -webkit-box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-//   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-// }
-.price-button {
-	@extend .btn;
-	@extend .btn-sm;
-	background-color: $gray-200;
-	margin-bottom: -5px;
-	font-size: smaller;
-	cursor: none;
+
+
+.custom-modal-dialog {
+	position: relative;
+	width: auto;
+	height: subtract(100%, $modal-dialog-margin * 2);
+	margin: $modal-dialog-margin;
+	opacity: 0;
+	animation: scaleUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+.custom-modal-content {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	width: 100%; // Ensure `.modal-content` extends the full width of the parent `.modal-dialog`
+	// counteract the pointer-events: none; in the .modal-dialog
+	color: $modal-content-color;
+	pointer-events: auto;
+	background-color: $modal-content-bg;
+	background-clip: padding-box;
+	border: $modal-content-border-width solid $modal-content-border-color;
+	@include border-radius($modal-content-border-radius);
+	@include box-shadow($modal-content-box-shadow-xs);
+	// Remove focus outline from opened modal
+	outline: 0;
 }
 
-.price-input {
-	border: none;
-	appearance: none;
-	width: 6ch;
+.custom-modal-header {
 	display: flex;
-	align-items: flex-end;
-}
-
-.overlay {
-	position: fixed;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	display: flex;
+	flex-shrink: 0;
 	align-items: center;
-	justify-content: center;
-	z-index: $zindex-modal-backdrop;
-	overflow: hidden;
-	transition: all 100ms cubic-bezier(0.4, 0, 0.2, 1);
-	background: rgba(0, 0, 0, 0);
-	animation: fadeIn 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+	justify-content: space-between; // Put modal header elements (title and dismiss) on opposite ends
+	padding: $modal-header-padding;
+	border-bottom: $modal-header-border-width solid $modal-header-border-color;
+	@include border-top-radius($modal-content-inner-border-radius);
 
-	& .custom-modal-dialog {
-		position: relative;
-		width: auto;
-		height: subtract(100%, $modal-dialog-margin * 2);
-		margin: $modal-dialog-margin;
-		opacity: 0;
-		animation: scaleUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
-	}
-	& .custom-modal-content {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		width: 100%; // Ensure `.modal-content` extends the full width of the parent `.modal-dialog`
-		// counteract the pointer-events: none; in the .modal-dialog
-		color: $modal-content-color;
-		pointer-events: auto;
-		background-color: $modal-content-bg;
-		background-clip: padding-box;
-		border: $modal-content-border-width solid $modal-content-border-color;
-		@include border-radius($modal-content-border-radius);
-		@include box-shadow($modal-content-box-shadow-xs);
-		// Remove focus outline from opened modal
-		outline: 0;
-	}
-	& .custom-modal-header {
-		display: flex;
-		flex-shrink: 0;
-		align-items: center;
-		justify-content: space-between; // Put modal header elements (title and dismiss) on opposite ends
-		padding: $modal-header-padding;
-		border-bottom: $modal-header-border-width solid $modal-header-border-color;
-		@include border-top-radius($modal-content-inner-border-radius);
-
-		.btn-close {
-			padding: ($modal-header-padding-y / 2) ($modal-header-padding-x / 2);
-			margin: ($modal-header-padding-y / -2) ($modal-header-padding-x / -2) ($modal-header-padding-y / -2) auto;
-		}
-	}
-	& .custom-modal-body {
-		position: relative;
-		// Enable `flex-grow: 1` so that the body take up as much space as possible
-		// when there should be a fixed height on `.modal-dialog`.
-		flex: 1 1 auto;
-		padding: $modal-inner-padding;
-	}
-	& .custom-modal-footer {
-		display: flex;
-		flex-wrap: wrap;
-		flex-shrink: 0;
-		align-items: center; // vertically center
-		justify-content: flex-end; // Right align buttons with flex property because text-align doesn't work on flex items
-		padding: $modal-inner-padding - $modal-footer-margin-between / 2;
-		border-top: $modal-footer-border-width solid $modal-footer-border-color;
-		@include border-bottom-radius($modal-content-inner-border-radius);
-
-		// Place margin between footer elements
-		// This solution is far from ideal because of the universal selector usage,
-		// but is needed to fix https://github.com/twbs/bootstrap/issues/24800
-		> * {
-			margin: $modal-footer-margin-between / 2;
-		}
-	}
-
-	&.close {
-		animation: fadeOut 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
-		& .custom-modal-dialog {
-			animation: scaleDown 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
-		}
+	.btn-close {
+		padding: ($modal-header-padding-y / 2) ($modal-header-padding-x / 2);
+		margin: ($modal-header-padding-y / -2) ($modal-header-padding-x / -2) ($modal-header-padding-y / -2) auto;
 	}
 }
 
-.modal-active {
-	animation: zoomOut 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+.custom-modal-body {
+	position: relative;
+	// Enable `flex-grow: 1` so that the body take up as much space as possible
+	// when there should be a fixed height on `.modal-dialog`.
+	flex: 1 1 auto;
+	padding: $modal-inner-padding;
 }
 
-// .overlay {
-// 	position: fixed;
-// 	top: 0;
-// 	right: 0;
-// 	bottom: 0;
-// 	left: 0;
-// 	opacity: 0;
-// 	backdrop-filter: blur(100px);
-// 	transition: all 100ms cubic-bezier(0.4, 0, 0.2, 1);
-// 	transition-delay: 200ms;
-// 	display: flex;
-// 	align-items: center;
-// 	justify-content: center;
-// 	z-index: $zindex-modal-backdrop;
-// 	& .modal-wrapper {
-// 		box-shadow: $modal-content-box-shadow-sm-up;
-// 		border-radius: 2px;
-// 		transform: translateY(100px);
-// 		transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
-// 		opacity: 0;
-// 	}
-// 	&.active {
-// 		transition-duration: 250ms;
-// 		transition-delay: 0ms;
-// 		opacity: 1;
-// 		background: rgba($color: #000000, $alpha: 0.8);
-// 		& .modal-wrapper {
-// 			transform: translateY(0);
-// 			opacity: 1;
-// 			border-color: $modal-content-border-color;
-// 			transition-delay: 150ms;
-// 			transition-duration: 350ms;
-// 		}
-// 	}
-// 	& .custom-modal-content {
-// 		@extend .modal-content;
-// 		background-color: $gray-300;
-// 	}
-// }
+.custom-modal-footer {
+	display: flex;
+	flex-wrap: wrap;
+	flex-shrink: 0;
+	align-items: center; // vertically center
+	justify-content: flex-end; // Right align buttons with flex property because text-align doesn't work on flex items
+	padding: $modal-inner-padding - $modal-footer-margin-between / 2;
+	border-top: $modal-footer-border-width solid $modal-footer-border-color;
+	@include border-bottom-radius($modal-content-inner-border-radius);
+
+	// Place margin between footer elements
+	// This solution is far from ideal because of the universal selector usage,
+	// but is needed to fix https://github.com/twbs/bootstrap/issues/24800
+	> * {
+		margin: $modal-footer-margin-between / 2;
+	}
+}
 
 .rounded {
 	-webkit-border-radius: 6px;
@@ -548,35 +300,9 @@ ul {
 .custom-form-label {
 	margin-right: 5rem;
 }
-.form-switch.form-switch-sm {
-	@include switch();
-}
 
 .float {
 	position: fixed;
 	bottom: 40px;
 	right: 40px;
-}
-
-.section-switches {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-end;
-	margin-left: $spacer * 5;
-}
-
-.custom-control-right {
-	padding-right: 24px;
-	padding-left: 0;
-	margin-left: 0;
-	margin-right: 0;
-}
-.custom-control-right .custom-control-label::after {
-	right: -1.5rem;
-	left: auto;
-}
-
-.custom-control-right .custom-control-label::before {
-	right: -2.35rem;
-	left: auto;
 }

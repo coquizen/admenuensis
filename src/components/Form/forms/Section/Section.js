@@ -4,6 +4,7 @@ import React, { useEffect } from 'react'
 import { useData } from 'context/DataProvider'
 import { Switch } from 'components/Form'
 import { DropDownMenu } from 'components/Form'
+import styles from './Section.module.scss'
 
 const defaultValues = {
 	id: '',
@@ -17,13 +18,12 @@ const defaultValues = {
 
 const Section = ({ uuid, setValue, reset, register }) => {
 	const { getSectionDataByID } = useData()
-	const data = uuid === 'blank' ? defaultValues : getSectionDataByID(uuid)
 
 	useEffect(() => {
 		if (uuid === undefined) {
 			setValue(defaultValues)
 		} else {
-			// const data = allSectionsData.find(section => section.id == dataID)
+			const data = getSectionDataByID(uuid)
 			const parsedData = {
 				id: data.id,
 				title: data.title,
@@ -34,47 +34,47 @@ const Section = ({ uuid, setValue, reset, register }) => {
 			}
 			reset(parsedData)
 		}
-	}, [defaultValues, reset, data])
+	}, [getSectionDataByID, reset, setValue, uuid])
 
 	return (
 		<React.Fragment>
 			<input name='id' ref={register} type='hidden'/>
-			<div className='custom-modal-body'>
-				<div className='form-row'>
-					<label htmlFor='title' className='custom-form-label'>
+			<div className={styles.container}>
+				<div className={styles['form-row']}>
+					<label htmlFor='title' className={styles['form-label']}>
 						Name
 					</label>
 					<input
 						name='title'
 						ref={register}
 						type='text'
-						className='form-input'
+						className={styles['form-input']}
 						id='title'
 						placeholder='Please enter section name e.g. Desserts'/>
 				</div>
 				<hr />
-				<div className='form-row'>
-					<label htmlFor='description' className='custom-form-label'>
+				<div className={styles['form-row']}>
+					<label htmlFor='description' className={styles['form-label']}>
 						Description
 					</label>
 					<input
 						type='text'
 						name='description'
-						className='form-input'
+						className={styles['form-input']}
 						id='description'
 						rows='3'
 						ref={register}/>
 				</div>
 				<hr />
-				<div className='form-row'>
+				<div className={styles['form-row']}>
 					<div>Other Settings</div>
-					<div className='section-switches'>
+					<div className={styles['form-switch-group']}>
 						<Switch label='Disable' name='active' ref={register} />
 						<Switch label='Visible' name='visible' ref={register} />
 					</div>
 				</div>
 				<hr />
-				<div className='form-row'>
+				<div className={styles['form-row']}>
 					<DropDownMenu name='section_parent_id' ref={register} itemID={uuid} />
 				</div>
 			</div>

@@ -8,6 +8,11 @@ const register = (first_name, last_name, address_1, address_2 = null, zip_code, 
     })
 }
 
+
+export {
+    register,
+}
+
 const login = (username, password) => {
     return fetch('/login', {
         method: 'POST',
@@ -15,21 +20,5 @@ const login = (username, password) => {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({ username, password })
-    }).then((response) => {
-        if (response.body.token) {
-            localStorage.setItem("authToken", response.token)
-        }
-
-        return response.body.token
-    })
-}
-
-const logout = () => {
-    localStorage.removeItem("authToken")
-}
-
-export default {
-    register,
-    login,
-    logout,
+    }).then((response) => response.json()).then(({ token, expires }) => ({ token, expires })).catch((err) => console.log(err))
 }

@@ -1,0 +1,33 @@
+/** @format */
+@import '../../../assets/scss/admin';
+
+.SideBar {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	min-width: 48px;
+	max-width: 48px;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-o-transition: all 0.3s;
+	transition: all 0.3s;
+	&:last-child {
+		bottom: 0;
+	}
+	&.Hide {
+		margin-left: -48px;
+	}
+	@include media-breakpoint-down(md) {
+		margin-left: -48px;
+	}
+	.SideBarLink {
+		@extend .rounded;
+		@extend .rounded-3;
+		font-size: $h5-font-size;
+		padding: $spacer 10px $spacer $spacer;
+		color: $gray-200;
+		&.SideBarLogout {
+			margin-top: auto;
+		}
+	}
+}

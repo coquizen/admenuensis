@@ -1,10 +1,6 @@
-/** @format */
 
-const headers = {
-	'Content-Type': 'application/json',
-}
 export const authHeader = () => {
-	const token = JSON.parse(localStorage.getItem('authToken'))
+	const token = JSON.parse(localStorage.getItem('token'))
 	if (token) {
 		return {
 			"Authorization": "Bearer " + token,
@@ -13,6 +9,12 @@ export const authHeader = () => {
 	} else {
 		return {};
 	}
+}
+
+export const fetchMenus = () => {
+	return fetch(`/api/v1/menus`)
+		.then((response) => response.json())
+		.then((data) => data.data)
 }
 
 export const fetchSections = () => {
@@ -77,8 +79,4 @@ export const deleteItem = (id) => {
 	})
 }
 
-export const fetchMenus = () => {
-	return fetch(`/api/v1/menus`)
-		.then((response) => response.json())
-		.then((data) => data.data)
-}
+

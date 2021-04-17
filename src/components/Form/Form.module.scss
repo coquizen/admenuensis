@@ -1,0 +1,45 @@
+.modal-dialog {
+  height: 74%;
+  width: 435px;
+  border-radius: 15px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 15px;
+
+  .container {
+    outline: 0;
+    border: none;
+    position: relative;
+
+    .modal-header {
+      height: 15%;
+      position: relative;
+      text-align: center;
+    }
+
+    .button {
+      left: 0;
+      right: 0;
+      padding: 0;
+      outline: 0;
+      width: 150px;
+      border: none;
+      height: 40px;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 40px;
+      position: absolute;
+      display: inline-block;
+      margin: 10px auto 0;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+      text-transform: uppercase;
+    }
+    .modal-footer {
+      height: 15%;
+      position: relative;
+    }
+  }
+}

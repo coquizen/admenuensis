@@ -1,0 +1,31 @@
+
+@import '../../assets/scss/admin';
+
+.Accounts {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+
+  .AccountsHeader {
+    background: $gray-200;
+    font-weight: $font-weight-bold;
+    color: $gray-900;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    margin-left: map-get($map: $spacers, $key: 4);
+    margin-right: map-get($map: $spacers, $key: 4);
+    padding: 0 $spacer $spacer $spacer;
+    min-height: 40px;
+    z-index: $zindex-sticky;
+    position: sticky;
+    top: 0;
+  }
+  .AccountsBody {
+    overflow-y: auto;
+    padding-top: $spacer * 3;
+    padding-left: $spacer * 3;
+    margin-bottom: 10px;
+    list-style: none;
+    font-weight: $font-weight-bold;
+  }
+}

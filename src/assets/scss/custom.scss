@@ -1,0 +1,43 @@
+/** @format */
+
+//@import '~bootstrap/scss/bootstrap';
+
+/** Color System **/
+
+$white: #f9f9fa;
+$gray-100: #B2B2B2;
+$gray-200: #989898;
+$gray-300: #828282;
+$gray-400: #6F6F6F;
+$gray-500: #5F5F5F;
+$gray-600: #4F4F4F;
+$gray-700: #424242;
+$gray-800: #373737;
+$gray-900: #2E2E2E;
+$black: #000;
+
+$body-bg: $gray-500;
+$body-color: $gray-900;
+
+$link-decoration: none;
+
+/** Input **/
+/** missing xs scale **/
+$input-btn-padding-y-xs: $input-btn-padding-y-sm * (1/1.5) !default;
+$input-btn-padding-x-xs: $input-btn-padding-y-sm * (1/1.5) !default;
+$btn-padding-y-xs: $input-btn-padding-y-xs !default;
+$btn-padding-x-xs: $input-btn-padding-x-xs !default;
+$btn-font-size-xs: $font-size-base * 0.8125 !default;
+$btn-border-radius-xs: 0.225 !default;
+$input-padding-y-xs: $input-btn-padding-y-xs;
+$input-padding-x-xs: $input-btn-padding-x-xs;
+$input-font-size-xs: $btn-font-size-xs;
+$input-border-radius-xs: $btn-border-radius-xs;
+$input-height-inner: ($font-size-base * $input-btn-line-height) + ($input-btn-padding-y * 2) !default;
+
+$red: #AC3E31;
+$light-grey: #484848;
+$yellow: #DBAE58;
+$off-white: #DADADA;
+$dark-blue: #20283E;
+$light-blue: #488A99;

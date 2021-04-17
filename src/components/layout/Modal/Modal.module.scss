@@ -1,0 +1,22 @@
+/** @format */
+@import '../../../assets/scss/admin';
+
+.Overlay {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: $zindex-modal-backdrop;
+	overflow: hidden;
+	transition: all 100ms cubic-bezier(0.4, 0, 0.2, 1);
+	background: rgba(0, 0, 0, 0);
+	animation: fadeIn 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+
+	&.Close {
+		animation: fadeOut 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+	}
+}

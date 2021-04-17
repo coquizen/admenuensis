@@ -25,3 +25,6 @@ yarn-error.log*
 # IDE config
 .vscode/
 .idea/
+
+# Undo information
+.history/

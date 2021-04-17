@@ -3,63 +3,55 @@
 @import '../../../../assets/scss/admin';
 
 ul {
-	display: inline;
-	flex-wrap: wrap;
-	list-style: none;
+  display: inline;
+  flex-wrap: wrap;
+  list-style: none;
 }
 
 .input-transition {
-	-webkit-transition: all 300ms ease;
-	-moz-transition: all 300s ease;
-	-o-transition: all 300s ease;
-	transition: all 300s ease;
+  -webkit-transition: all 300ms ease;
+  -moz-transition: all 300s ease;
+  -o-transition: all 300s ease;
+  transition: all 300s ease;
 }
 
-.node-section {
-	display: contents;
-	margin: ($spacer/2) 0;
-	align-items: center;
-	&.child {
-		margin-left: 2rem;
-	}
-	&.node-new {
-		background-color: rgba(10, 10, 10, 0.45);
-	}
+.NodeWrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  flex-grow: 1;
 }
 
-.node-item {
-	display: contents;
-	margin: ($spacer/2) 0;
-	align-items: center;
-	font-size: $input-font-size-xs;
+.Node {
+  display: contents;
+  flex-direction: column;
+  margin: ($spacer/2) 0;
+  align-items: center;
+  font-size: $input-font-size-xs;
+  &.NodeNew {
+    color: $gray-400;
+    font-style: italic;
+  }
 }
 
-.node-input {
-	flex-grow: 1;
-	@extend .input-transition;
-	.node-title-input {
-		width: 100%;
-		outline: none;
-		border: none;
-		@extend .input-transition;
-		&:focus {
-			background-color: blue;
-		}
-	}
+.NodeInput {
+  flex-grow: 1;
+  @extend .input-transition;
+  font-size: $input-font-size-xs;
+  outline: none;
+  border: none;
+  width: 100%;
+  &:focus-within {
+    background-color: $gray-900;
+    border: rgba(10, 10, 10, 0.946);
+  }
 
-	&.node-input-item {
-		font-size: $input-font-size-xs;
-	}
-	&:focus-within {
-		background-color: $gray-900;
-		border: rgba(10, 10, 10, 0.946);
-	}
 }
 
-.price-input {
-	border: none;
-	appearance: none;
-	width: 6ch;
-	display: flex;
-	align-items: flex-end;
+.PriceInput {
+  border: none;
+  appearance: none;
+  width: 8ch;
+  display: flex;
+  align-items: flex-end;
 }

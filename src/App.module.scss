@@ -1,0 +1,22 @@
+/** @format */
+@import './assets/scss/admin.scss';
+
+.AppWrapper {
+	@extend .d-flex;
+	@extend .align-items-stretch;
+	height: 100vh;
+}
+
+.Page {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	.Content {
+		display: inline-flex;
+		min-height: 0;
+		-webkit-transition: all 0.3s;
+		-moz-transition: all 0.3s;
+		-o-transition: all 0.3s;
+		transition: all 0.3s;
+	}
+}

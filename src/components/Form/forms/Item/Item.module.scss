@@ -33,6 +33,12 @@
     background: rgba(0, 0, 0, 0.1);
   }
 }
+.section-switches {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-left: $spacer * 5;
+}
 
 .node-item {
   display: contents;

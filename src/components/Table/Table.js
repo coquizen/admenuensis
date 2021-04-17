@@ -12,11 +12,15 @@ import {
 	useSensors,
 	useSensor,
 } from '@dnd-kit/core'
+import styles from './Table.module.scss'
+
 import { SortableContext, arrayMove, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable'
 
 import { List, SortableNodeWrapper, Node } from 'components/Table'
+import MiniSectionForm from 'components/Table/Node/MiniSectionForm'
+import MiniItemForm from 'components/Table/Node/MiniItemForm'
 import { useData } from 'context/DataProvider'
-import { flattenRoot } from 'utils/flattenTree'
+
 const DroppableContainer = ({ children, columns = 1, id, items, getStyle = () => ({}) }) => {
 	const { over, isOver, setNodeRef } = useDroppable({
 		id,
@@ -36,10 +40,10 @@ const defaultContainerStyle = ({ isOverContainer }) => ({
 	backgroundColor: isOverContainer ? 'rgb(235,235,235,1)' : 'rgba(246,246,246,1)',
 })
 
-const iconContainerStyle = ({ isOverContainer }) => ({
-	marginTop: '-1rem',
-	backgroundColor: isOverContainer ? 'rgb(235,235,235,1)' : 'rgba(246,246,246,1)',
-})
+// const iconContainerStyle = ({ isOverContainer }) => ({
+// 	marginTop: '-1rem',
+// 	backgroundColor: isOverContainer ? 'rgb(235,235,235,1)' : 'rgba(246,246,246,1)',
+// })
 
 const VOID_ID = 'void'
 
@@ -52,18 +56,19 @@ const Table = ({
 	renderItem,
 	strategy = verticalListSortingStrategy,
 }) => {
-	const { menus, rootSections, getSectionDataByID } = useData()
-	const [isBefore, setIsBefore] = useState(false)
-	const [menuData, setMenuData] = useState(null)
-	const [dragOverlaydItems, setClonedItems] = useState(null)
-	const [activeId, setActiveId] = useState(null)
-	const [overIndex, setOverIndex] = useState(null)
+	const { menus, allData, getSectionDataByID, getItemDataByID } = useData()
+	const [ isBefore, setIsBefore ] = useState(false)
+	const [ menuData, setMenuData ] = useState()
+	const [ dragOverlaydItems, setClonedItems ] = useState(null)
+	const [ activeId, setActiveId ] = useState(null)
+	const [ overIndex, setOverIndex ] = useState(null)
 
 	useEffect(() => {
-		var flattened = []
-		rootSections.forEach((root) => flattened.push(flattenRoot(root)))
-		setMenuData(flattened)
-	}, [rootSections])
+		// var flattened = []
+		// rootSections.forEach((root) => flattened.push(flattenRoot(root)))
+		setMenuData(menus)
+	}, [ menus ])
+
 	const sensors = useSensors(
 		useSensor(PointerSensor),
 		useSensor(KeyboardSensor, {
@@ -71,7 +76,11 @@ const Table = ({
 		})
 	)
 
-	const findContainer = (id) => Object.keys(menuData).filter((key) => menuData[key].find((node) => node.id === id))[0]
+	const findContainer = (id) => {
+		const menuComponent = allData.section.find(({ secID }) => id === secID) || allData.item.find(({ itemID }) => id === itemID)
+		return (menuComponent.section_id === undefined ? id : menuComponent.section_id)
+
+	}
 
 	const getIndex = (id) => {
 		const container = findContainer(id)
@@ -102,8 +111,8 @@ const Table = ({
 
 		if (activeContainer !== overContainer) {
 			setMenuData((menuData) => {
-				const activeItemsID = menuData[activeContainer].map((item) => item.id)
-				const overItemsID = menuData[overContainer].map((item) => item.id)
+				const activeItemsID = menuData[ activeContainer ].map((item) => item.id)
+				const overItemsID = menuData[ overContainer ].map((item) => item.id)
 				const overindex = overItemsID.indexOf(overId)
 				const activeIndex = activeItemsID.indexOf(active.id)
 
@@ -125,9 +134,9 @@ const Table = ({
 
 
 				console.log(newIndex)
-				menuData[overContainer].splice(newIndex, 0, menuData[activeContainer][activeIndex])
-					menuData[activeContainer] = [...menuData[activeContainer].filter((item) => item.id !== active.id)]
-					console.log(menuData)
+				menuData[ overContainer ].splice(newIndex, 0, menuData[ activeContainer ][ activeIndex ])
+				menuData[ activeContainer ] = [ ...menuData[ activeContainer ].filter((item) => item.id !== active.id) ]
+				console.log(menuData)
 				return menuData
 			}
 			)
@@ -160,8 +169,8 @@ const Table = ({
 		const overContainer = findContainer(overId)
 
 		if (activeContainer && overContainer) {
-			const activeIndex = menuData[activeContainer].map((item) => item.id).indexOf(active.id)
-			const overIndex = menuData[overContainer].map((item) => item.id).indexOf(overId)
+			const activeIndex = menuData[ activeContainer ].map((item) => item.id).indexOf(active.id)
+			const overIndex = menuData[ overContainer ].map((item) => item.id).indexOf(overId)
 
 			if (activeIndex !== overIndex) {
 				setMenuData((menuData) => {
@@ -185,127 +194,129 @@ const Table = ({
 	}
 
 	return (
-		<DndContext
-			sensors={sensors}
-			collisionDetection={collisionDetection}
-			onDragStart={handleDragStart}
-			onDragOver={handleDragOver}
-			onDragEnd={handleDragEnd}
-			onDragCancel={handleDragCancel}
-			modifiers={modifiers}>
-			<div className='table-view'>
-				{menus &&
-					menus.map((container, index) => {
-						const items = [container, container.subsections?.map((subsection) => subsection), container.items?.map((item) => item)].flat().filter((el) => el != undefined)
-						const itemIDs = items.map(item => item.id)
-						return (
-							<SortableContext
-								key={container.id}
-								id={container.title}
-								items={[container.id]}
-								strategy={strategy}>
-								<DroppableContainer
-									items={[container.id]}
-									getStyle={getContainerStyle}>
-										<SortableNodeWrapper
-											id={container.id}
-											key={container.title}
-											dataID={container.id}
-											index={index}
-											style={getItemStyles}
-											wrapperStyle={wrapperStyle}
-											renderItem={renderItem}
-											getIndex={() => getIndex(container.id)}
-										/>
-										<>
-										{container.subsections != undefined && (
-											<SortableContext id={container.id} items={container.subsections.map(({id}) => id)} strategy={strategy}>
-												<DroppableContainer items={container.subsections.map(({id}) => id)}>
-													{container.subsections.map((subsection, subindex) => (
-														<>
-													<SortableNodeWrapper
-														id={subsection.id}
-														key={subsection.title}
-														dataID={subsection.id}
-														index={subindex}
-														style={getItemStyles}
-														wrapperStyle={wrapperStyle}
-														renderItem={renderItem}
-														getIndex={() => getIndex(subsection.id)}
-													/>
-															{subsection.items != undefined && (
-																<SortableContext id={subsection.items[0].id} items={subsection.items.map(({id})=> id)} strategyy={strategy}>
-																	<DroppableContainer items={subsection.items.map(({id}) => id)}>
-																		{subsection.items.map((item, itemindex) => (
-																			<SortableNodeWrapper
-																				id={item.id}
-																				key={item.title}
-																				dataID={item.id}
-																				index={itemindex}
-																				style={getItemStyles}
-																				wrapperStyle={wrapperStyle}
-																				renderItem={renderItem}
-																				getIndex={() => getIndex(item.id)}
-																			/>
-																		))}
-																	</DroppableContainer>
-																</SortableContext>
-															)}
-														</>
-													))}
-												</DroppableContainer>
-											</SortableContext>
-										)}
-											{container.items != undefined && (
-												<SortableContext id={container.id} items={container.items.map(({id})=> id)} strategy={strategy}>
-													<DroppableContainer items={container.items.map(({id})=> id)}>
-														{container.items.map((item, itemindex) => (
-															<SortableNodeWrapper
-																id={item.id}
-																key={item.title}
-																dataID={item.id}
-																index={itemindex}
-																style={getItemStyles}
-																wrapperStyle={wrapperStyle}
-																renderItem={renderItem}
-																getIndex={() => getIndex(item.id)}
-															/>
-														))}
-													</DroppableContainer>
-												</SortableContext>
+		<>
+			<List>
+				<MiniSectionForm isBlank={true} />
+				<MiniItemForm isBlank={true} />
+			</List>
+			<DndContext
+				sensors={sensors}
+				collisionDetection={collisionDetection}
+				onDragStart={handleDragStart}
+				onDragOver={handleDragOver}
+				onDragEnd={handleDragEnd}
+				onDragCancel={handleDragCancel}
+				modifiers={modifiers}>
+				<div className={styles.Table}>
+					{menus && <SortableContext
+						id='root'
+						items={menus.map((menu) => menu).sort((a, b) => a.list_order > b.list_order).map(({ id }) => id)}
+						strategy={strategy}>
+						<DroppableContainer
+							items={menus.map((menu) => menu).sort((a, b) => a.list_order > b.list_order).map(({ id }) => id)}
+							getStyle={getContainerStyle}
+						>{menus.sort((a, b) => a.list_order > b.list_order).map((menu, index) => (
+							<div key={menu.id}>
+								<SortableNodeWrapper
+									id={menu.id}
+									key={menu.id}
+									dataID={menu.id}
+									index={index}
+									style={getItemStyles}
+									wrapperStyle={wrapperStyle}
+									renderItem={renderItem}
+									getIndex={() => getIndex(menu.id)}
+								/>
+								{menu.subsections !== undefined && (
+									<SortableContext id={menu.id} items={menu.subsections.map(({ id }) => id)} strategy={strategy}>
+										<DroppableContainer items={menu.subsections.map(({ id }) => id)}>
+											<>
+												{menu.subsections.map((subsection, subIndex) => (
+													<div key={subsection.id}>
+														<SortableNodeWrapper
+															id={subsection.id}
+															dataID={subsection.id}
+															index={subIndex}
+															style={getItemStyles}
+															wrapperStyle={wrapperStyle}
+															renderItem={renderItem}
+															getIndex={() => getIndex(subsection.id)}
+														/>
+														{subsection.items !== undefined && (
+															<SortableContext id={subsection.items[ 0 ].id} items={subsection.items.map(({ id }) => id)} strategyy={strategy}>
+																<DroppableContainer items={subsection.items.map(({ id }) => id)}>
+																	{subsection.items.map((item, itemindex) => (
+																		<SortableNodeWrapper
+																			id={item.id}
+																			key={item.id}
+																			dataID={item.id}
+																			index={itemindex}
+																			style={getItemStyles}
+																			wrapperStyle={wrapperStyle}
+																			renderItem={renderItem}
+																			getIndex={() => getIndex(item.id)}
+																		/>
+																	))}
+																</DroppableContainer>
+															</SortableContext>
+														)}
+													</div>)
+												)}
+											</>	</DroppableContainer>
+									</SortableContext>
+								)}
+								{menu.items !== undefined &&
+									<SortableContext id={menu.id} items={menu.items.map(({ id }) => id)} strategy={strategy}>
+										<DroppableContainer items={menu.items.map(({ id }) => id)}>
+											{menu.items.map((item, itemindex) => (
+												<SortableNodeWrapper
+													id={item.id}
+													key={item.id}
+													dataID={item.id}
+													index={itemindex}
+													style={getItemStyles}
+													wrapperStyle={wrapperStyle}
+													renderItem={renderItem}
+													getIndex={() => getIndex(item.id)}
+												/>
+											)
 											)}
-									</>
-								</DroppableContainer>
-							</SortableContext>
-						)}
-					)}
-			</div>
-			{createPortal(
-				<DragOverlay>
-					{activeId ? (
-						<Node
-							dataID={activeId}
-							style={getItemStyles({
-								containerId: findContainer(activeId),
-								overIndex: -1,
-								index: getIndex(activeId),
-								width: overIndex !== 0 ? '80%' : '100%',
-								transition: 'width 300ms',
-								value: activeId,
-								isSorting: activeId !== null,
-								isDragging: true,
-								isDragOverlay: true,
-							})}
-							index={getIndex(activeId)}
-							wrapperStyle={wrapperStyle(getIndex(activeId))}
-							renderItem={renderItem}
-							dragOverlay
-						/>
-					) : null}
-				</DragOverlay>,
-				document.body
-			)}
-		</DndContext>
+										</DroppableContainer>
+									</SortableContext>
+								}
+							</div>
+						))
+							}
+						</DroppableContainer>
+					</SortableContext>}
+				</div>
+				{createPortal(
+					<DragOverlay>
+						{activeId ? (
+							<Node
+								dataID={activeId}
+								style={getItemStyles({
+									containerId: findContainer(activeId),
+									overIndex: -1,
+									index: getIndex(activeId),
+									width: overIndex !== 0 ? '80%' : '100%',
+									transition: 'width 300ms',
+									value: activeId,
+									isSorting: activeId !== null,
+									isDragging: true,
+									isDragOverlay: true,
+								})}
+								index={getIndex(activeId)}
+								wrapperStyle={wrapperStyle(getIndex(activeId))}
+								renderItem={renderItem}
+								dragOverlay
+							/>
+						) : null}
+					</DragOverlay>,
+					document.body
+				)}
+			</DndContext>
+		</>
 	)
 }
 
@@ -352,52 +363,3 @@ function Trash() {
 }
 
 export default Table
-
-// {subcontainer.subsections.length > 0 &&
-// 	subcontainer.subsections.
-// 		.map((subsection, subsectionIndex) => (
-// 		<>
-// 			<SortableNodeWrapper
-// 				id={`section-${subsection.id}`}
-// 				key={`section-${subsection.id}`}
-// 				dataID={`section-${subsection.id}`}
-// 				index={index}
-// 				isSubSection={true}
-// 				style={getItemStyles}
-// 				wrapperStyle={wrapperStyle}
-// 				renderItem={renderItem}
-// 				containerId={subcontainer.id}
-// 				getIndex={() => getIndex(subsection.id)}
-// 			/>
-// 			{subsection.items.length > 0 && (
-// 				<SortableContext
-// 					items={subsection.items
-// 						.sort((a, b) => a.list_order > b.list_order)
-// 						.map((item) => item.id)}
-// 					strategy={strategy}>
-// 					<DroppableContainer
-// 						id={subsection.id}
-// 						items={subsection.items
-// 							.sort((a, b) => a.list_order > b.list_order)
-// 							.map((item) => item.id)}
-// 						getStyle={iconContainerStyle}>
-// 						{subsection.items
-// 							.sort((a, b) => a.list_order > b.list_order)
-// 							.map((item) => (
-// 								<SortableNodeWrapper
-// 									id={`item-${item.id}`}
-// 									key={`item-${item.id}`}
-// 									dataID={`item-${item.id}`}
-// 									index={index}
-// 									style={getItemStyles}
-// 									wrapperStyle={wrapperStyle}
-// 									renderItem={renderItem}
-// 									containerId={subsection.id}
-// 									getIndex={() => getIndex(item.id)}
-// 								/>
-// 							))}
-// 					</DroppableContainer>
-// 				</SortableContext>
-// 			)}
-// 		</>
-// 	))}

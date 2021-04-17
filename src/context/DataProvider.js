@@ -4,13 +4,14 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 import useReactContextDevTool from 'hooks/useReactContextDevTool'
 import * as api from 'services/data'
 
-const DataContext = createContext()
+const DataContext = createContext(null)
 
 const DataProvider = ({ children }) => {
 	const [ allSectionsData, setAllSectionsData ] = useState(null)
 	const [ menus, setMenusData ] = useState(null)
 	const [ allItemsData, setAllItemsData ] = useState(null)
 	const [ isDirty, setIsDirty ] = useState(true)
+
 	useEffect(() => {
 		if (isDirty) {
 			api.fetchSections().then((data) => setAllSectionsData(data))
@@ -24,32 +25,36 @@ const DataProvider = ({ children }) => {
 
 	const getItemDataByID = (id) => allItemsData && allItemsData.find((item) => item.id === id)
 
-	const rootSections =
-		allSectionsData &&
-		allSectionsData.filter((section) => section.section_id === undefined)
-
-	var allData = {}
+	let allData = {}
 	allData[ 'section' ] = allSectionsData
 	allData[ 'item' ] = allItemsData
 
 
 	const updateSection = (data) => {
-		api.updateSection(data).then(setIsDirty(true))
+		api.updateSection(data).then(() => setIsDirty(true))
 	}
 	const updateItem = (data) => {
-		api.updateItem(data).then(setIsDirty(true))
+		api.updateItem(data).then(() => setIsDirty(true))
 	}
 
+	const deleteSection = (id) => {
+		api.deleteSection(id).then(() => setIsDirty(true))
+	}
+
+	const deleteItem = (id) => {
+		api.deleteItem(id).then(() => setIsDirty(true))
+	}
 	useReactContextDevTool({
 		id: 'dataprovider',
 		displayName: 'Data',
 		values: {
 			allSectionsData,
-			rootSections,
 			updateSection,
 			getItemDataByID,
 			getSectionDataByID,
 			updateItem,
+			deleteItem,
+			deleteSection,
 			allData,
 			menus
 		},
@@ -60,7 +65,6 @@ const DataProvider = ({ children }) => {
 		<DataContext.Provider
 			value={{
 				allSectionsData,
-				rootSections,
 				updateSection,
 				getItemDataByID,
 				getSectionDataByID,

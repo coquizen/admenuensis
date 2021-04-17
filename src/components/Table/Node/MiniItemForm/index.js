@@ -1,3 +1,3 @@
-import MiniSectionForm from "../MiniSectionForm";
+import MiniItemForm from "./MiniItemForm";
 
-export default MiniSectionForm
+export default MiniItemForm
