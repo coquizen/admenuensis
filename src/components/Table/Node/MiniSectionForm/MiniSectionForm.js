@@ -76,7 +76,7 @@ const MiniSectionForm = ({ uuid, listeners, attributes, isBlank = false }) => {
 					onBlur={onLostFocus}
 					disabled={isBlank}
 				/>
-				<div classsName={styles.ButtonGroup}>
+				<div className={styles.ButtonGroup}>
 					<button disabled={isBlank} type='button' className='btn btn-sm'>
 						<FontAwesomeIcon icon={faDotCircle} fixedWidth />
 					</button>
