@@ -91,12 +91,7 @@ const Node = memo(
 						style={style}
 						data-cypress='draggable-item'
 						{...props}>
-						{type === 'section' && (
-							<MiniSectionForm uuid={dataID} listeners={listeners} attributes={attributes} />
-						)}
-						{type === 'item' && (
-							<MiniItemForm uuid={dataID} listeners={listeners} attributes={attributes} />
-						)}
+
 					</div>
 				</li>
 			)

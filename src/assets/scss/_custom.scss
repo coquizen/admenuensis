@@ -37,7 +37,15 @@ $input-height-inner: ($font-size-base * $input-btn-line-height) + ($input-btn-pa
 
 $red: #AC3E31;
 $light-grey: #484848;
-$yellow: #DBAE58;
-$off-white: #DADADA;
-$dark-blue: #20283E;
+$green: #719E2D;
+$yellow: #F39237;
+$off-white: #FBFEF9;
+$dark-blue: #191923;
 $light-blue: #488A99;
+
+$primary: $red;
+$secondary: $light-grey;
+$success: $green;
+$warning: $yellow;
+$info: $light-blue;
+

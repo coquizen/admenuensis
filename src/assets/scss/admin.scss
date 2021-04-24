@@ -1,13 +1,20 @@
 /** @format */
 
-@import "~bootstrap/scss/bootstrap";
 $enable-shadows: true;
 $enable-gradients: true;
 $enable-negative-margins: true;
+$enable-rounded: true;
 
 @import "~bootstrap/scss/bootstrap";
 @import './variables';
 @import './custom-forms';
+
+// Generate WCAG 2.0 accessibility standard color contrasts
+@each $color, $value in $theme-colors {
+	.swatch-#{$color} {
+		color: color-contrast($value);
+	}
+}
 
 .input-group-xs > .node-input,
 .input-group-xs > .btn,
@@ -44,17 +51,6 @@ $box-shadow: 0 0.1rem 1rem rgba(#000, 0.15);
 	}
 }
 
-// 3. Include remainder of required Bootstrap stylesheets
-@import "~bootstrap/scss/variables";
-@import "~bootstrap/scss/mixins";
-
-
-// 4. Include any optional Bootstrap components as you like
-@import "~bootstrap/scss/root";
-@import "~bootstrap/scss/type";
-@import "~bootstrap/scss/images";
-@import "~bootstrap/scss/containers";
-@import "~bootstrap/scss/grid";
 @keyframes fadeIn {
 	0% {
 		background: rgba(0, 0, 0, 0);

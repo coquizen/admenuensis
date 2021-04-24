@@ -1,0 +1,49 @@
+@import '../../assets/scss/admin.scss';
+
+
+.CardGroup {
+  @extend .card-group;
+  margin-top: $spacer;
+}
+
+.Section {
+  margin: $spacer;
+  padding: $spacer;
+  border: 1px solid #ccc;
+  border-bottom: 2px solid #bbb;
+  border-top: 1px solid #ddd;
+  border-radius: 2px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+}
+.SectionContainer {
+  display: flex;
+  background-color: $gray-200;
+  margin-left: 1rem;
+  flex-direction: column;
+  padding: $spacer;
+  margin-right: $spacer;
+  border: 1px solid #ccc;
+  border-bottom: 2px solid #bbb;
+  border-top: 1px solid #ddd;
+  border-radius: 2px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  margin: $spacer;
+}
+
+.SectionTitle {
+  color: $dark;
+}
+
+.SectionDescription {
+  font-style: italic;
+
+}
+
+.SectionItems {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: space-evenly;
+}

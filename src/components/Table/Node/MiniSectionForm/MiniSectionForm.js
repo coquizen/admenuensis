@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDotCircle, faEdit, faEllipsisH, faImage, faPlus } from '@fortawesome/free-solid-svg-icons'
-import { Handle } from 'components/Table/Handle'
+import Handle from 'components/Table/Handle'
 import { useData } from 'context/DataProvider'
 import { useModal } from 'context/ModalProvider'
 import Form from 'components/Form'

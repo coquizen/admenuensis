@@ -1,11 +1,31 @@
 /** @format */
+@import '../../assets/scss/admin.scss';
 
-.Table {
-  width: 100%;
+.MenuContainer {
   display: flex;
+  background-color: $gray-100;
+  margin-left: 1rem;
   flex-direction: column;
-  min-height: 0;
+  padding: $spacer;
+  margin: $spacer;
+  border: 1px solid #ccc;
+  border-bottom: 2px solid #bbb;
+  border-top: 1px solid #ddd;
+  border-radius: 2px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+}
+
+.MenuTitle {
+  color: $dark;
+}
+
+.MenuDescription {
+  font-style: italic;
+  margin-bottom: $spacer;
 }
 
 .BlankList {
 }
+
+

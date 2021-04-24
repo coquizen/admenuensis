@@ -1,0 +1,75 @@
+@import '../../assets/scss/admin';
+@import '../../assets/scss/custom';
+
+.Card {
+  @extend .card;
+  width: 100%;
+  max-width: 18rem;
+}
+
+.CardHeader {
+  @extend .card-header;
+  width: fit-content;
+  width: -moz-fit-content;
+}
+
+.CardBody {
+  @extend .card-body;
+}
+
+.CardTitle {
+  @extend .card-title;
+}
+
+.CardText {
+  @extend .card-text;
+}
+
+.CardFooter {
+  @extend .card-footer;
+}
+
+.Price::before {
+  content: "$";
+}
+.Price {
+  @extend .text-muted;
+  @extend .text-end;
+
+  color: $red;
+}
+
+
+
+
+
+.ItemContainer {
+  background-color: $gray-100;
+  width: 18rem;
+  border: 1px solid #ccc;
+  border-bottom: 2px solid #bbb;
+  border-top: 1px solid #ddd;
+  border-radius: 2px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  color: $dark;
+  margin: $spacer;
+  padding: $spacer;
+  .Clicked {
+    border-bottom: 2px solid #ddd;
+    border-top: 1px solid #bbb;
+  }
+}
+
+.ItemHeader {
+  height: 13.5%;
+}
+.ItemBody {
+  height: 75%;
+}
+.ItemFooter {
+  height: 13.5%;
+}
+.Price {
+  color: $red;
+}
