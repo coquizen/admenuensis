@@ -1,22 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { DndContext, DragOverlay, closestCorners, useSensors, useSensor, PointerSensor, KeyboardSensor, useDroppable } from '@dnd-kit/core'
-import { sortableKeyboardCoordinates, SortableContext, arrayMove, rectSwappingStrategy } from '@dnd-kit/sortable'
+import { sortableKeyboardCoordinates, SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useData } from 'context/DataProvider'
 import List from 'components/Table/List'
 import styles from './Table.module.scss'
 import { SortableNodeWrapper } from 'components/Table/Node'
 import Menus from './Menus'
 import SortableWrapper from './SortableWrapper'
-
-
-const DroppableContainer = ({ children, id, items, getStyle = () => ({}) }) => {
-	const { over, isOver, setNodeRef } = useDroppable({ id })
-	const isOverContainer = isOver || (over ? items.includes(over.id) : false)
-
-	return (
-		<List ref={setNodeRef} style={getStyle({ isOverContainer })}>{children}</List>
-	)
-}
+import DroppableContainer from './DroppableContainer'
+import flattenTree from "../../utils/flattenTree";
 
 const defaultContainerStyle = ({ isOverContainer }) => ({
 	marginTop: 40,
@@ -34,7 +26,7 @@ const Table = ({ getItemStyles = () => ({}) }) => {
 	useEffect(() => {
 		if (menus) {
 			let menuObj = {}
-			menus.forEach((menu) => menuObj[ menu.id ] = menu)
+			menus.forEach((menu) => menuObj[menu.id] = flattenTree(menu))
 			setMenuData(menuObj)
 		}
 	}, [ menus ])
@@ -175,36 +167,12 @@ const Table = ({ getItemStyles = () => ({}) }) => {
 
 	let menuItems
 	if (menuData) menuItems = Object.keys(menuData).sort((a, b) => {
-		return menuData[a].list_order < menuData[b].list_order
+		return menuData[a].list_order - menuData[b].list_order
 	}).map((containerID => containerID))
 	return (
-		<DndContext
-			sensors={sensors}
-			collisionDetection={closestCorners}
-			onDragStart={handleDragStart}
-			onDragOver={handleDragOver}
-			onDragEnd={handleDragEnd}
-			onDragCancel={handleDragCancel}
-		>
-			{menuData &&
-			<SortableContext
-				items={menuItems}
-				strategy={rectSwappingStrategy}>
-				<DroppableContainer
-					id='menus'
-					items={menuItems}
-					getStyle={defaultContainerStyle}>
-					{menuItems.map((containerID, index) =>
-						<SortableWrapper key={containerID}
-										 id={containerID}
-										 index={index}
-										 style={getItemStyles}
-										 getIndex={getIndex}>
-							<Menus menusData={menuData[containerID]}/>
-						</SortableWrapper>)}
-				</DroppableContainer>
-			</SortableContext>}
-		</DndContext>
+		<>
+			{menuData && menuItems.map((menuID) => <Menus key={menuID} menusData={menuData[menuID]}  />)}</>
+
 	)
 }
 

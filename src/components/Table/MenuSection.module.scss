@@ -4,6 +4,7 @@
 .CardGroup {
   @extend .card-group;
   margin-top: $spacer;
+  justify-content: space-between;
 }
 
 .Section {
@@ -39,6 +40,10 @@
 .SectionDescription {
   font-style: italic;
 
+}
+
+.Handle {
+  font-size: 1rem;
 }
 
 .SectionItems {

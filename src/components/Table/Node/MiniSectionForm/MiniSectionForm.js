@@ -80,7 +80,7 @@ const MiniSectionForm = ({ uuid, listeners, attributes, isBlank = false }) => {
 					<button disabled={isBlank} type='button' className='btn btn-sm'>
 						<FontAwesomeIcon icon={faDotCircle} fixedWidth />
 					</button>
-					<button disabled={isBlank} type='button' className='btn btn-sm' onClick={handleClick}>
+					<button type='button' className='btn btn-sm' onClick={handleClick}>
 						<FontAwesomeIcon icon={faEdit} fixedWidth />
 					</button>
 					<button disabled={isBlank} type='button' className='btn btn-sm'>

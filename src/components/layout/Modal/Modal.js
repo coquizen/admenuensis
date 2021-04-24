@@ -35,7 +35,7 @@ const Modal = ({ closing, onClosingTransitionEnd, closeModal, isOpen, children }
 			document.querySelector('#root').removeAttribute('inert')
 			window.removeEventListener('keyup', keyHandler)
 		}
-	}, [ isOpen, closeModal ])
+	}, [ isOpen ])
 
 	return (
 		<Portal>

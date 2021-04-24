@@ -5,12 +5,13 @@
   @extend .card;
   width: 100%;
   max-width: 18rem;
+  margin: $spacer $spacer/2;
 }
 
 .CardHeader {
   @extend .card-header;
-  width: fit-content;
-  width: -moz-fit-content;
+  color: $dark-blue;
+  background-color: $gray-200;
 }
 
 .CardBody {
@@ -27,6 +28,9 @@
 
 .CardFooter {
   @extend .card-footer;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
 }
 
 .Price::before {
@@ -35,11 +39,15 @@
 .Price {
   @extend .text-muted;
   @extend .text-end;
-
   color: $red;
 }
 
-
+.EditButton {
+  align-items: center;
+}
+button {
+  border: none;
+}
 
 
 

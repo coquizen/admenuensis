@@ -6842,6 +6842,11 @@ isobject@^3.0.0, isobject@^3.0.1:
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
 
+isomorphic-react-fittext@^1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/isomorphic-react-fittext/-/isomorphic-react-fittext-1.3.2.tgz#bcdfe18a33c88c5b57533a5150b7e3cad62d34a9"
+  integrity sha512-qp78wi2UL8iN3xUVLetObp1xT/4v9EtcCMsL8pv7bTsmjMlgzU6wjsExnmuDo56hbq5odhmBpTvIrB70Ns0YFQ==
+
 isstream@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
