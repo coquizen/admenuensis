@@ -11,8 +11,8 @@ export default (tree) => {
 				subsection.items &&
 					subsection.items
 						.sort((a, b) => a.list_order < b.list_order)
-						.forEach((item, index) => {
-							items.push(item)
+						.forEach((item) => {
+							items.push(item.id)
 						})
 				newTree[subsection.id]= items
 			})
@@ -22,7 +22,7 @@ export default (tree) => {
 			.sort((a, b) => a.list_order > b.list_order)
 			.forEach((item, index) => {
 				if (item.type !== 'Plate') return
-				items.push(item)
+				items.push(item.id)
 			})
 		newTree[tree.id] = items
 	}

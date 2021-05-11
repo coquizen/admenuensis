@@ -5,13 +5,12 @@ import Item from "./Node/Item";
 const SortableItemWrapper = ({
     dataID, index, getIndex, style, children, type, ...props
 }) => {
-    const { setNodeRef, isDragging, isSorting, over, overIndex, transform, transition, listeners, attributes } = useSortable({ id: dataID })
+    const { setNodeRef, isDragging, isSorting, over, overIndex, transform, transition, wrapperStyle, listeners, attributes } = useSortable({ id: dataID })
 
     const mounted = useMountStatus()
     const mountedWhileDragging = isDragging && !mounted
     const unmounting = !isDragging && !mounted
 
-    console.info('sortable ', type)
     return (
         <Item type={type}
               dataID={dataID}
@@ -20,10 +19,12 @@ const SortableItemWrapper = ({
               attributes={attributes}
               dragging={isDragging}
               style={style({ isDragging, isSorting, overIndex: over ? getIndex(over.id) : overIndex })}
-              sorting={isSorting} index={index}
+              sorting={isSorting}
+              index={index}
               fadeIn={mountedWhileDragging}
               fadeOut={unmounting}
               transition={transition}
+              wrapperStyle={wrapperStyle}
               transform={transform}
         >
             {children}

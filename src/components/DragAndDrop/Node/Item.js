@@ -3,6 +3,7 @@ import classnames from "classnames";
 import styles from "./Item.module.scss";
 import MiniItemForm from "./MiniItemForm";
 import MiniSectionForm from "./MiniSectionForm";
+import { useData } from "context/DataProvider"
 
 export const Item = memo(forwardRef(({
     dataID,
@@ -11,6 +12,7 @@ export const Item = memo(forwardRef(({
     disabled,
     fadeIn,
     fadeOut,
+    height,
     listeners,
     attributes,
     style,
@@ -18,11 +20,13 @@ export const Item = memo(forwardRef(({
     transform,
     sorting,
     index,
-    children,
-    type,
+    wrapperStyle,
     ...props
 }, ref) => {
 
+    const { getTypeByID, getItemDataByID, getSectionDataByID } = useData()
+    const type = getTypeByID(dataID)
+    const data = type === 'item' ? getItemDataByID(dataID) : getSectionDataByID(dataID)
     useLayoutEffect(() => {
         if (!dragOverlay) {
             return
@@ -35,10 +39,15 @@ export const Item = memo(forwardRef(({
         }
     }, [ dragOverlay ])
 
+    console.info('sortable : ', data)
     return (
         <div
-            className={classnames(styles.Wrapper, fadeIn && styles.fadeIn, dragOverlay && styles.dragOverlay)}
+            className={classnames(styles.Wrapper,
+                                  fadeIn && styles.FadeIn,
+                                  sorting && styles.Sorting,
+                                  dragOverlay && styles.DragOverlay)}
             style={{
+                ...wrapperStyle,
                 transition,
                 '--translate-x': transform ? `${Math.round(transform.x)}px` : undefined,
                 '--translate-y': transform ? `${Math.round(transform.y)}px` : undefined,
@@ -47,10 +56,19 @@ export const Item = memo(forwardRef(({
                 '--index': index
             }}
             ref={ref}
-            data-cypress='draggable-item'>
-            {type === 'Plate' ?
+            >
+            <div className={classnames(
+                styles.Item,
+                dragging && styles.Dragging,
+                dragOverlay && styles.DragOverlay,
+                )}
+                 style={style}
+                 data-cypress='draggable-item'
+                {...props}>
+            {type === 'item' ?
              <MiniItemForm uuid={dataID} listeners={listeners} attributes={attributes} />
             : <MiniSectionForm uuid={dataID} listeners={listeners} attributes={attributes} />}
+            </div>
         </div>
     )
 }))

@@ -22,14 +22,9 @@ const DataProvider = ({ children }) => {
 	}, [isDirty])
 
 	const getSectionDataByID = (id) => {
-	if (allSectionsData) return allSectionsData.find((section) => section.id === id)
-}
+		if (allSectionsData) return allSectionsData.find((section) => section.id === id)
+	}
 	const getItemDataByID = (id) => allItemsData && allItemsData.find((item) => item.id === id)
-
-	let allData = {}
-	allData[ 'section' ] = allSectionsData
-	allData[ 'item' ] = allItemsData
-
 
 	const updateSection = (data) => {
 		api.updateSection(data).then(() => setIsDirty(true))
@@ -45,6 +40,12 @@ const DataProvider = ({ children }) => {
 	const deleteItem = (id) => {
 		api.deleteItem(id).then(() => setIsDirty(true))
 	}
+
+	const getTypeByID = (id) => {
+		if (!isDirty) {
+			return getSectionDataByID(id) ? 'section' : 'item'
+		}
+	}
 	useReactContextDevTool({
 		id: 'dataprovider',
 		displayName: 'Data',
@@ -56,7 +57,7 @@ const DataProvider = ({ children }) => {
 			updateItem,
 			deleteItem,
 			deleteSection,
-			allData,
+			getTypeByID,
 			menus
 		},
 	})
@@ -70,7 +71,7 @@ const DataProvider = ({ children }) => {
 				getItemDataByID,
 				getSectionDataByID,
 				updateItem,
-				allData,
+				getTypeByID,
 				menus
 			}}>
 			{children}

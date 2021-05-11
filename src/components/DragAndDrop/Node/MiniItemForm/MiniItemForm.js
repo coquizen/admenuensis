@@ -28,6 +28,7 @@ const MiniItemForm = ({ uuid, listeners, attributes, isBlank = false }) => {
 
 	}
 
+
 	const [ itemData, setItemData ] = useState()
 	const [ isChanged, setIsChanged ] = useState(false)
 	const { insertComponent } = useModal()
