@@ -7,22 +7,23 @@ import * as api from 'services/data'
 const DataContext = createContext(null)
 
 const DataProvider = ({ children }) => {
-	const [ allSectionsData, setAllSectionsData ] = useState(null)
-	const [ menus, setMenusData ] = useState(null)
-	const [ allItemsData, setAllItemsData ] = useState(null)
-	const [ isDirty, setIsDirty ] = useState(true)
+	const [allSectionsData, setAllSectionsData] = useState(null)
+	const [menus, setMenusData] = useState(null)
+	const [allItemsData, setAllItemsData] = useState(null)
+	const [isDirty, setIsDirty] = useState(true)
 
 	useEffect(() => {
 		if (isDirty) {
 			api.fetchSections().then((data) => setAllSectionsData(data))
-			api.fetchMenus().then((data) => setMenusData(data))
+			api.fetchMenus().then((data) => setMenusData(data.sort((a, b) => a.list_order - b.list_order)))
 			api.fetchItems().then((data) => setAllItemsData(data))
 			setIsDirty(false)
 		}
-	}, [ isDirty ])
+	}, [isDirty])
 
-	const getSectionDataByID = (id) => allSectionsData && allSectionsData.find((section) => section.id === id)
-
+	const getSectionDataByID = (id) => {
+	if (allSectionsData) return allSectionsData.find((section) => section.id === id)
+}
 	const getItemDataByID = (id) => allItemsData && allItemsData.find((item) => item.id === id)
 
 	let allData = {}

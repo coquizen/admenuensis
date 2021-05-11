@@ -1,0 +1,84 @@
+/** @format */
+
+@import '../../../assets/scss/admin';
+@import '../../../assets/scss/custom';
+
+.Card {
+  @extend .card;
+  width: 18rem;
+  margin: $spacer $spacer/2;
+}
+
+.CardHeader {
+  // @extend .card-header;
+  display: inline-flex;
+  flex-flow: row;
+  color: $dark-blue;
+  background-color: $gray-200;
+}
+
+.CardBody {
+  @extend .card-body;
+}
+
+.CardTitle {
+  @extend .card-title;
+}
+
+.CardText {
+  @extend .card-text;
+}
+
+.CardFooter {
+  @extend .card-footer;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+}
+
+.Price::before {
+  content: '$';
+}
+.Price {
+  @extend .text-muted;
+  @extend .text-end;
+  color: $red;
+}
+
+.EditButton {
+  align-items: center;
+}
+button {
+  border: none;
+}
+
+.ItemContainer {
+  background-color: $gray-100;
+  width: 18rem;
+  border: 1px solid #ccc;
+  border-bottom: 2px solid #bbb;
+  border-top: 1px solid #ddd;
+  border-radius: 2px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  color: $dark;
+  margin: $spacer;
+  padding: $spacer;
+  .Clicked {
+    border-bottom: 2px solid #ddd;
+    border-top: 1px solid #bbb;
+  }
+}
+
+.ItemHeader {
+  height: 13.5%;
+}
+.ItemBody {
+  height: 75%;
+}
+.ItemFooter {
+  height: 13.5%;
+}
+.Price {
+  color: $red;
+}

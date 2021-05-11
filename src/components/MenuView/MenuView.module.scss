@@ -1,0 +1,11 @@
+@import '../../assets/scss/admin';
+
+.Menus {
+  display: flex;
+
+}
+.MenuContent {
+  display: flex;
+  background-color: $gray-500;
+  height: 80vh;
+}

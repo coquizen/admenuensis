@@ -1,19 +1,33 @@
 /** @format */
 
-import React from 'react'
-import Table from 'components/Table/Table'
-import { PublishButton } from 'components/Table/PublishButton'
+import React, {useEffect, useState} from 'react'
+import { PublishButton } from 'components/DragAndDrop/PublishButton'
+import { useData } from 'context/DataProvider'
 import styles from './Menu.module.scss'
-const Menu = () => {
-	// const { result, error, loading } = menuSectionData
+import SubHeader from 'components/layout/SubHeader'
+import NavBar from "components/NavBar/NavBar";
+import Table from 'components/DragAndDrop/Table'
 
+const Menu = () => {
+	const { menus } = useData()
+	const [activeMenu, setActiveMenu] = useState()
+
+	useEffect(() => {
+		if (menus) {
+			setActiveMenu(menus[0])
+		}
+	},[menus])
+
+
+	console.info(menus)
 	return (
 		<div className={styles.Menu}>
-			<div className={styles.MenuHeader}>Menu Management</div>
+			<SubHeader title={'Menu Management'} />
+				{menus && <NavBar menus={menus} setActiveMenu={setActiveMenu} activeMenu={activeMenu} />}
 			<div className={styles.MenuBody}>
-				<Table />
-				<PublishButton />
+				{activeMenu && <Table data={activeMenu}/>}
 			</div>
+			<PublishButton />
 		</div>
 	)
 }

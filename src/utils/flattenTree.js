@@ -1,43 +1,30 @@
 /** @format */
 
 export default (tree) => {
-	let flattenedTree = []
-
-	if (!tree.description) {
-		tree.description = "Description..."
-	}
-	flattenedTree.push({ ...tree, depth: 0, index: -1 })
+	let newTree = {}
 	tree.subsections &&
 		tree.subsections
 			.sort((a, b) => a.list_order < b.list_order)
 			.forEach((subsection, index) => {
-				if (!subsection.description) {
-					subsection.description = "Description..."
-				}
-				flattenedTree.push({ ...subsection, depth: 1, index })
+				if (subsection.type !== 'Category') return
+				let items = []
 				subsection.items &&
 					subsection.items
 						.sort((a, b) => a.list_order < b.list_order)
 						.forEach((item, index) => {
-							if (!item.description) {
-								item.description = "Description..."
-							}
-							flattenedTree.push({
-								...item,
-								depth: 2,
-								type: 'item',
-								index,
-							})
+							items.push(item)
 						})
+				newTree[subsection.id]= items
 			})
-	tree.items &&
+	if (tree.items.length > 0) {
+		let items = []
 		tree.items
 			.sort((a, b) => a.list_order > b.list_order)
 			.forEach((item, index) => {
-				if (!item.description) {
-					item.description = "Description..."
-				}
-				flattenedTree.push({ ...item, depth: 1, type: 'section', index })
+				if (item.type !== 'Plate') return
+				items.push(item)
 			})
-	return flattenedTree
+		newTree[tree.id] = items
+	}
+	return newTree
 }
