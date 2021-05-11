@@ -4,23 +4,18 @@
 @import '../../../assets/scss/custom';
 
 .Tab {
-	color: inherit;
-	background-color: $gray-300;
-	text-decoration: none
-	font-size: $font-size;
+	color: $gray-400;
+	background-color: transparent;
+	text-decoration: none;
+	font-size: $font-size-lg;
 	display: block;
-	padding: $spacer $spacer;
+	padding: .5rem .75rem;
 	transition-duration: 0.3s;
 	transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 	position: relative;
-	padding: 0.5rem 0.75rem;
-
 	&.Active {
-		color: $orange;
-		background-color: $gray-100;
+		color: black;
 		transition: all 0.7s;
-		border: solid $light-blue;
-		border-width: 1px 1px 0 1px;
 	}
 	&:not(:only-child):after {
 		content: '\f105';
@@ -28,7 +23,7 @@
 		right: 20px;
 		top: 10px;
 		font-size: $font-size-sm;
-		font-family: "Font Awesome 5 Free"
+		font-family: "Font Awesome 5 Free";
 		display: inline-block;
 		padding: 3px;
 		vertical-align: middle;

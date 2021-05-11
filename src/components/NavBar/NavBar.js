@@ -1,14 +1,19 @@
 import React from 'react'
-import styles from './Tab.module.scss'
+import styles from './NavBar.module.scss'
 import Tab from './Tab'
+import AnimatingSelector from './AnimatingSelector'
+import usePositionAndDimension from "hooks/usePositionAndDimension";
 
-const NavBar = ({setActiveLabel, activeLabel, menus}) => {
+const NavBar = ({setActiveMenu, activeMenu, menus}) => {
+    const {activeRef, setActiveRef} = usePositionAndDimension()
+
     return (
         <div className={styles.NavBar}>
-            <AnimatingSelector />
-            <ol className={styles.NavList}>
-                {menus && menus.map((menu) => <Tab label={menu.title} activeLabel={activeLabel} key={menu.title} onClick={setActiveLabel} />)}
-            </ol>
+            <AnimatingSelector activeRef={activeRef}/>
+            <div className={styles.NavList}>
+                {menus && menus.map((menu) => <Tab setActiveRef={setActiveRef} menu={menu} activeMenu={activeMenu} key={menu.title} setActiveMenu={setActiveMenu} />)}
+            </div>
         </div>
     )
 }
+export default NavBar
