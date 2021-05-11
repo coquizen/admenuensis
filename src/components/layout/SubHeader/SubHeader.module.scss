@@ -1,0 +1,15 @@
+@import '../../../assets/scss/admin';
+
+.SubHeader {
+  background: $gray-300;
+  font-weight: $font-weight-bold;
+  color: $gray-700;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  margin-left: map-get($map: $spacers, $key: 4);
+  margin-right: map-get($map: $spacers, $key: 4);
+  padding: 0 $spacer $spacer $spacer;
+  min-height: 40px;
+  z-index: $zindex-sticky;
+  position: sticky;
+  top: 0;
+}
