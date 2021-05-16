@@ -1,6 +1,6 @@
 /** @format */
 
-export default (tree) => {
+const flattenTree = (tree) => {
 	let newTree = {}
 	tree.subsections &&
 		tree.subsections
@@ -9,12 +9,12 @@ export default (tree) => {
 				if (subsection.type !== 'Category') return
 				let items = []
 				subsection.items &&
-					subsection.items
-						.sort((a, b) => a.list_order < b.list_order)
-						.forEach((item) => {
-							items.push(item.id)
-						})
-				newTree[subsection.id]= items
+				subsection.items
+					.sort((a, b) => a.list_order < b.list_order)
+					.forEach((item) => {
+						items.push(item.id)
+					})
+				newTree[subsection.id] = items
 			})
 	if (tree.items.length > 0) {
 		let items = []
@@ -28,3 +28,5 @@ export default (tree) => {
 	}
 	return newTree
 }
+
+export default flattenTree

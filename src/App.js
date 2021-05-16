@@ -3,8 +3,8 @@
 import React from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import Routes from 'routes'
-import { default as Providers } from 'context'
 import { Header } from './components/layout'
+import Providers  from 'context'
 import styles from './App.module.scss'
 import SideBar from 'components/layout/SideBar'
 

@@ -1,6 +1,7 @@
 /** @format */
 
 import React, { useState, useEffect } from "react"
+import { fetchItem } from 'services/data'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faDotCircle, faEdit, faEllipsisH, faDollarSign } from "@fortawesome/free-solid-svg-icons"
 import classnames from "classnames"
@@ -10,34 +11,22 @@ import { useModal } from "context/ModalProvider"
 import { Item } from "components/Form/forms"
 import Form from "components/Form"
 import styles from "./MiniItemForm.module.scss"
+import * as api from 'services/data'
 
-const defaults = { title: "", price: null, section_id: 1 }
-
-const MiniItemForm = ({ uuid, listeners, attributes, isBlank = false }) => {
-	const { updateItem, getItemDataByID } = useData()
-	let data
-	switch (isBlank) {
-		case true:
-			data = defaults
-			break;
-		case false:
-			data = getItemDataByID(uuid)
-			break;
-		default:
-			console.error("How did you even get here?!")
-
-	}
-
+const MiniItemForm = ({ uuid, listeners, attributes }) => {
+	const { updateItem } = useData()
 
 	const [ itemData, setItemData ] = useState()
 	const [ isChanged, setIsChanged ] = useState(false)
 	const { insertComponent } = useModal()
 
 	useEffect(() => {
-		if (data) {
-			setItemData(data)
+		const fetchData = () => {
+			api.fetchItem(uuid).then(setItemData)
 		}
-	},[data])
+		fetchData()
+	}, [uuid])
+
 	const onChange = (e) => {
 		const newItemData = itemData
 		newItemData[ e.target.name ] = e.target.value
@@ -47,12 +36,10 @@ const MiniItemForm = ({ uuid, listeners, attributes, isBlank = false }) => {
 		}
 	}
 
-	if (typeof itemData === undefined) debugger
 	const handleClick = (e) => {
 		e.preventDefault()
 		insertComponent(<Form form={<Item uuid={uuid} />} />)
 	}
-
 
 	const handleDataChange = (e) => {
 		if (e.charCode === 13 && isChanged) {
@@ -70,23 +57,24 @@ const MiniItemForm = ({ uuid, listeners, attributes, isBlank = false }) => {
 
 	return (
 		<>
-		{itemData && <div className={styles.NodeWrapper}>
+		{itemData &&
+		<div className={styles.NodeWrapper}>
 			<div className={styles.Node}>
-				{!isBlank && <Handle listeners={listeners} attributes={attributes} />}
+				<Handle listeners={listeners} attributes={attributes} />
 				<input
 					name="title"
 					type="text"
-					className={classnames(styles.NodeInput, isBlank && styles.NodeNew)}
+					className={styles.NodeInput}
 					value={itemData.title}
 					onChange={onChange}
 					onKeyPress={handleDataChange}
 					onBlur={onLostFocus}
 					placeholder="Please type in a food item. E.g. French Fries"
-					disabled={isBlank}
+
 				/>
-				<div type="button" className="btn btn-sm">
+				<button type="button" className="btn btn-sm">
 					<FontAwesomeIcon icon={faDollarSign} fixedWidth />
-				</div>
+				</button>
 				<div style={{ textAlign: "right" }}>
 					<input
 						name="price"
@@ -118,4 +106,4 @@ const MiniItemForm = ({ uuid, listeners, attributes, isBlank = false }) => {
 	)
 }
 
-export default MiniItemForm
+export default React.memo(MiniItemForm)

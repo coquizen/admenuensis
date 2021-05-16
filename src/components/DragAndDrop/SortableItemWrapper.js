@@ -1,31 +1,28 @@
 import React, {useLayoutEffect, useState} from 'react'
+import {CSS} from '@dnd-kit/utilities'
 import {useSortable} from '@dnd-kit/sortable'
 import Item from "./Node/Item";
 
-const SortableItemWrapper = ({
-    dataID, index, getIndex, style, children, type, ...props
-}) => {
-    const { setNodeRef, isDragging, isSorting, over, overIndex, transform, transition, wrapperStyle, listeners, attributes } = useSortable({ id: dataID })
+const SortableItemWrapper = ({id, dataID, formType, children, ...props }) => {
 
-    const mounted = useMountStatus()
-    const mountedWhileDragging = isDragging && !mounted
-    const unmounting = !isDragging && !mounted
+    const { setNodeRef, transform, transition, listeners, attributes,
+    } = useSortable({
+                                  id: dataID
+    })
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition
+    }
 
     return (
-        <Item type={type}
+        <Item formType={formType}
               dataID={dataID}
               ref={setNodeRef}
+              style={style}
               listeners={listeners}
               attributes={attributes}
-              dragging={isDragging}
-              style={style({ isDragging, isSorting, overIndex: over ? getIndex(over.id) : overIndex })}
-              sorting={isSorting}
-              index={index}
-              fadeIn={mountedWhileDragging}
-              fadeOut={unmounting}
-              transition={transition}
-              wrapperStyle={wrapperStyle}
-              transform={transform}
+              {...props}
         >
             {children}
         </Item>
@@ -33,15 +30,3 @@ const SortableItemWrapper = ({
 }
 
 export default SortableItemWrapper
-
-const useMountStatus = () => {
-    const [ isMounted, setIsMounted ] = useState(false)
-
-    useLayoutEffect(() => {
-        const timeout = setTimeout(() => setIsMounted(true), 500)
-        return () => clearTimeout()
-    }, [])
-
-    return isMounted
-}
-

@@ -11,10 +11,8 @@ export const authHeader = () => {
 	}
 }
 
-export const fetchMenus = () => {
-	return fetch(`/api/v1/menus`)
-		.then((response) => response.json())
-		.then((data) => data.data)
+export const fetchMenus = async () => {
+	return await fetch(`/api/v1/menus`)
 }
 
 export const fetchSections = () => {

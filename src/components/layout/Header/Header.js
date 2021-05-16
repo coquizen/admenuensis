@@ -8,7 +8,6 @@ import styles from './Header.module.scss'
 
 const Header = () => {
 	const { isAuthenticated } = useAuth()
-	console.info("@Header: ", isAuthenticated())
 	return (
 		<div className={classnames(
 			styles.Header,

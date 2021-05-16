@@ -24,7 +24,6 @@ const Login = () => {
         setLoginState('pending')
         login(username, password).then(() => {
             setLoginState('resolved')
-            console.info(username, password, loginState)
             let { from } = location.state || { from: { pathname: "/" } };
             history.replace(from);
         }).catch((err) => {

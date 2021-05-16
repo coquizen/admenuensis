@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import {
-	closestCorners, DndContext, DragOverlay, KeyboardSensor, PointerSensor, useSensor, useSensors
-} from '@dnd-kit/core'
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { useSensors, useSensor, PointerSensor, KeyboardSensor, DndContext, closestCenter, DragOverlay} from "@dnd-kit/core";
 import styles from './Table.module.scss'
 import SortableItemWrapper from './SortableItemWrapper'
 import DroppableContainer from './DroppableContainer'
 import flattenTree from "utils/flattenTree";
 import Item from 'components/DragAndDrop/Node/Item'
 import { createPortal } from "react-dom";
+import { useData } from "context/DataProvider";
 
 const getContainerStyle = ({ isOverContainer }) => ({
 	marginTop: 40,
@@ -16,17 +15,17 @@ const getContainerStyle = ({ isOverContainer }) => ({
 })
 
 const Table = ({ getItemStyles = () => ({}), wrapperStyle = () => ({}), data }) => {
-	const [ menuData, setMenuData] = useState(null)
-	const [ activeID, setActiveID ] = useState()
+	const [ menuData, setMenuData] = useState({})
+	const [ activeID, setActiveID ] = useState(null)
 	const [ dragOverlaidItems, setClonedItems ] = useState(null)
-
+	const {getSectionDataByID} = useData()
 
 	useEffect(() => {
 		if (data) {
-			let parsedMenu = flattenTree(data)
-			setMenuData(parsedMenu)
+			const parsedData = flattenTree(data)
+			setMenuData(parsedData)
 		}
-	},[data])
+	}, [data])
 
 	const sensors = useSensors(
 		useSensor(PointerSensor),
@@ -75,8 +74,8 @@ const Table = ({ getItemStyles = () => ({}), wrapperStyle = () => ({}), data }) 
 			setMenuData((menuData) => {
 				const activeItemsID = menuData[ activeContainer ]
 				const overItemsID = menuData[ overContainer ]
-				const overIndex = overItemsID.indexOf(over.id)
-				const activeIndex = activeItemsID.indexOf(active.id)
+				const overIndex = getIndex(over.id)
+				const activeIndex = getIndex(active.id)
 				let newIndex
 
 				if (over.id in menuData) {
@@ -117,8 +116,8 @@ const Table = ({ getItemStyles = () => ({}), wrapperStyle = () => ({}), data }) 
 		const overContainer = findContainer(over.id)
 
 		if (activeContainer && overContainer) {
-			const activeIndex = menuData[ activeContainer ].indexOf(active.id)
-			const overIndex = menuData[ overContainer ].indexOf(over.id)
+			const activeIndex = getIndex(active.id)
+			const overIndex = getIndex(over.id)
 
 			if (activeIndex !== overIndex) {
 				setMenuData((menuData) => ({
@@ -143,7 +142,6 @@ const Table = ({ getItemStyles = () => ({}), wrapperStyle = () => ({}), data }) 
 		setClonedItems(null)
 	}
 
-	console.info(menuData)
 	return (
 		<DndContext
 			onDragStart={handleDragStart}
@@ -155,7 +153,7 @@ const Table = ({ getItemStyles = () => ({}), wrapperStyle = () => ({}), data }) 
 		>
 			<div className={styles.Sections}>
 				{menuData && Object.keys(menuData).map((containerId) =>	(
-					<SortableContext items={menuData[containerId]} strategy={verticalListSortingStrategy}>
+					<SortableContext items={menuData[containerId]} strategy={verticalListSortingStrategy} key={containerId}>
 						<DroppableContainer id={containerId} items={menuData[containerId]} getStyle={getContainerStyle}>
 							<section key={containerId}>
 								{menuData[containerId].map((nodeID, index) => (
@@ -164,37 +162,23 @@ const Table = ({ getItemStyles = () => ({}), wrapperStyle = () => ({}), data }) 
 										key={nodeID}
 										dataID={nodeID}
 										index={index}
-										style={getItemStyles}
-										wrapperStyle={wrapperStyle}
-										containerId={containerId}
-										getIndex={getIndex}/>
-								))}
-							</section>
+										isSection={containerId === nodeID}
+									/>
+							)})}
 						</DroppableContainer>
-					</SortableContext>)
-				)}
+				</SortableContext>))}
 			</div>
 			{createPortal(
 				<DragOverlay adjustScale='false'>
 					{activeID ?
 					 <Item
 						dataID={activeID}
-						style={getItemStyles({
-							containerId:   findContainer(activeID),
-							overIndex:     -1,
-							index:         getIndex(activeID),
-							isSorting:     activeID !== null,
-							isDragging:    true,
-							isDragOverlay: true
-						})}
-					index={getIndex(activeID)}
-					wrapperStyle={wrapperStyle({index: 0})}
-					dragOverlay
 				/> : null}
 			</DragOverlay>, document.body)}
 		</DndContext>
 	)
 }
+
 const DragAndDropContainer = ({nodeIDs, getIndex, containerId, getItemStyles, wrapperStyle}) => {
 
 	return (

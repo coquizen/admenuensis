@@ -9,21 +9,17 @@ const ModalContext = createContext()
 const ModalProvider = ({ children }) => {
 	const [ isOpen, setIsOpen ] = useState(false)
 	const [ ModalComponent, setModalComponent ] = useState(undefined)
-	const [ closing, setClosing ] = useState(false)
+	const [ closing, closeModal ] = useState(false)
 
 	const insertComponent = (comp) => {
 		setModalComponent(comp)
 		setIsOpen(true)
 	}
 
-	const closeModal = () => {
-		setClosing(true)
-	}
-
 	const onClosingTransitionEnd = () => {
 		if (closing) {
 			setIsOpen(false)
-			setClosing(false)
+			closeModal(false)
 			setModalComponent(undefined)
 		} else {
 			setIsOpen(true)
@@ -41,7 +37,7 @@ const ModalProvider = ({ children }) => {
 			{children}
 			{isOpen && (
 				<Modal closing={closing}
-					closeModal={closeModal}
+					closeModal={() => closeModal(true)}
 					isOpen={isOpen}
 					onClosingTransitionEnd={onClosingTransitionEnd}>
 					{ModalComponent}

@@ -6,12 +6,10 @@
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-	min-height: 0;
-	.MenuBody {
-		overflow-y: auto;
+	flex-grow: 1;
+	.MenuContent {
 		padding-left: $spacer;
 		background-color: $gray-100;
-		list-style: none;
 		font-weight: $font-weight-light;
 		margin: 0 map-get($map: $spacers, $key: 5) 0 map-get($map: $spacers, $key: 5);
 	}
