@@ -1,35 +1,44 @@
 /** @format */
-
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import { PublishButton } from 'components/DragAndDrop/PublishButton'
-import { useData } from 'context/DataProvider'
 import styles from './Menu.module.scss'
-import SubHeader from 'components/layout/SubHeader'
 import NavBar from "components/NavBar/NavBar";
 import Table from 'components/DragAndDrop/Table'
+import SubHeader from 'components/layout/SubHeader'
+import { fetchMenus } from 'services/data'
 
 const Menu = () => {
-	const { menus } = useData()
-	const [activeMenu, setActiveMenu] = useState()
+	const [ menus, loadMenus ] = useState()
 
 	useEffect(() => {
-		if (menus) {
-			setActiveMenu(menus[0])
-		}
-	},[menus])
+			loadMenus(fetchMenus())
+	}, [])
 
-
-	console.info(menus)
 	return (
 		<div className={styles.Menu}>
 			<SubHeader title={'Menu Management'} />
-				{menus && <NavBar menus={menus} setActiveMenu={setActiveMenu} activeMenu={activeMenu} />}
-			<div className={styles.MenuBody}>
-				{activeMenu && <Table data={activeMenu}/>}
-			</div>
+			{menus && <MenuView menus={menus} />}
 			<PublishButton />
-		</div>
+		</div >
 	)
 }
-
 export default Menu
+
+const MenuView = ({ menus }) => {
+	const [ activeMenu, setActiveMenu ] = useState()
+	menus.sort((a,b) => a.list_order - b.list_order)
+
+	if (!activeMenu) {
+		setActiveMenu(menus[0])
+		console.log('I have been set inside here')
+	}
+	return (
+		<>
+			{activeMenu && <>
+			<NavBar menus={menus} setActiveMenu={setActiveMenu} activeMenu={activeMenu} />
+			<div className={styles.MenuContent}>
+				<Table data={activeMenu} />
+			</div></>}
+		</>
+	)
+}

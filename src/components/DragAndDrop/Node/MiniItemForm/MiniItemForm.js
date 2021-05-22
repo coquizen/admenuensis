@@ -1,7 +1,6 @@
 /** @format */
 
 import React, { useState, useEffect } from "react"
-import { fetchItem } from 'services/data'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faDotCircle, faEdit, faEllipsisH, faDollarSign } from "@fortawesome/free-solid-svg-icons"
 import classnames from "classnames"
@@ -11,7 +10,7 @@ import { useModal } from "context/ModalProvider"
 import { Item } from "components/Form/forms"
 import Form from "components/Form"
 import styles from "./MiniItemForm.module.scss"
-import * as api from 'services/data'
+import { fetchItem }from 'services/data'
 
 const MiniItemForm = ({ uuid, listeners, attributes }) => {
 	const { updateItem } = useData()
@@ -21,10 +20,10 @@ const MiniItemForm = ({ uuid, listeners, attributes }) => {
 	const { insertComponent } = useModal()
 
 	useEffect(() => {
-		const fetchData = () => {
-			api.fetchItem(uuid).then(setItemData)
+		const fetchData = (uuid) => {
+			fetchItem(uuid).then(setItemData)
 		}
-		fetchData()
+		fetchData(uuid)
 	}, [uuid])
 
 	const onChange = (e) => {

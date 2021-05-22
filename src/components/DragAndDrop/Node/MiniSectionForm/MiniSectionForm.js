@@ -10,34 +10,22 @@ import Form from 'components/Form'
 import { Section } from 'components/Form/forms'
 import classnames from 'classnames'
 import styles from './MiniSectionForm.module.scss'
+import { fetchSection } from "services/data";
 
-const defaults = { title: '', price: null, section_id: 1 }
-const MiniSectionForm = ({ uuid, listeners, attributes, isBlank = false }) => {
-
-	const { updateSection, getSectionDataByID } = useData()
-	let data
-	switch (isBlank) {
-		case true:
-			data = defaults
-			break;
-		case false:
-			data = getSectionDataByID(uuid)
-			break;
-		default:
-			console.error("we shouldn't be here. How did you get here?!")
-	}
-
+const MiniSectionForm = ({ uuid, listeners, attributes }) => {
+	const { updateSection } = useData()
 	const [ sectionData, setSectionData] = useState()
-
-	const [ sectionTitle, setSectionTitle ] = useState(data.title)
+	const [ sectionTitle, setSectionTitle ] = useState()
 	const [ isChanged, setIsChanged ] = useState(false)
-
-	useEffect(() => {
-		if (data) {
-			setSectionData(data)
-		}
-	}, [data])
 	const { insertComponent } = useModal()
+
+	const isBlank = false
+	useEffect(() => {
+		const fetchData = () => {
+			fetchSection(uuid).then(({data}) => (setSectionData(data)))
+		}
+		fetchData()
+	}, [uuid])
 
 	const onChange = (e) => {
 		setSectionTitle(e.target.value)
@@ -70,12 +58,12 @@ const MiniSectionForm = ({ uuid, listeners, attributes, isBlank = false }) => {
 		<>
 		{sectionData && <div className={styles.NodeWrapper}>
 			<div className={styles.Node}>
-				{!isBlank && <Handle listeners={listeners} attributes={attributes} />}
+				<Handle listeners={listeners} attributes={attributes} />
 				<input
 					placeholder='Type section name, e.g. Dinner or Appetizer'
 					type='text'
-					className={classnames(styles.NodeInput, isBlank && styles.NodeNew)}
-					value={sectionTitle}
+					className={classnames(styles.NodeInput, !isBlank && styles.NodeNew)}
+					value={sectionData?.title}
 					onChange={onChange}
 					onKeyPress={handleTitleChange}
 					onBlur={onLostFocus}

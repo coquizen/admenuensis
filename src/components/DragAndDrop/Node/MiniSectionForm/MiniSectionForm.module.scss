@@ -34,7 +34,7 @@ button {
   &.child {
     margin-left: 2rem;
   }
-  &.nodeNew {
+  &.NodeNew {
     background-color: rgba(10, 10, 10, 0.45);
   }
 }
@@ -52,5 +52,6 @@ button {
 }
 
 .ButtonGroup {
+  display: inline-flex;
   padding: .25rem;
 }

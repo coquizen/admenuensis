@@ -1,0 +1,12 @@
+@import '../../assets/scss/admin';
+
+.Container {
+  background-color: $gray-500;
+  border-radius: $border-radius;
+  display: flex;
+  align-self: stretch;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  padding: 0 $spacer 0 $spacer;
+  
+}
