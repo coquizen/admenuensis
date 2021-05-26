@@ -1,44 +1,54 @@
 /** @format */
 import React, { useEffect, useState } from 'react'
-import { PublishButton } from 'components/DragAndDrop/PublishButton'
+import { PublishButton } from 'components/Table/PublishButton'
 import styles from './Menu.module.scss'
 import NavBar from "components/NavBar/NavBar";
-import Table from 'components/DragAndDrop/Table'
+import Table from 'components/Table/Table'
 import SubHeader from 'components/layout/SubHeader'
 import { fetchMenus } from 'services/data'
 
 const Menu = () => {
-	const [ menus, loadMenus ] = useState()
+	const [ menus, loadMenus ] = useState(null)
 
 	useEffect(() => {
-			loadMenus(fetchMenus())
-	}, [])
+		fetchMenus().then(({data})=> {
+			data.sort((a,b)=> a.list_order - b.list_order)
+			loadMenus(data)
+		})
+	},[fetchMenus, loadMenus])
 
+	console.info('menu.js: ', menus )
 	return (
-		<div className={styles.Menu}>
+		<>
+		{menus && <div className={styles.Menu}>
 			<SubHeader title={'Menu Management'} />
-			{menus && <MenuView menus={menus} />}
+			<MenuView menus={menus} />
 			<PublishButton />
-		</div >
+		</div>}
+		</>
 	)
 }
 export default Menu
 
 const MenuView = ({ menus }) => {
-	const [ activeMenu, setActiveMenu ] = useState()
-	menus.sort((a,b) => a.list_order - b.list_order)
 
-	if (!activeMenu) {
-		setActiveMenu(menus[0])
-		console.log('I have been set inside here')
+	for (let i = 0; i < menus.length; i++) {
+		if (menus[ i ].subsections) {
+			menus[ i ].subsections = menus[ i ].subsections.filter((section) => section.type === 'Category')
+				.sort((a, b) => a.list_order - b.list_order)
+		}
+		if (menus[ i ].items) {
+			menus[ i ].items = menus[ i ].items.filter((item) => item.type === 'Plate')
+				.sort((a, b) => a.list_order - b.list_order)
+		}
 	}
+	const [ activeMenu, setActiveMenu ] = useState(menus[0])
 	return (
 		<>
-			{activeMenu && <>
 			<NavBar menus={menus} setActiveMenu={setActiveMenu} activeMenu={activeMenu} />
 			<div className={styles.MenuContent}>
 				<Table data={activeMenu} />
-			</div></>}
+			</div>
 		</>
 	)
 }

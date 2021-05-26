@@ -8,19 +8,21 @@ const DataContext = createContext(null)
 
 const DataProvider = ({ children }) => {
 	const [allSectionsData, setAllSectionsData] = useState(null)
-	const [menus, setMenusData] = useState(null)
+	// const [menus, setMenusData] = useState(api.fetchMenus())
 	const [allItemsData, setAllItemsData] = useState(null)
 	const [isDirty, setIsDirty] = useState(true)
 
-	useEffect(() => {
-		if (isDirty) {
-			api.fetchSections().then((data) => setAllSectionsData(data))
-			api.fetchMenus().then((data) => setMenusData(data.sort((a, b) => a.list_order - b.list_order)))
-			api.fetchItems().then((data) => setAllItemsData(data))
-			setIsDirty(false)
-		}
-	}, [isDirty])
-
+	// useEffect(() => {
+	// 		api.fetchSections().then((data) => setAllSectionsData(data))
+	// }, [])
+	//
+	// useEffect(() => {
+	// 		api.fetchItems().then((data) => setAllItemsData(data))
+	// }, [])
+	//
+	// useEffect(()=> {
+	// 	api.fetchMenus().then((data) => setMenusData(data))
+	// }, [])
 	const getSectionDataByID = (id) => {
 		if (allSectionsData) return allSectionsData.find((section) => section.id === id)
 	}
@@ -58,7 +60,7 @@ const DataProvider = ({ children }) => {
 			deleteItem,
 			deleteSection,
 			getTypeByID,
-			menus
+
 		},
 	})
 
@@ -72,7 +74,6 @@ const DataProvider = ({ children }) => {
 				getSectionDataByID,
 				updateItem,
 				getTypeByID,
-				menus
 			}}>
 			{children}
 		</DataContext.Provider>

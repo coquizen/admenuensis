@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useState } from 'react'
 import { CSS } from '@dnd-kit/utilities'
 import { useSortable } from '@dnd-kit/sortable'
-import MiniSectionForm from "components/DragAndDrop/Node/MiniSectionForm";
+import MiniSectionForm from "components/Table/sortables/MiniSectionForm";
 
 const SortableItemWrapper = ({ id, dataID, menuData, formType, children, ...props }) => {
     console.log('item', dataID)
@@ -12,12 +12,16 @@ const SortableItemWrapper = ({ id, dataID, menuData, formType, children, ...prop
         }
     })
 
+    // const style = {
+    //     transform: CSS.Transform.toString(transform),
+    //     transition,
+    //     flex: 1,
+    //     position: "relative"
+    // }
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
-        flex: 1,
-        position: "relative"
-    }
+    };
 
     const injectPropsIntoChildren = () => (
         React.Children.map(children, (child => React.cloneElement(child, {listeners: listeners, attributes: attributes, ...props}))
