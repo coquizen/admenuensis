@@ -11,7 +11,7 @@ const NavBar = ({setActiveMenu, activeMenu, menus}) => {
         <div className={styles.NavBar}>
             <AnimatingSelector activeRef={activeRef}/>
             <div className={styles.NavList}>
-                {menus.map((menu) => <Tab setActiveRef={setActiveRef} menu={menu} activeMenu={activeMenu} key={menu.title} setActiveMenu={setActiveMenu} />)}
+                {menus?.map((menu) => <Tab setActiveRef={setActiveRef} menu={menu} activeMenu={activeMenu} key={menu.title} setActiveMenu={setActiveMenu} />)}
             </div>
         </div>
     )
