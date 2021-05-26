@@ -12,16 +12,16 @@ const SortableItemWrapper = ({ id, dataID, menuData, formType, children, ...prop
         }
     })
 
-    // const style = {
-    //     transform: CSS.Transform.toString(transform),
-    //     transition,
-    //     flex: 1,
-    //     position: "relative"
-    // }
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
-    };
+        flex: 1,
+        position: "relative"
+    }
+    // const style = {
+    //     transform: CSS.Transform.toString(transform),
+    //     transition,
+    // };
 
     const injectPropsIntoChildren = () => (
         React.Children.map(children, (child => React.cloneElement(child, {listeners: listeners, attributes: attributes, ...props}))
@@ -30,7 +30,7 @@ const SortableItemWrapper = ({ id, dataID, menuData, formType, children, ...prop
 
     return (
         <div ref={setNodeRef} style={style}>
-            {formType === 'section' ? <><MiniSectionForm uuid={dataID} listeners={listeners} attributes={attributes} menuData={menuData}/>{children}</> : injectPropsIntoChildren() }
+            {injectPropsIntoChildren()}
         </div>
     )
 }
