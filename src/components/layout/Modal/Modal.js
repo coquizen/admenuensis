@@ -1,51 +1,58 @@
 /** @format */
 
-import React, { useRef, useLayoutEffect } from 'react'
-import classnames from 'classnames'
-import Portal from '../Portal/Portal'
+import React, {useEffect, useRef} from 'react'
+import Portal from './Portal/Portal'
 import styles from './Modal.module.scss'
+import classNames from "classnames"
 
-const Modal = ({ closing, onClosingTransitionEnd, closeModal, isOpen, children }) => {
-	const modalRef = useRef(null)
+const Modal = ({open, onClose, WrappedComponent}) => {
+	const [active, setActive] = React.useState(false)
+	let modalRef = useRef(null)
+	useEffect(() => {
+		const {current} = modalRef
+		const transitionEnd = () => setActive(open);
 
-	useLayoutEffect(() => {
-		const { current } = modalRef
+		const keyHandler = (event) =>
+			[27].indexOf(event.which) >= 0 && onClose(event);
 
-		// if the event keypress is <esc>
-		const keyHandler = (e) => [ 27 ].indexOf(e.which) >= 0 && closeModal()
-
-		const clickHandler = (e) => e.target === current && closeModal()
+		const clickHandler = (event) => event.target === current && onClose(event);
 
 		if (current) {
-			current.addEventListener('click', clickHandler)
-			window.addEventListener('keyup', keyHandler)
+			current.addEventListener("transitionend", transitionEnd);
+			current.addEventListener("click", clickHandler);
+			window.addEventListener("keyup", keyHandler);
 		}
 
-		if (isOpen) {
+		if (open) {
 			window.setTimeout(() => {
-				document.activeElement.blur()
-				document.querySelector('#root').setAttribute('inert', 'true')
-			}, 10)
+				document.activeElement.blur();
+				document.querySelector("#root").setAttribute("inert", "true");
+				setActive(open);
+			}, 0);
 		}
 
 		return () => {
 			if (current) {
-				current.removeEventListener('click', clickHandler)
+				current.removeEventListener("transitionend", transitionEnd);
+				current.removeEventListener("click", clickHandler);
 			}
-			document.querySelector('#root').removeAttribute('inert')
-			window.removeEventListener('keyup', keyHandler)
-		}
-	}, [ isOpen ])
 
-	return (
-		<Portal>
-			<div
-				ref={modalRef}
-				className={classnames(styles.Overlay, closing && styles.Close)}
-				onTransitionEnd={onClosingTransitionEnd}>
-				{children}
+			document.querySelector("#root").removeAttribute("inert");
+			window.removeEventListener("keyup", keyHandler);
+		}
+	}, [open, onClose])
+
+	return (<React.Fragment>
+		{(open || active) &&
+		<Portal className="portal-container">
+			<div ref={modalRef} className={classNames(styles.ModalOverlay, (open && active) && styles.Active)}>
+				<div className={styles.Modal}>
+					{WrappedComponent}
+				</div>
+
 			</div>
-		</Portal>
-	)
+		</Portal>}
+	</React.Fragment>)
 }
+
 export default Modal

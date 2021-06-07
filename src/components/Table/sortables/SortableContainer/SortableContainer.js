@@ -1,6 +1,6 @@
-import React, { forwardRef } from "react"
-import { useDroppable } from '@dnd-kit/core'
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import React, {forwardRef} from "react"
+import {useDroppable} from '@dnd-kit/core'
+import {SortableContext, verticalListSortingStrategy} from "@dnd-kit/sortable";
 import SortableItemWrapper from 'components/Table/sortables/SortableItem/SortableItemWrapper'
 import styles from "components/Table/sortables/SortableContainer/SortableContainer.module.scss"
 import MiniItemForm from "components/Table/sortables/MiniItemForm/MiniItemForm";
@@ -13,11 +13,16 @@ const Container = forwardRef(({children}, ref) => {
     )
 })
 
-const SortableContainer = ({items, id, menuData, isSubSection = false}) => {
-    const itemIDs = items.map((item) => item.id)
+const SortableContainer = ({nodes, id, menuData, isSubSection}) => {
+
+
+    const itemIDs = nodes?.map((node) => node.id)
+
 
     const {isOver, setNodeRef} = useDroppable({id})
-
+    if (itemIDs === undefined) {
+        return <></>
+    }
     if (isOver) {
         console.log("is over", id)
     }
@@ -25,41 +30,34 @@ const SortableContainer = ({items, id, menuData, isSubSection = false}) => {
     return (
         <>
             {isSubSection
-             ? <Container ref={setNodeRef}>
-                 <SortableItemWrapper
-                     dataID={id}
-                     id={id}
-                     menuData={menuData}
-                     formType={'item'}>
-                        <MiniSectionForm uuid={id} />
-                         <SortableContext items={itemIDs} strategy={verticalListSortingStrategy}>
-                             <div className={styles.Items}>
-                                 {items.map((item) =>
-                                                <SortableItemWrapper dataID={item.id}
-                                                                           key={item.id}
-                                                                           id={item.id}
-                                                                           formType={'item'}>
-                                     <MiniItemForm uuid={item.id} />
-                                 </SortableItemWrapper>
-                                 )}
-                             </div>
-                         </SortableContext>
-                     </SortableItemWrapper>
-                 </Container>
-             : <Container ref={setNodeRef}>
-                 <SortableContext items={itemIDs} strategy={verticalListSortingStrategy}>
-                         {items.map((item) => {
-                             return <SortableItemWrapper dataID={item.id}
-                                                         key={item.id}
-                                                         id={item.id}
-                                                         menuData={menuData}
-                                                         formType={'item'}>
-                                 <MiniItemForm uuid={item.id} />
-                             </SortableItemWrapper>
-                         })}
-                     </SortableContext>
-                 </Container>
-                }
+                ? <Container ref={setNodeRef}>
+                    {nodes.map((subsection) => (
+                        <SortableItemWrapper dataID={subsection.id}
+                                             key={subsection.id}
+                                             id={subsection.id}
+                                             menuData={menuData}
+                                             formType={'section'}>
+                            <MiniSectionForm uuid={subsection.id}/>
+                            {subsection.items &&
+                            <SortableContainer isSubSection={false} nodes={subsection.items} id={subsection.id}
+                                               menuData={menuData}/>}
+                        </SortableItemWrapper>
+                    ))}
+                </Container>
+                : <SortableContext id={menuData.id} items={itemIDs} strategy={verticalListSortingStrategy}>
+                    <Container ref={setNodeRef}>
+                        {nodes.map((item) => {
+                            return <SortableItemWrapper dataID={item.id}
+                                                        key={item.id}
+                                                        id={item.id}
+                                                        menuData={menuData}
+                                                        formType={'item'}>
+                                <MiniItemForm uuid={item.id}/>
+                            </SortableItemWrapper>
+                        })}
+                    </Container>
+                </SortableContext>
+            }
         </>
     )
 }

@@ -1,21 +1,21 @@
 /** @format */
-import React, { useEffect, useState } from 'react'
-import { PublishButton } from 'components/Table/PublishButton'
+import React, {useEffect, useState} from 'react'
+import {PublishButton} from 'components/Table/PublishButton'
 import styles from './Menu.module.scss'
 import NavBar from "components/NavBar/NavBar";
 import Table from 'components/Table/Table'
 import SubHeader from 'components/layout/SubHeader'
-import { fetchMenus } from 'services/data'
+import {fetchMenus} from 'services/data'
 
 const Menu = () => {
-	const [ menus, loadMenus ] = useState(null)
+	const [menus, loadMenus] = useState(null)
 
 	useEffect(() => {
-		fetchMenus().then(({data})=> {
-			data.sort((a,b)=> a.list_order - b.list_order)
+		fetchMenus().then(({data}) => {
+			data.sort((a, b) => a.list_order - b.list_order)
 			loadMenus(data)
 		})
-	},[fetchMenus, loadMenus])
+	}, [loadMenus])
 
 	console.info('menu.js: ', menus )
 	return (

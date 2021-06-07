@@ -1,54 +1,155 @@
-@import '../../assets/scss/admin.scss';
-@import '../../assets/scss/custom';
+@import "../../assets/scss/admin.scss";
+@import "../../assets/scss/custom";
 
-.ModalDialog {
-  height: 74%;
-  width: 435px;
-  border-radius: 15px;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: 15px;
-  background-color: $light-grey;
-  opacity: 0;
-  transition: all 100ms cubic-bezier(0.4, 0, 0.2, 1);
-  animation: scaleUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
-  .Container {
-    outline: 0;
-    border: none;
-    position: relative;
+.FormContainer {
+  position: relative;
+  width: auto;
+  background-color: $off-white;
 
-    .ModalHeader {
-      height: 15%;
-      position: relative;
-      text-align: center;
+  .FormHeader {
+    @extend .modal-header;
+    height: 32px;
+    background-color: $dark-blue;
+    color: $off-white;
+
+    .CloseButton {
+      //box-shadow: 0px 10px 10px 10px;
+      //background-color: rgba(0, 0, 0, 0.25);
+      border-radius: 10px;
+      text-indent: -9999px;
+
+      &:after {
+        -webkit-transform: rotate(45deg);
+        -moz-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        -o-transform: rotate(45deg);
+        transform: rotate(45deg);
+        -webkit-transition: all 0.3s ease-out;
+        -moz-transition: all 0.3s ease-out;
+        -ms-transition: all 0.3s ease-out;
+        -o-transition: all 0.3s ease-out;
+        transition: all 0.3s ease-out;
+      }
     }
 
-    .Button {
-      left: 0;
-      right: 0;
-      padding: 0;
-      outline: 0;
-      width: 150px;
-      border: none;
-      height: 40px;
-      font-size: 12px;
-      font-weight: 400;
-      line-height: 40px;
-      position: absolute;
-      display: inline-block;
-      margin: 10px auto 0;
-      -webkit-box-shadow: none;
-      box-shadow: none;
-      text-transform: uppercase;
+    .CloseButton:before,
+    .CloseButton:after {
+      content: "";
+      background: #fff;
+      -webkit-transform: rotate(-45deg);
+      -moz-transform: rotate(-45deg);
+      -ms-transform: rotate(-45deg);
+      -o-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+      -webkit-transition: all 0.3s ease-out;
+      -moz-transition: all 0.3s ease-out;
+      -ms-transition: all 0.3s ease-out;
+      -o-transition: all 0.3s ease-out;
+      transition: all 0.3s ease-out;
     }
-    .ModalFooter {
-      height: 15%;
-      position: relative;
+
+    .CloseButton:hover:before,
+    .CloseButton:hover:after {
+      -webkit-transform: rotate(180deg);
+      -moz-transform: rotate(180deg);
+      -ms-transform: rotate(180deg);
+      -o-transform: rotate(180deg);
+      transform: rotate(180deg);
     }
   }
-  &.Close {
-    animation: scaleDown 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+
+  .FormBody {
+    @extend .modal-body;
+    flex-direction: column;
+  }
+
+  .FormFooter {
+    height: auto;
   }
 }
+
+.ButtonGroup {
+  display: flex;
+  justify-content: space-evenly;
+  margin-bottom: 1rem;
+}
+
+.Button {
+  @include font-size($input-font-size-xs);
+  @include border-radius($input-border-radius-sm);
+  @extend .input-transition;
+  text-decoration: none;
+  padding: 4px;
+  border: none;
+
+  &.ButtonCancel {
+    background-color: $red;
+    color: $off-white;
+
+    &:hover {
+      background-color: darken($red, 5);
+    }
+  }
+
+  &.ButtonSubmit {
+    background-color: $light-grey;
+    color: $off-white;
+
+    &:hover {
+      background-color: darken($light-grey, 5);
+    }
+  }
+}
+
+// .CloseButton {
+//   left: 0;
+//   right: 0;
+//   padding: 0;
+//   outline: 0;
+//   width: 150px;
+//   border: none;
+//   height: 40px;
+//   font-size: 12px;
+//   font-weight: 400;
+//   line-height: 40px;
+//   position: absolute;
+//   display: inline-block;
+//   margin: 10px auto 0;
+//   -webkit-box-shadow: none;
+//   box-shadow: none;
+//   text-transform: uppercase;
+// }
+
+//.ModalDialog {
+//  height: 74%;
+//  width: 435px;
+//  border-radius: 15px;
+//  top: 0;
+//  left: 0;
+//  right: 0;
+//  bottom: 0;
+//  margin: 15px;
+//  background-color: $light-grey;
+//  opacity: 0;
+//  transition: all 100ms cubic-bezier(0.4, 0, 0.2, 1);
+//  animation: scaleUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+//  .Container {
+//    outline: 0;
+//    border: none;
+//    position: relative;
+//
+//    .ModalHeader {
+//      height: 15%;
+//      position: relative;
+//      text-align: center;
+//    }
+//
+//    .ModalFooter {
+//      height: 15%;
+//      position: relative;
+//    }
+//  }
+//  &.Closing {
+//    animation: scaleDown 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+//  }
+//}

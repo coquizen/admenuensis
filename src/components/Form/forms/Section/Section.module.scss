@@ -1,9 +1,56 @@
-@import '../../../../assets/scss/admin';
+@import "../../../../assets/scss/admin";
+@import "../../../../assets/scss/custom";
 
-.container {
+.FormContainer {
   position: relative;
-  flex: 1 1 auto;
-  border-radius: 12px;
+  width: auto;
+  background-color: $off-white;
+
+  .FormHeader {
+    @extend .modal-header;
+    height: 32px;
+    background-color: $dark-blue;
+    color: $off-white;
+  }
+
+  .FormBody {
+    @extend .modal-body;
+    flex-direction: column;
+
+    .FormInputs {
+      @extend .input-group;
+      flex-direction: column;
+
+      .FormLabel {
+        @extend .form-label;
+      }
+
+      .FormInput {
+        @extend .input-transition;
+        flex-grow: 1;
+        font-size: $input-font-size-xs;
+        border: none;
+        margin-top: 0.25rem;
+        margin-bottom: 0.25rem;
+
+        &:focus {
+          background-color: $gray-900;
+          color: lighten($off-white, 5);
+          border: $light-blue;
+        }
+      }
+    }
+  }
+
+  .FormFooter {
+    height: auto;
+  }
+}
+
+.RowInput {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .form-label {
@@ -16,27 +63,28 @@
   justify-content: space-between;
 }
 
-.form-input {
+.FormInput {
   // background: rgba(0, 0, 0, 0.2);
-  //color: $gray-800;
+  color: $gray-800;
   // text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
-  //display: block;
-  //width: 269px;
-  //height: 1rem;
-  //padding: 15px;
-  //margin-bottom: 10px;
-  //outline: none;
-  //border: none;
+  display: block;
+  width: 269px;
+  height: 1rem;
+  padding: 15px;
+  margin-bottom: 10px;
+  outline: none;
+  border: none;
   @extend .input-transition;
   @extend .rounded;
+
   &:focus {
     background: rgba(0, 0, 0, 0.1);
   }
 }
 
 .form-switch-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    margin-left: $spacer * 5;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-left: $spacer * 5;
 }

@@ -3,7 +3,7 @@ export const authHeader = () => {
     if (token) {
         return {
             "Authorization": "Bearer " + token,
-            'Content-Type':  'application/json',
+            'Content-Type': 'application/json',
         }
     } else {
         return {};
@@ -22,14 +22,11 @@ export const fetchMenus = () => {
 export const fetchSections = () => {
     return fetch('/api/v1/sections')
         .then((response) => response.json())
-        .then((data) => data.data)
-        .catch((error) => console.error(error))
 }
 
 export const fetchSection = (id) => {
     return fetch(`/api/v1/sections/${id}`)
         .then((response) => response.json())
-
 }
 
 export const fetchItems = () => {
@@ -40,15 +37,14 @@ export const fetchItems = () => {
 export const fetchItem = (id) => {
     return fetch(`/api/v1/items/${id}`)
         .then((response) => response.json())
-        .then((data) => data.data)
-        .catch((error) => console.error(error))
+        .then(({data}) => data)
 }
 
 export const updateSection = (data) => {
     return fetch(`/api/v1/sections/${data.id}`, {
-        method:  'PATCH',
+        method: 'PATCH',
         headers: authHeader(),
-        body:    JSON.stringify(data),
+        body: JSON.stringify(data),
     }).then((response) => response.json())
         .then((data) => data.data)
         .catch((error) => {
@@ -58,9 +54,9 @@ export const updateSection = (data) => {
 
 export const updateItem = (data) => {
     return fetch(`/api/v1/items/${data.id}`, {
-        method:  'PATCH',
+        method: 'PATCH',
         headers: authHeader(),
-        body:    JSON.stringify(data),
+        body: JSON.stringify(data),
     })
         .then((response) => response.json())
         .then((data) => data.data)
@@ -71,13 +67,13 @@ export const updateItem = (data) => {
 
 export const deleteSection = (id) => {
     return fetch(`/api/v1/sections/${id}`, {
-        method:  'DELETE',
+        method: 'DELETE',
         headers: authHeader(),
     })
 }
 export const deleteItem = (id) => {
     return fetch(`/api/v1/items/${id}`, {
-        method:  'DELETE',
+        method: 'DELETE',
         headers: authHeader(),
     })
 }

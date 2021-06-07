@@ -1,4 +1,31 @@
 @import '../../../../assets/scss/admin';
+@import "../../../../assets/scss/custom";
+
+.ItemInputs {
+  @extend .input-group;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: end;
+
+  .ItemLabel {
+    @extend .form-label;
+  }
+
+  .ItemInput {
+    @extend .input-transition;
+    flex-grow: 1;
+    background-color: inherit;
+    font-size: $input-font-size-xs;
+    border: none;
+
+    &:focus, &:hover {
+      background-color: $gray-900;
+      color: lighten($off-white, 5);
+      border: $light-blue;
+      transition: all 300ms;
+    }
+  }
+}
 
 .custom-modal-body {
   position: relative;

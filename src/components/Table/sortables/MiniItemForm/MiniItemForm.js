@@ -1,23 +1,22 @@
 /** @format */
 
-import React, { useState, useEffect } from "react"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faDotCircle, faEdit, faEllipsisH, faDollarSign } from "@fortawesome/free-solid-svg-icons"
-import classnames from "classnames"
+import React, {useEffect, useState} from "react"
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
+import {faDollarSign, faDotCircle, faEdit, faEllipsisH} from "@fortawesome/free-solid-svg-icons"
 import Handle from "components/Table/Handle"
-import { useData } from "context/DataProvider"
-import { useModal } from "context/ModalProvider"
-import { Item } from "components/Form/forms"
+import {useData} from "context/DataProvider"
+import {useModal} from "context/ModalProvider"
+import {Item} from "components/Form/forms"
 import Form from "components/Form"
 import styles from "./MiniItemForm.module.scss"
-import { fetchItem }from 'services/data'
+import {fetchItem} from 'services/data'
 
-const MiniItemForm = ({ uuid, listeners, attributes }) => {
-	const { updateItem } = useData()
+const MiniItemForm = ({uuid, listeners, attributes}) => {
+	const {updateItem} = useData()
 
-	const [ itemData, setItemData ] = useState()
-	const [ isChanged, setIsChanged ] = useState(false)
-	const { insertComponent } = useModal()
+	const [itemData, setItemData] = useState()
+	const [isChanged, setIsChanged] = useState(false)
+	const {insertComponent} = useModal()
 
 	useEffect(() => {
 		const fetchData = (uuid) => {
@@ -37,7 +36,7 @@ const MiniItemForm = ({ uuid, listeners, attributes }) => {
 
 	const handleClick = (e) => {
 		e.preventDefault()
-		insertComponent(<Form form={<Item uuid={uuid} />} />)
+		insertComponent(<Form form={<Item data={itemData}/>}/>)
 	}
 
 	const handleDataChange = (e) => {

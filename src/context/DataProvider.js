@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, {createContext, useCallback, useContext, useState} from 'react'
 import useReactContextDevTool from 'hooks/useReactContextDevTool'
 import * as api from 'services/data'
 
@@ -13,54 +13,48 @@ const DataProvider = ({ children }) => {
 	const [isDirty, setIsDirty] = useState(true)
 
 	// useEffect(() => {
-	// 		api.fetchSections().then((data) => setAllSectionsData(data))
+	// 	api.fetchSections().then(data => setAllSectionsData(data))
 	// }, [])
-	//
+
 	// useEffect(() => {
-	// 		api.fetchItems().then((data) => setAllItemsData(data))
+	// 	api.fetchItems().then((data) => setAllItemsData(data))
 	// }, [])
-	//
-	// useEffect(()=> {
-	// 	api.fetchMenus().then((data) => setMenusData(data))
-	// }, [])
-	const getSectionDataByID = (id) => {
-		if (allSectionsData) return allSectionsData.find((section) => section.id === id)
-	}
-	const getItemDataByID = (id) => allItemsData && allItemsData.find((item) => item.id === id)
 
-	const updateSection = (data) => {
+	const getSectionDataByID = useCallback((id) => {
+		return allSectionsData.find((section) => section.id === id)
+	}, [allSectionsData])
+
+	const getItemDataByID = useCallback((id) => {
+		return allItemsData.find((item) => item.id === id)
+	}, [allItemsData])
+
+	const updateSection = useCallback((data) => {
 		api.updateSection(data).then(() => setIsDirty(true))
-	}
-	const updateItem = (data) => {
+	}, [])
+
+	const updateItem = useCallback((data) => {
 		api.updateItem(data).then(() => setIsDirty(true))
-	}
+	}, [])
 
-	const deleteSection = (id) => {
+	const deleteSection = useCallback((id) => {
 		api.deleteSection(id).then(() => setIsDirty(true))
-	}
+	}, [])
 
-	const deleteItem = (id) => {
-		api.deleteItem(id).then(() => setIsDirty(true))
-	}
+	const deleteItem = useCallback((id) => {
+		api.deleteItem(id)
+	}, [])
 
-	const getTypeByID = (id) => {
-		if (!isDirty) {
-			return getSectionDataByID(id) ? 'section' : 'item'
-		}
-	}
+
 	useReactContextDevTool({
-		id: 'dataprovider',
+		id: 'DataProvider',
 		displayName: 'Data',
 		values: {
-			allSectionsData,
 			updateSection,
 			getItemDataByID,
 			getSectionDataByID,
 			updateItem,
 			deleteItem,
 			deleteSection,
-			getTypeByID,
-
 		},
 	})
 
@@ -68,12 +62,10 @@ const DataProvider = ({ children }) => {
 	return (
 		<DataContext.Provider
 			value={{
-				allSectionsData,
 				updateSection,
 				getItemDataByID,
 				getSectionDataByID,
 				updateItem,
-				getTypeByID,
 			}}>
 			{children}
 		</DataContext.Provider>

@@ -1,48 +1,41 @@
 /** @format */
 
-import React, { createContext, useState, useContext } from 'react'
-import { Modal } from 'components/layout'
+import React, {createContext, useContext, useEffect, useState} from 'react'
+import Modal from 'components/layout/Modal'
 import useReactContextDevTool from 'hooks/useReactContextDevTool'
 
-const ModalContext = createContext()
+const ModalContext = createContext(undefined)
 
-const ModalProvider = ({ children }) => {
-	const [ isOpen, setIsOpen ] = useState(false)
-	const [ ModalComponent, setModalComponent ] = useState(undefined)
-	const [ closing, closeModal ] = useState(false)
+const ModalProvider = ({children}) => {
+	const [isOpen, setIsOpen] = useState(false)
+	const [ModalWrappedComponent, setModalWrappedComponent] = useState(null)
 
-	const insertComponent = (comp) => {
-		setModalComponent(comp)
-		setIsOpen(true)
-	}
-
-	const onClosingTransitionEnd = () => {
-		if (closing) {
-			setIsOpen(false)
-			closeModal(false)
-			setModalComponent(undefined)
-		} else {
+	useEffect(() => {
+		if (ModalWrappedComponent) {
 			setIsOpen(true)
 		}
+	}, [ModalWrappedComponent])
+
+	const insertComponent = (comp) => {
+		setModalWrappedComponent(comp)
+	}
+
+	const closeModal = (event) => {
+		event.preventDefault()
+		setIsOpen(false)
+		setModalWrappedComponent(null)
 	}
 
 	useReactContextDevTool({
 		id: 'modal',
 		displayName: 'Modal',
-		values: { insertComponent, closeModal, closing, isOpen },
+		values: {insertComponent, ModalWrappedComponent, isOpen},
 	})
 
 	return (
-		<ModalContext.Provider value={{ insertComponent, closeModal }}>
+		<ModalContext.Provider value={{insertComponent, closeModal}}>
 			{children}
-			{isOpen && (
-				<Modal closing={closing}
-					closeModal={() => closeModal(true)}
-					isOpen={isOpen}
-					onClosingTransitionEnd={onClosingTransitionEnd}>
-					{ModalComponent}
-				</Modal>
-			)}
+			<Modal onClose={closeModal} open={isOpen} WrappedComponent={ModalWrappedComponent}/>
 		</ModalContext.Provider>
 	)
 }
@@ -50,8 +43,8 @@ const ModalProvider = ({ children }) => {
 const useModal = () => {
 	try {
 		return useContext(ModalContext)
-	} catch (e) {
-		console.log(e)
+	} catch (err) {
+		console.error(err)
 	}
 }
 

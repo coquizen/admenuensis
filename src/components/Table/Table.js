@@ -1,26 +1,28 @@
-import React, { useEffect, useState } from 'react'
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import React, {useEffect, useState} from 'react'
+import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy} from '@dnd-kit/sortable'
 import {
-	closestCenter, DndContext, DragOverlay, KeyboardSensor, PointerSensor, useSensor, useSensors
+	closestCenter,
+	DndContext,
+	DragOverlay,
+	KeyboardSensor,
+	PointerSensor,
+	useSensor,
+	useSensors
 } from "@dnd-kit/core";
 import styles from './Table.module.scss'
-import { flattenTree } from "utils/flattenTree";
 import Item from 'components/Table/sortables/Item'
-import { createPortal } from "react-dom";
-import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
+import {createPortal} from "react-dom";
+import {restrictToVerticalAxis} from '@dnd-kit/modifiers'
 import SortableContainer from 'components/Table/sortables/SortableContainer'
-import {updateItem, updateSection} from 'services/data'
 
-const getContainerStyle = ({ isOverContainer }) => ({
+const getContainerStyle = ({isOverContainer}) => ({
 	marginTop: 40,
 	backgroundColor: isOverContainer ? 'rgb(235,235,235,1)' : 'rgba(246,246,246,1)',
 })
 
-const Table = ({ data }) => {
+const Table = ({data}) => {
 	// const orderedData = orderTree(data)
-	const { newTree, sectionsArray } = flattenTree(data)
-	const [ menuData, setMenuData ] = useState(null)
-	const [ sectionsOrder, setSectionsOrder ] = useState(sectionsArray)
+	const [menuData, setMenuData] = useState(null)
 	const [ activeID, setActiveID ] = useState(null)
 	const [ dragOverlaidItems, setClonedItems ] = useState(null)
 	let rootID
@@ -41,17 +43,16 @@ const Table = ({ data }) => {
 	)
 
 	const findContainer = (soughtID, type) => {
-
+		if (soughtID === rootID) {
+			return rootID
+		}
 		if (type === 'section') {
 			return rootID
-		}
-		if (menuData?.items.find((item)=> item.id === soughtID)) {
-			return rootID
-		} else {
-			return menuData.subsections.find((section) => section.items.map(({id}) => id).includes(soughtID)).id
+		} else if (type === 'item') {
+			return menuData?.subsections.find((section) => section.items.map(({id}) => id)
+				.includes(soughtID)).id || rootID
 		}
 	}
-
 	const getIndex = (soughID, type) => {
 		const container = findContainer(soughID, type)
 
@@ -81,8 +82,8 @@ const Table = ({ data }) => {
 	}
 
 	const handleDragOver = ({ active, over, draggingRect }) => {
-		if (!over) return
-		const overType = over.data.current.type
+		if (!over || !active) return
+		const overType = over.data.current?.type
 		const activeType = active.data.current.type
 
 		const overContainer = findContainer(over.id, overType)
@@ -119,14 +120,27 @@ const Table = ({ data }) => {
 
 		if (activeType === 'item') {
 			if (overContainer === activeContainer) {
-				setMenuData((menuData) => {
-					const containerIndex = getIndex(overContainer, 'section')
-					const overIndex = getIndex(over.id, overType)
-					const activeIndex = getIndex(active.id, activeType)
-					const items = menuData.subsections.find((section) => section.id === overContainer).items
-					menuData.subsections[ containerIndex ].items = arrayMove(items, activeIndex, overIndex)
-					return menuData
-				})
+				if (overContainer !== rootID) {
+					setMenuData((menuData) => {
+						const containerIndex = getIndex(overContainer, 'section')
+						const overIndex = getIndex(over.id, overType)
+						const activeIndex = getIndex(active.id, activeType)
+						const items = menuData.subsections.find((section) => section.id === overContainer).items
+						menuData.subsections[containerIndex].items = arrayMove(items, activeIndex, overIndex)
+						return menuData
+					})
+				} else {
+					setMenuData((menuData) => {
+						const overIndex = getIndex(over.id, overType)
+						const activeIndex = getIndex(active.id, activeType)
+						let {items} = menuData
+						console.info("items: ", items)
+						items = arrayMove(items, activeIndex, overIndex)
+						console.info("items: ", items)
+						menuData.items = items
+						return menuData
+					})
+				}
 			} else {
 				setMenuData((menuData) => {
 					const overContainerIndex = getIndex(overContainer, 'section')
@@ -163,6 +177,9 @@ const Table = ({ data }) => {
 		const overContainer = findContainer(over.id, overType)
 		const activeContainer = findContainer(active.id, activeType)
 
+		const overIndex = getIndex(over.id, overType)
+		const activeIndex = getIndex(active.id, activeType)
+
 		if (!overContainer || !activeContainer) {
 			return
 		}
@@ -171,31 +188,22 @@ const Table = ({ data }) => {
 			return
 		}
 		if (overContainer === activeContainer === menuData["id"]) {
-
-		}
 			if (activeType === 'item') {
-				const overIndex = getIndex(over.id, overType)
-				const activeIndex = getIndex(active.id, activeType)
 				const containerIndex = getIndex(overContainer, 'section')
 				setMenuData((menuData) => {
 					const items = menuData.subsections.find((section) => section.id === overContainer).items
-					menuData.subsections[ containerIndex ].items = arrayMove(items, activeIndex, overIndex)
+					menuData.subsections[containerIndex].items = arrayMove(items, activeIndex, overIndex)
 					return menuData
 				})
-				const updatedActiveItem = {
-					id:         active.id,
-					list_order: overIndex + 1,
-				}
-				const updatedOverItem = {
-					id:         over.id,
-					list_order: activeIndex + 1,
-				}
-
-
-				return
+			} else {
+				setMenuData((menuData) => {
+					let {subsections} = menuData
+					menuData.subsections = arrayMove(subsections, activeIndex, overIndex)
+					return menuData
+				})
 			}
-
-		setActiveID(null)
+			setActiveID(null)
+		}
 	}
 
 	const handleDragCancel = () => {
@@ -212,17 +220,17 @@ const Table = ({ data }) => {
 		<DndContext
 			onDragStart={handleDragStart}
 			onDragOver={handleDragOver}
-			onDragEnd={handleDragOver}
+			onDragEnd={handleDragEnd}
 			onDragCancel={handleDragCancel}
 			sensors={sensors}
 			collisionDetection={closestCenter}
-			modifiers={[ restrictToVerticalAxis ]}
+			modifiers={[restrictToVerticalAxis]}
 		>
 			<div className={styles.Sections}>
-				{menuData && <SortableLists menuData={menuData} />}
+				{menuData && <SortableLists menuData={menuData}/>}
 			</div>
 			{createPortal(
-				<DragOverlay modifiers={[ restrictToVerticalAxis ]}>
+				<DragOverlay modifiers={[restrictToVerticalAxis]}>
 					{activeID ?
 						<Item
 							dataID={activeID}
@@ -235,21 +243,19 @@ const Table = ({ data }) => {
 }
 
 const SortableLists = ({menuData}) => {
+	if (menuData === undefined) return null
 	if (menuData.subsections.length > 0) {
-		const sectionIDs = menuData.subsections.map(({id})=> id)
-		return <SortableContext id='root' items={sectionIDs}>
-			{menuData.subsections.map((subsection) =>
-										  <SortableContainer menuData={menuData} key={subsection.id} id={subsection.id} items={subsection.items} isSubsection={true} />
-			)}
-		</SortableContext>
-	}
-	if (menuData.items.length > 0) {
+		const sectionIDs = menuData.subsections.map(({id}) => id)
+		return (
+			<SortableContext id='root' items={sectionIDs} strategy={verticalListSortingStrategy}>
+				<SortableContainer menuData={menuData} id={'root'} nodes={menuData.subsections} isSubSection={true}/>
+			</SortableContext>
+		)
+	} else if (menuData.items.length > 0) {
 		let filteredItems = menuData.items.filter((item) => item.type === 'Plate')
 		filteredItems.sort((a, b) => a.list_order - b.list_order)
-
 		if (filteredItems.length > 0) {
-			return <SortableContainer menuData={menuData} id={menuData.id} items={filteredItems}/>
-
+			return <SortableContainer menuData={menuData} id={menuData.id} nodes={menuData.items} isSubSection={false}/>
 		}
 	}
 	return null

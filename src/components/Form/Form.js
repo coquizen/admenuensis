@@ -1,53 +1,48 @@
 /** @format */
-import React, { useState } from 'react'
+import React from 'react'
 import styles from './Form.module.scss'
-import { useForm } from 'react-hook-form'
-import { useData } from 'context/DataProvider'
-import { useModal } from 'context/ModalProvider'
+import {useForm} from 'react-hook-form'
+import {useData} from 'context/DataProvider'
+import {useModal} from 'context/ModalProvider'
+import classnames from "classnames";
 
-const Form = ({ form }) => {
-	const [ closing, setClosing ] = useState(false);
-	const { closeModal } = useModal()
-	const { updateSection } = useData()
-	const { register, handleSubmit, reset, setValue } = useForm({ shouldUnregister: false })
+const Form = ({form}) => {
+	const {closeModal} = useModal()
+	const {updateSection} = useData()
+	const {register, handleSubmit, reset, setValue} = useForm({shouldUnregister: false})
 
 	const onSubmit = (data) => {
 		updateSection(data)
 		closeModal()
 	}
 
-	const onCloseModal = (event) => {
-		event.preventDefault()
-		setClosing(true)
-		closeModal()
-	}
-
 	return (
-		<React.Fragment>
-			<form onSubmit={handleSubmit(onSubmit)}>
-				<div className={styles.ModalDialog, closing && styles.Close}>
-					<div className={styles.Container}>
-						<div className={styles.ModalHeader}>
-							<h5 className='custom-modal-title'>Form</h5>
-							<button
-								aria-label='Close Modal'
-								type='button'
-								className='btn btn-secondary'
-								onClick={onCloseModal}></button>
-						</div>
-						{React.cloneElement(form, { setValue: setValue, reset: reset, register: register })}
-						<div className={styles.ModalFooter}>
-							<button type='button' className='btn btn-secondary' onClick={closeModal}>
-								Cancel
-							</button>
-							<button input='button' type='submit' className='btn btn-primary'>
-								Save changes
-							</button>
-						</div>
+		<form onSubmit={handleSubmit(onSubmit)}>
+			<div className={styles.FormContainer}>
+				<div className={styles.FormHeader}>
+					<div>Form</div>
+					<button
+						aria-label='Close Modal'
+						type='button'
+						className={styles.CloseButton}
+						onClick={closeModal}/>
+				</div>
+
+				<div className={styles.FormBody}>
+
+					{React.cloneElement(form, {setValue: setValue, reset: reset, register: register})}
+				</div>
+				<div className={styles.FormFooter}>
+					<div className={styles.ButtonGroup}>
+						<button type='button' className={classnames('btn', styles.Button, styles.ButtonCancel)}
+								onClick={closeModal}>Cancel
+						</button>
+						<button type='submit' className={classnames('btn', styles.Button, styles.ButtonSubmit)}>Save
+						</button>
 					</div>
 				</div>
-			</form>
-		</React.Fragment>
+			</div>
+		</form>
 	)
 }
 
