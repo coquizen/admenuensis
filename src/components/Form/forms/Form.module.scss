@@ -2,10 +2,15 @@
 @import "../../../assets/scss/custom";
 
 .Container {
- @include make-container();
+//  @include make-container();
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: end;
   .Label {
     @extend .col-form-label;
     @extend .col-form-label-sm;
+    color: $gray-500;
   }
   .Input {
     @extend .form-control;
@@ -15,6 +20,10 @@
 }
 
 .SwitchGroup {
-  @extend .input-group;
+  @extend .input-group-text;
   @extend .input-group-xs;
+  justify-content: space-between;
+  .Switch {
+    margin-right: 0.5rem;
+  }
 }
