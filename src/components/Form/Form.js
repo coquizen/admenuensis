@@ -2,17 +2,19 @@
 import React from 'react'
 import styles from './Form.module.scss'
 import {useForm} from 'react-hook-form'
-import {useData} from 'context/DataProvider'
+import {updateSection} from 'services/data'
 import {useModal} from 'context/ModalProvider'
 import classnames from "classnames";
 
 const Form = ({form, label}) => {
 	const {closeModal} = useModal()
-	const {updateSection} = useData()
 	const {register, handleSubmit, reset, setValue} = useForm({shouldUnregister: false})
 
 	const onSubmit = (data) => {
-		updateSection(data)
+		console.info(data)
+		updateSection(data).then((response) => {
+			console.info(response)
+		})
 		closeModal()
 	}
 

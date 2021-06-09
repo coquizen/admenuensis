@@ -10,7 +10,6 @@ const ModalProvider = ({children}) => {
 	const [isOpen, setIsOpen] = useState(false)
 	const [ModalWrappedComponent, setModalWrappedComponent] = useState(null)
 
-	const reload=()=>window.location.reload();
 	
 	useEffect(() => {
 		if (ModalWrappedComponent !== null) {
@@ -24,10 +23,8 @@ const ModalProvider = ({children}) => {
 		setModalWrappedComponent(comp)
 	}
 
-	const closeModal = (event) => {
-		event.preventDefault()
+	const closeModal = () => {
 		setModalWrappedComponent(null)
-		reload()
 	}
 
 	useReactContextDevTool({
@@ -39,7 +36,7 @@ const ModalProvider = ({children}) => {
 	return (
 		<ModalContext.Provider value={{insertComponent, closeModal}}>
 			{children}
-			<Modal onClose={closeModal} open={isOpen} WrappedComponent={ModalWrappedComponent}/>
+			<Modal closeModal={closeModal} isOpen={isOpen} WrappedComponent={ModalWrappedComponent}/>
 		</ModalContext.Provider>
 	)
 }

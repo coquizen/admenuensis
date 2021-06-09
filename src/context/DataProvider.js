@@ -1,28 +1,28 @@
 /** @format */
 
-import React, {createContext, useCallback, useContext, useState} from 'react'
+import React, {createContext, useCallback, useContext, useState, useEffect,} from 'react'
 import useReactContextDevTool from 'hooks/useReactContextDevTool'
 import * as api from 'services/data'
 
 const DataContext = createContext(null)
 
 const DataProvider = ({ children }) => {
-	const [allSectionsData, setAllSectionsData] = useState(null)
+	const [sections, setAllSectionsData] = useState(null)
 	// const [menus, setMenusData] = useState(api.fetchMenus())
 	const [allItemsData, setAllItemsData] = useState(null)
 	const [isDirty, setIsDirty] = useState(true)
 
-	// useEffect(() => {
-	// 	api.fetchSections().then(data => setAllSectionsData(data))
-	// }, [])
+	useEffect(() => {
+		api.fetchSections().then(({data}) => setAllSectionsData(data))
+	}, [])
 
 	// useEffect(() => {
 	// 	api.fetchItems().then((data) => setAllItemsData(data))
 	// }, [])
 
 	const getSectionDataByID = useCallback((id) => {
-		return allSectionsData.find((section) => section.id === id)
-	}, [allSectionsData])
+		return sections.find((section) => section.id === id)
+	}, [sections])
 
 	const getItemDataByID = useCallback((id) => {
 		return allItemsData.find((item) => item.id === id)
@@ -49,6 +49,7 @@ const DataProvider = ({ children }) => {
 		id: 'DataProvider',
 		displayName: 'Data',
 		values: {
+			sections,
 			updateSection,
 			getItemDataByID,
 			getSectionDataByID,
@@ -62,6 +63,7 @@ const DataProvider = ({ children }) => {
 	return (
 		<DataContext.Provider
 			value={{
+				sections,
 				updateSection,
 				getItemDataByID,
 				getSectionDataByID,

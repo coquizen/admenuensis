@@ -46,10 +46,6 @@ export const updateSection = (data) => {
         headers: authHeader(),
         body: JSON.stringify(data),
     }).then((response) => response.json())
-        .then((data) => data.data)
-        .catch((error) => {
-            console.error(error)
-        })
 }
 
 export const updateItem = (data) => {
