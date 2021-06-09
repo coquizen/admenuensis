@@ -54,7 +54,7 @@ const Item = ({ data, reset, register }) => {
 			<div className={styles.Container}>
 			<DropDownMenu name={"section_id"} inputRef={parentSection.ref} itemID={data.id} />
 			</div>
-				<label className={styles.Label}>Other Settings</label>
+				<div className={styles.Label}>Other Settings</div>
 			<div className={styles.SwitchGroup}>
 				<Switch label='Disable' name='active' inputRef={disable.ref} status={data.disable}/>
 				<Switch label='Visible' name='visible' inputRef={visible.ref} status={data.visible} />
