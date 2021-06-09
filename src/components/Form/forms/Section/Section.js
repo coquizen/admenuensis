@@ -1,10 +1,12 @@
 /** @format */
 
-import React from 'react'
-import { DropDownMenu, Switch } from 'components/Form'
+import React, { useState, useEffect } from 'react'
+import Spinner from 'components/Spinner'
 import styles from '../Form.module.scss'
-
+import { useData } from 'context/DataProvider'
 const Section = ({ data, reset, register }) => {
+	const { sections } = useData()
+
 	reset({
 		id: data.id,
 		title: data.title,
@@ -14,11 +16,10 @@ const Section = ({ data, reset, register }) => {
 		section_id: data.section_id === undefined ? "" : data.section_id,
 	})
 
-	const parentSection = register("section_id")
-	const disable = register("disable", { required: true })
-	const visible = register("visible", { required: true })
+	const meals = sections.filter((section) => section.type === 'Meal')
 
-	return (
+
+	return (<>{(sections !== null) ?
 		<React.Fragment>
 			<input {...register("id")} type='hidden' />
 			<div className={styles.Container}>
@@ -28,7 +29,7 @@ const Section = ({ data, reset, register }) => {
 				<input
 					{...register("title", { required: true, minLength: 1 })}
 					type='text'
-					className={styles.FormInput}
+					className={styles.Input}
 					id='title'
 					placeholder='Please enter section name e.g. Desserts' />
 			</div>
@@ -38,19 +39,41 @@ const Section = ({ data, reset, register }) => {
 				</label>
 				<input
 					type='text'
-					className={styles.FormInput}
+					className={styles.Input}
 					rows='3'
 					{...register("description")} />
 			</div>
-			<h1 className={styles.Subheader}>Other Settings</h1>
-			<div className={styles.SwitchGroup}>
-				<Switch label='Disable' inputRef={disable.ref} />
-				<Switch label='Visible' inputRef={visible.ref} />
-			</div>
 			<div className={styles.Container}>
-				<DropDownMenu name='section_id' inputRef={parentSection.ref} itemID={data.id} />
+				<label htmlFor='section_id' className={styles.Label}>Meal</label>
+				<select {...register("section_id")} className={styles.Input}>
+					{meals && meals.map(
+						(parent) => {
+							console.log(parent.id)
+							return (
+								<option key={parent.id} value={parent.id}>
+									{parent.title}
+								</option>
+							)})
+						})}
+				</select>
 			</div>
-		</React.Fragment>
+			<br />
+			<div className={styles.Label}>Other Settings</div>
+				<div className={styles.SwitchGroup}>
+					<div className={styles["toggle-switch"]}>
+						<input type='checkbox' className={styles.Switch} {...register("visible")} />
+						<label className={styles.Label} htmlFor='visible' >
+							Visible
+						</label>
+					</div>
+				<div className={styles["toggle-switch"]}>
+					<input type='checkbox' className={styles.Switch} {...register("disable")} />
+					<label className={styles.Label} htmlFor='disable'>
+						Disable
+					</label>
+				</div>
+		</div>
+		</React.Fragment> : <Spinner />}</>
 	)
 }
 export default Section
