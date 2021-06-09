@@ -1,0 +1,20 @@
+@import '../../../assets/scss/admin';
+@import "../../../assets/scss/custom";
+
+.Container {
+ @include make-container();
+  .Label {
+    @extend .col-form-label;
+    @extend .col-form-label-sm;
+  }
+  .Input {
+    @extend .form-control;
+    @extend .form-control-sm;
+    @extend .standard-transition;
+  }
+}
+
+.SwitchGroup {
+  @extend .input-group;
+  @extend .input-group-xs;
+}

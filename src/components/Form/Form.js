@@ -6,7 +6,7 @@ import {useData} from 'context/DataProvider'
 import {useModal} from 'context/ModalProvider'
 import classnames from "classnames";
 
-const Form = ({form}) => {
+const Form = ({form, label}) => {
 	const {closeModal} = useModal()
 	const {updateSection} = useData()
 	const {register, handleSubmit, reset, setValue} = useForm({shouldUnregister: false})
@@ -20,7 +20,7 @@ const Form = ({form}) => {
 		<form onSubmit={handleSubmit(onSubmit)}>
 			<div className={styles.FormContainer}>
 				<div className={styles.FormHeader}>
-					<div>Form</div>
+					<div>{label}</div>
 					<button
 						aria-label='Close Modal'
 						type='button'
@@ -29,15 +29,14 @@ const Form = ({form}) => {
 				</div>
 
 				<div className={styles.FormBody}>
-
 					{React.cloneElement(form, {setValue: setValue, reset: reset, register: register})}
 				</div>
 				<div className={styles.FormFooter}>
 					<div className={styles.ButtonGroup}>
-						<button type='button' className={classnames('btn', styles.Button, styles.ButtonCancel)}
+						<button type='button' className={classnames(styles.Button, styles.ButtonCancel)}
 								onClick={closeModal}>Cancel
 						</button>
-						<button type='submit' className={classnames('btn', styles.Button, styles.ButtonSubmit)}>Save
+						<button type='submit' className={classnames(styles.Button, styles.ButtonSubmit)}>Save
 						</button>
 					</div>
 				</div>

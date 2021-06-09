@@ -34,9 +34,10 @@ const MiniItemForm = ({uuid, listeners, attributes}) => {
 		}
 	}
 
+	// TODO: Check to see if React has trouble with this nested russian doll of a render
 	const handleClick = (e) => {
 		e.preventDefault()
-		insertComponent(<Form form={<Item data={itemData}/>}/>)
+		insertComponent(<Form label={"Item: " + itemData.title} form={<Item data={itemData}/>}/>)
 	}
 
 	const handleDataChange = (e) => {

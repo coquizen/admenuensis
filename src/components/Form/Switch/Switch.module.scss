@@ -1,13 +1,18 @@
 /** @format */
+@import '../../../assets/scss/admin.scss';
+
+.Switch {
+	@extend .custom-control-input;
+	.SwitchLabel {
+		margin-right: 10px;
+	}
+}
 
 .toggle-switch {
 	position: relative;
 	width: 75px;
 	display: inline-block;
 	vertical-align: middle;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
 	text-align: left;
 	&-checkbox {
 		display: none;

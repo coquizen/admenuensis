@@ -36,7 +36,7 @@ const MiniSectionForm = ({uuid, listeners, attributes}) => {
 
 	const handleClick = (e) => {
 		e.preventDefault()
-		insertComponent(<Form form={<Section data={sectionData}/>}/>)
+		insertComponent(<Form label={"Section: " + sectionData.title}form={<Section data={sectionData}/>}/>)
 	}
 
 	const handleDataChange = (e) => {

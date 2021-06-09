@@ -209,14 +209,12 @@
           @extend .form-label;
         }
         .LoginInput {
-          @extend .input-transition;
           flex-grow: 1;
           font-size: $input-font-size-xs;
           border: none;
           margin-top: 0.25rem;
           margin-bottom: 0.25rem;
-          tranition: all 300ms;
-
+          @extend .standard-transition;
           &:focus, &:hover {
             background-color: $gray-900;
             color: lighten($off-white, 5);
@@ -240,13 +238,13 @@
 .Button {
   @include font-size($input-font-size-xs);
   @include border-radius($input-border-radius-sm);
-  @extend .input-transition;
   text-decoration: none;
   padding: 4px;
   border: none;
   &.ButtonCancel {
     background-color: $red;
     color: $off-white;
+    @extend .standard-transition;
     &:hover {
       background-color: darken($red, 5);
     }
@@ -254,6 +252,7 @@
   &.ButtonSubmit {
     background-color: $light-grey;
     color: $off-white;
+    @extend .standard-transition;
     &:hover {
       background-color: darken($light-grey, 5);
     }
