@@ -10,19 +10,21 @@ import {Item} from "components/Form/forms"
 import Form from "components/Form"
 import styles from "./MiniItemForm.module.scss"
 import {fetchItem} from 'services/data'
+import classnames from "classnames";
 
 const MiniItemForm = ({uuid, listeners, attributes}) => {
 	const {updateItem} = useData()
 
-	const [itemData, setItemData] = useState()
+	const [itemData, setItemData] = useState(null)
 	const [isChanged, setIsChanged] = useState(false)
 	const {insertComponent} = useModal()
 
 	useEffect(() => {
+		setTimeout(() => {
 		const fetchData = (uuid) => {
 			fetchItem(uuid).then(setItemData)
 		}
-		fetchData(uuid)
+		fetchData(uuid)}, 1000)
 	}, [uuid])
 
 	const onChange = (e) => {
@@ -56,7 +58,7 @@ const MiniItemForm = ({uuid, listeners, attributes}) => {
 
 	return (
 		<>
-		{itemData &&
+		{itemData !== null ?
 		<div className={styles.NodeWrapper}>
 			<div className={styles.Node}>
 				<Handle listeners={listeners} attributes={attributes} />
@@ -100,7 +102,14 @@ const MiniItemForm = ({uuid, listeners, attributes}) => {
 				</div>
 
 			</div>
-		</div>}
+		</div> : <div className={classnames(styles.Gradient, styles.Blank)}>
+				<input
+					type='text'
+					className={classnames(styles.Blank)}
+					disabled='true'
+				/>
+				<div className={classnames(styles.Blank, styles.Gradient)} />
+			</div>}
 	</>
 	)
 }

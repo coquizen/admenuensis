@@ -14,16 +14,17 @@ import {fetchSection} from "services/data";
 
 const MiniSectionForm = ({uuid, listeners, attributes}) => {
 	const {updateSection} = useData()
-	const [sectionData, setSectionData] = useState()
+	const [sectionData, setSectionData] = useState(null)
 	const [isChanged, setIsChanged] = useState(false)
 	const {insertComponent} = useModal()
 
 	const isBlank = false
 	useEffect(() => {
+		setTimeout(() => {
 		const fetchData = () => {
 			fetchSection(uuid).then(({data}) => (setSectionData(data)))
 		}
-		fetchData()
+		fetchData()},1000)
 	}, [uuid])
 
 	const onChange = (e) => {
@@ -36,7 +37,7 @@ const MiniSectionForm = ({uuid, listeners, attributes}) => {
 
 	const handleClick = (e) => {
 		e.preventDefault()
-		insertComponent(<Form label={"Section: " + sectionData.title}form={<Section data={sectionData}/>}/>)
+		insertComponent(<Form label={"Section: " + sectionData.title} form={<Section data={sectionData}/>}/>)
 	}
 
 	const handleDataChange = (e) => {
@@ -55,8 +56,8 @@ const MiniSectionForm = ({uuid, listeners, attributes}) => {
 
 	return (
 		<>
-			{sectionData &&
-			<div className={styles.NodeWrapper}>
+			{sectionData !== null
+				? <div className={styles.NodeWrapper}>
 				<div className={styles.Node}>
 					<Handle listeners={listeners} attributes={attributes}/>
 					<input
@@ -86,9 +87,17 @@ const MiniSectionForm = ({uuid, listeners, attributes}) => {
 						}
 					</div>
 				</div>
-			</div>}
+			</div>
+				: <div className={classnames(styles.Gradient, styles.NodeWrapper)}>
+					<input
+						type='text'
+						className={classnames(styles.NodeInput, !isBlank && styles.NodeNew)}
+						disabled='true'
+					/>
+					<div className={classnames(styles.Node, styles.Gradient)} />
+				</div>
+			}
 		</>
 	)
 }
-
 export default MiniSectionForm
