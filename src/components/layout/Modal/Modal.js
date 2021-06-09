@@ -5,18 +5,35 @@ import Portal from './Portal/Portal'
 import styles from './Modal.module.scss'
 import classNames from "classnames"
 
-const Modal = ({open, onClose, WrappedComponent}) => {
-	const [active, setActive] = React.useState(false)
-	
+const Modal = ({closeModal, isOpen, WrappedComponent}) => {
+	const [fadeType, setFadeType] = React.useState('mounting')
+
 	let modalRef = useRef(null)
+
+
+	const setModalClosing = () => {
+		setFadeType('out')
+	}
+	const setModalOpened = () => {
+		setFadeType('in')
+	}
+
 	useEffect(() => {
 		const {current} = modalRef
-		const transitionEnd = () => setActive(open);
 
-		const keyHandler = (event) =>
-			[27].indexOf(event.which) >= 0 && setActive(false);
+		const transitionEnd = (e) => {
+			if (e.propertyName !== "opacity" || fadeType === 'in') return
+			if (fadeType === 'out') closeModal()
+		}
+		
+		const keyHandler = (event) => {
+			const escapePressed = [27].indexOf(event.which) >= 0;
+			if (escapePressed)
+				setModalClosing(); // but the open state is still true see line 14. At the end of the fadeOut transition, the listener then sets the active state to be open .
+			// return escapePressed && setActive(active => !active);// This toggles it
+		}
 
-		const clickHandler = (event) => event.target === current && setActive(false);
+		const clickHandler = (event) => event.target === current && setModalClosing();
 
 		if (current) {
 			current.addEventListener("transitionend", transitionEnd);
@@ -24,39 +41,35 @@ const Modal = ({open, onClose, WrappedComponent}) => {
 			window.addEventListener("keyup", keyHandler);
 		}
 
-		if (open) {
-			window.setTimeout(() => {
+		if (fadeType === 'mounting' && isOpen) {
+		window.setTimeout(() => {
 				document.activeElement.blur();
 				document.querySelector("#root").setAttribute("inert", "true");
-				setActive(open);
-			}, 0);
-		} else {
-			setActive(false)
-		}
-
+				setModalOpened()
+		},10) 
+	} else if (!isOpen) {
+		setFadeType('mounting')
+	}
 		return () => {
 			if (current) {
 				current.removeEventListener("transitionend", transitionEnd);
 				current.removeEventListener("click", clickHandler);
 			}
-
 			document.querySelector("#root").removeAttribute("inert");
 			window.removeEventListener("keyup", keyHandler);
 		}
-	}, [open, onClose])
+	}, [isOpen, fadeType, closeModal])
 
 	return (
 		<React.Fragment>
-		{(open || active) &&
+			{isOpen &&
 			<Portal className="portal-container">
-				<div ref={modalRef} className={classNames(styles.ModalOverlay, (open && active) && styles.Active)}>
+				<div ref={modalRef} className={classNames(styles.ModalOverlay, fadeType === 'in' && styles.Active)}>
 					<div className={styles.Modal}>
 						{WrappedComponent}
 					</div>
-
 				</div>
-			</Portal>
-		}
+			</Portal>}
 	</React.Fragment>
 	)
 }
