@@ -27,28 +27,28 @@ const MiniSectionForm = ({uuid, listeners, attributes}) => {
 		fetchData()},1000)
 	}, [uuid])
 
-	const onChange = (e) => {
+	const onChange = (event) => {
 		const newSectionData = sectionData
-		newSectionData[e.target.name] = e.target.value
+		newSectionData[event.target.name] = event.target.value
 		if (!isChanged) {
 			setIsChanged(true)
 		}
 	}
 
-	const handleClick = (e) => {
-		e.preventDefault()
-		insertComponent(<Form label={"Section: " + sectionData.title} form={<Section data={sectionData}/>}/>)
+	const handleClick = (event) => {
+		event.preventDefault()
+		insertComponent(<Form label={'Section: ' + sectionData.title} form={<Section data={sectionData} />} />)
 	}
 
-	const handleDataChange = (e) => {
-		if (e.charCode === 13 && isChanged) {
+	const handleDataChange = (event) => {
+		if (event.charCode === 13 && isChanged) {
 			updateSection({...sectionData})
 			setIsChanged(false)
 		}
 	}
 
-	const onLostFocus = (e) => {
-		if (e.currentTarget === e.target && isChanged) {
+	const onLostFocus = (event) => {
+		if (event.currentTarget === event.target && isChanged) {
 			updateSection({id: uuid, title: sectionData.title})
 			setIsChanged(false)
 		}
@@ -63,26 +63,22 @@ const MiniSectionForm = ({uuid, listeners, attributes}) => {
 					<input
 						placeholder='Type section name, e.g. Dinner or Appetizer'
 						type='text'
-						className={classnames(styles.NodeInput, !isBlank && styles.NodeNew)}
+						className={classnames(styles.NodeInput)}
 						value={sectionData.title}
 						onChange={onChange}
 						onKeyPress={handleDataChange}
 						onBlur={onLostFocus}
-						disabled={isBlank}
+
 					/>
 					<div className={styles.ButtonGroup}>
-						<button disabled={isBlank} type='button' className='btn btn-sm'>
+						<button type='button' className='btn btn-sm'>
 							<FontAwesomeIcon icon={faDotCircle} fixedWidth/>
 						</button>
 						<button type='button' className='btn btn-sm' onClick={handleClick}>
 							<FontAwesomeIcon icon={faEdit} fixedWidth/>
 						</button>
-						<button disabled={isBlank} type='button' className='btn btn-sm'>
+						<button type='button' className='btn btn-sm'>
 							<FontAwesomeIcon icon={faEllipsisH} fixedWidth/>
-						</button>
-						{isBlank &&
-						<button type='button' className='btn btn-sm' onClick={handleClick}>
-							<FontAwesomeIcon icon={faPlus} fixedWidth/>
 						</button>
 						}
 					</div>
@@ -91,7 +87,7 @@ const MiniSectionForm = ({uuid, listeners, attributes}) => {
 				: <div className={classnames(styles.Gradient, styles.NodeWrapper)}>
 					<input
 						type='text'
-						className={classnames(styles.NodeInput, !isBlank && styles.NodeNew)}
+						className={classnames(styles.NodeInput)}
 						disabled='true'
 					/>
 					<div className={classnames(styles.Node, styles.Gradient)} />

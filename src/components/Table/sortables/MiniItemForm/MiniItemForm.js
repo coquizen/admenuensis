@@ -13,23 +13,18 @@ import {fetchItem} from 'services/data'
 import classnames from "classnames";
 
 const MiniItemForm = ({uuid, listeners, attributes}) => {
-	const {updateItem} = useData()
+	const {updateItem, items} = useData()
 
 	const [itemData, setItemData] = useState(null)
 	const [isChanged, setIsChanged] = useState(false)
 	const {insertComponent} = useModal()
 
-	useEffect(() => {
-		setTimeout(() => {
-		const fetchData = (uuid) => {
-			fetchItem(uuid).then(setItemData)
-		}
-		fetchData(uuid)}, 1000)
-	}, [uuid])
+	const item = items.filter((item) => item.id === uuid)
+  setItemData(item)
 
-	const onChange = (e) => {
+	const onChange = (event) => {
 		const newItemData = itemData
-		newItemData[ e.target.name ] = e.target.value
+		newItemData[ event.target.name ] = event.target.value
 		setItemData(newItemData)
 		if (!isChanged) {
 			setIsChanged(true)
@@ -37,20 +32,20 @@ const MiniItemForm = ({uuid, listeners, attributes}) => {
 	}
 
 	// TODO: Check to see if React has trouble with this nested russian doll of a render
-	const handleClick = (e) => {
-		e.preventDefault()
+	const handleClick = (event) => {
+		event.preventDefault()
 		insertComponent(<Form label={"Item: " + itemData.title} form={<Item data={itemData}/>}/>)
 	}
 
-	const handleDataChange = (e) => {
-		if (e.charCode === 13 && isChanged) {
+	const handleDataChange = (event) => {
+		if (event.charCode === 13 && isChanged) {
 			updateItem({ id: uuid, title: itemData.title, price: itemData.price * 100 })
 			setIsChanged(false)
 		}
 	}
 
-	const onLostFocus = (e) => {
-		if (e.currentTarget === e.target && isChanged) {
+	const onLostFocus = (event) => {
+		if (event.currentTarget === event.target && isChanged) {
 			updateItem({ id: uuid, title: itemData.title, price: itemData.price * 100 })
 			setIsChanged(false)
 		}

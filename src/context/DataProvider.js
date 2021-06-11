@@ -9,12 +9,16 @@ const DataContext = createContext(null)
 const DataProvider = ({ children }) => {
 	const [sections, setAllSectionsData] = useState(null)
 	// const [menus, setMenusData] = useState(api.fetchMenus())
-	const [allItemsData, setAllItemsData] = useState(null)
+	const [items, setAllItemsData] = useState(null)
 	const [isDirty, setIsDirty] = useState(true)
 
 	useEffect(() => {
 		api.fetchSections().then(({data}) => setAllSectionsData(data))
 	}, [])
+
+	useEffect(()=> {
+		api.fetchItems().then(({data}) => setAllItemsData(data))
+		},[])
 
 	// useEffect(() => {
 	// 	api.fetchItems().then((data) => setAllItemsData(data))
@@ -25,8 +29,8 @@ const DataProvider = ({ children }) => {
 	}, [sections])
 
 	const getItemDataByID = useCallback((id) => {
-		return allItemsData.find((item) => item.id === id)
-	}, [allItemsData])
+		return items.find((item) => item.id === id)
+	}, [items])
 
 	const updateSection = useCallback((data) => {
 		api.updateSection(data).then(() => setIsDirty(true))
@@ -44,6 +48,11 @@ const DataProvider = ({ children }) => {
 		api.deleteItem(id)
 	}, [])
 
+	const getMealByParentID = useCallback((id) => {
+		const section = sections.first((section) => section.id === id)
+		const meal = sections.first((meal) => meal.id === section.id)
+		return meal
+	})
 
 	useReactContextDevTool({
 		id: 'DataProvider',
@@ -64,10 +73,12 @@ const DataProvider = ({ children }) => {
 		<DataContext.Provider
 			value={{
 				sections,
+				items,
 				updateSection,
 				getItemDataByID,
 				getSectionDataByID,
 				updateItem,
+				getMealByParentID
 			}}>
 			{children}
 		</DataContext.Provider>

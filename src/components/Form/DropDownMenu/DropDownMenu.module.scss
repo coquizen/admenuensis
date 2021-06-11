@@ -1,13 +1,13 @@
 @import '../../../assets/scss/admin';
 
-.DropDownMenuContainer {
+.Container {
   @include make-container();
 }
 .Label {
   @extend .col-form-label;
   @extend .col-form-label-sm;
 }
-.DropDownMenu {
+.Menu {
   @extend .form-select;
   @extend .form-select-sm;
 }
