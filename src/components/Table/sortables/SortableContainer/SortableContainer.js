@@ -5,14 +5,18 @@ import styles from "components/Table/sortables/SortableContainer/SortableContain
 import classNames from "classnames";
 
 
-const Container = forwardRef(({children, isSubSection}, ref) => {
+const Container = forwardRef(({children, isSubSection, getStyle}, ref) => {
     return (
-        <ul className={classNames(styles.Container, isSubSection && styles.SubSection)} ref={ref}>
+        <ul style={getStyle} className={classNames(styles.Container, isSubSection && styles.SubSection)} ref={ref}>
             {children}
         </ul>
     )
 })
 
+const defaultContainer = ({ isOverContainer }) => ({
+    marginTop: 40,
+    backgroundColor: isOverContainer ? 'rgb(235,235,235,1)' : 'rgba(246,246,246,1)',
+})
 
 const ConditionalContainer = ({condition, wrapper, children}) => condition ? wrapper(children) : children;
 
@@ -23,7 +27,6 @@ const SortableContainer = ({nodes, id, menuData, isSubSection}) => {
     if (itemIDs === undefined) {
         return <></>
     }
-
     const isOverContainer = isOver || (over ? nodes.includes(over.id) : false)
 
     return (
@@ -32,7 +35,13 @@ const SortableContainer = ({nodes, id, menuData, isSubSection}) => {
                 ?
                 <>
                     {nodes.map((subsection) => (
-                        <ConditionalContainer condition={subsection.items.length > 0} wrapper={children => <Container ref={setNodeRef} isSubSection={isSubSection}>{children}</Container> }>
+                        <ConditionalContainer
+                            condition={subsection.items.length > 0}
+                            wrapper={children => <Container ref={setNodeRef} getStyle={defaultContainer({isOverContainer})} isSubSection={isSubSection}
+                                                            isOver={isOver}
+                                                            over={over}>
+                                {children}
+                            </Container> }>
                             <SortableItemWrapper dataID={subsection.id}
                                              key={subsection.id}
                                              id={subsection.id}
@@ -47,7 +56,7 @@ const SortableContainer = ({nodes, id, menuData, isSubSection}) => {
                     ))}
                 </>
                 :
-                <Container ref={setNodeRef} isSubSection={isSubSection}>
+                <Container ref={setNodeRef} isSubSection={isSubSection} isOver={isOver} over={over}>
                         {nodes.map((item) =>
                             <SortableItemWrapper dataID={item.id}
                                                  key={item.id}

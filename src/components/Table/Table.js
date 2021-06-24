@@ -16,11 +16,6 @@ import { createPortal } from "react-dom";
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import SortableContainer from 'components/Table/sortables/SortableContainer'
 
-const getContainerStyle = ({ isOverContainer }) => ({
-	marginTop: 40,
-	backgroundColor: isOverContainer ? 'rgb(235,235,235,1)' : 'rgba(246,246,246,1)',
-})
-
 const customCollisionDetectionStrategy = (rects, rect) => {
 	const rootRect = rects.filter(([id]) => id === 'root')
 	const intersectingRootRect = rectIntersection(rootRect, rect)
