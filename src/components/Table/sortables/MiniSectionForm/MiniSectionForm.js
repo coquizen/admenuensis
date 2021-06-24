@@ -1,8 +1,8 @@
 /** @format */
 
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faDotCircle, faEdit, faEllipsisH, faPlus} from '@fortawesome/free-solid-svg-icons'
+import {faDotCircle, faEdit, faEllipsisH} from '@fortawesome/free-solid-svg-icons'
 import Handle from 'components/Table/Handle'
 import {useData} from 'context/DataProvider'
 import {useModal} from 'context/ModalProvider'
@@ -10,26 +10,17 @@ import Form from 'components/Form'
 import {Section} from 'components/Form/forms'
 import classnames from 'classnames'
 import styles from './MiniSectionForm.module.scss'
-import {fetchSection} from "services/data";
 
 const MiniSectionForm = ({uuid, listeners, attributes}) => {
-	const {updateSection} = useData()
-	const [sectionData, setSectionData] = useState(null)
+	const {getSectionDataByID,updateSection} = useData()
+	const [sectionData, setSectionData] = useState(getSectionDataByID(uuid))
 	const [isChanged, setIsChanged] = useState(false)
 	const {insertComponent} = useModal()
-
-	const isBlank = false
-	useEffect(() => {
-		setTimeout(() => {
-		const fetchData = () => {
-			fetchSection(uuid).then(({data}) => (setSectionData(data)))
-		}
-		fetchData()},1000)
-	}, [uuid])
 
 	const onChange = (event) => {
 		const newSectionData = sectionData
 		newSectionData[event.target.name] = event.target.value
+		setSectionData(newSectionData)
 		if (!isChanged) {
 			setIsChanged(true)
 		}
@@ -80,7 +71,6 @@ const MiniSectionForm = ({uuid, listeners, attributes}) => {
 						<button type='button' className='btn btn-sm'>
 							<FontAwesomeIcon icon={faEllipsisH} fixedWidth/>
 						</button>
-						}
 					</div>
 				</div>
 			</div>
@@ -88,7 +78,7 @@ const MiniSectionForm = ({uuid, listeners, attributes}) => {
 					<input
 						type='text'
 						className={classnames(styles.NodeInput)}
-						disabled='true'
+						disabled={true}
 					/>
 					<div className={classnames(styles.Node, styles.Gradient)} />
 				</div>

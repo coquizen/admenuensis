@@ -8,7 +8,7 @@ const DataContext = createContext(null)
 
 const DataProvider = ({ children }) => {
 	const [sections, setAllSectionsData] = useState(null)
-	// const [menus, setMenusData] = useState(api.fetchMenus())
+	const [menus, setMenusData] = useState(api.fetchMenus())
 	const [items, setAllItemsData] = useState(null)
 	const [isDirty, setIsDirty] = useState(true)
 
@@ -20,9 +20,9 @@ const DataProvider = ({ children }) => {
 		api.fetchItems().then(({data}) => setAllItemsData(data))
 		},[])
 
-	// useEffect(() => {
-	// 	api.fetchItems().then((data) => setAllItemsData(data))
-	// }, [])
+	useEffect(() => {
+		api.fetchMenus().then(({data}) => setMenusData(data))
+	}, [])
 
 	const getSectionDataByID = useCallback((id) => {
 		return sections.find((section) => section.id === id)
@@ -73,6 +73,7 @@ const DataProvider = ({ children }) => {
 		<DataContext.Provider
 			value={{
 				sections,
+				menus,
 				items,
 				updateSection,
 				getItemDataByID,

@@ -11,12 +11,12 @@ const Login = () => {
     const history = useHistory();
     const location = useLocation();
 
-    const { isAuthenticated, setAuthState, login, authState, logout } = useAuth()
+    const { login } = useAuth()
 
     const resetForm = () => {
         setTimeout(() => {
             setLoginState(null)
-        }, 2000);
+        }, 2000)
     }
 
     const onSubmit = (e) => {
@@ -30,6 +30,7 @@ const Login = () => {
             setLoginState('rejected')
             setPassword('')
             console.info(username, password, loginState)
+            console.error(err)
         })
     }
 

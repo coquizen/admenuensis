@@ -5,33 +5,19 @@ import styles from './Menu.module.scss'
 import NavBar from "components/NavBar/NavBar";
 import Table from 'components/Table/Table'
 import SubHeader from 'components/layout/SubHeader'
-import {fetchMenus} from 'services/data'
+import { useData } from 'context/DataProvider'
 
-const Menu = () => {
-	const [menus, loadMenus] = useState(null)
-
-	useEffect(() => {
-		fetchMenus().then(({data}) => {
-			data.sort((a, b) => a.list_order - b.list_order)
-			loadMenus(data)
-		})
-	}, [loadMenus])
-
-	console.info('menu.js: ', menus )
-	return (
-		<>
-		{menus && <div className={styles.Menu}>
+const Menu = () => (
+		<div className={styles.Menu}>
 			<SubHeader title={'Menu Management'} />
-			<MenuView menus={menus} />
+			<MenuView  />
 			<PublishButton />
-		</div>}
-		</>
+		</div>
 	)
-}
+
 export default Menu
 
-const MenuView = ({ menus }) => {
-
+const filterData = (menus) => {
 	for (let i = 0; i < menus.length; i++) {
 		if (menus[ i ].subsections) {
 			menus[ i ].subsections = menus[ i ].subsections.filter((section) => section.type === 'Category')
@@ -42,10 +28,28 @@ const MenuView = ({ menus }) => {
 				.sort((a, b) => a.list_order - b.list_order)
 		}
 	}
-	const [ activeMenu, setActiveMenu ] = useState(menus[0])
+
+	menus.sort((a,b) => a.list_order - b.list_order)
+
+	return menus
+}
+const MenuView = () => {
+	const [ activeMenu, setActiveMenu ] = useState(null)
+	const { menus } = useData()
+	let data
+	if (menus) {
+		data = filterData(menus)
+	}
+
+	useEffect(() => {
+		if (data) {
+			setActiveMenu(data[0])
+		}
+	},[data])
+
 	return (
 		<>
-			<NavBar menus={menus} setActiveMenu={setActiveMenu} activeMenu={activeMenu} />
+			<NavBar menus={data} setActiveMenu={setActiveMenu} activeMenu={activeMenu} />
 			<div className={styles.MenuContent}>
 				<Table data={activeMenu} />
 			</div>

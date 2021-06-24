@@ -1,12 +1,14 @@
 @import '../../../../assets/scss/admin';
 
 .Container {
-  background-color: $gray-500;
-  border-radius: $border-radius;
+  background-color: transparent;
   display: flex;
   align-self: stretch;
   flex-direction: column;
-  margin-bottom: 1rem;
-  padding: 0 $spacer 0 $spacer;
-  
+  margin: $spacer 0;
+}
+
+.SubSection {
+  @extend .shadow;
+  background-color: transparent;
 }

@@ -196,7 +196,11 @@
       height: 32px;
       background-color: $dark-blue;
       color: $off-white;
+      .LoginTitle {
+        @extend .modal-title;
+      }
     }
+
     .LoginBody {
       @extend .modal-body;
       flex-direction: column;

@@ -1,49 +1,29 @@
-import React, { useLayoutEffect, useState } from 'react'
+import React from 'react'
 import { CSS } from '@dnd-kit/utilities'
 import { useSortable } from '@dnd-kit/sortable'
-import MiniSectionForm from "components/Table/sortables/MiniSectionForm";
+import Item from "../Item";
 
-const SortableItemWrapper = ({ id, dataID, menuData, formType, children, ...props }) => {
-    console.log('item', dataID)
-    const { setNodeRef, transform, transition, listeners, attributes, isDragging, isSorting,
-    } = useSortable({
-        id, data: {
-            type: formType,
-        }
+const SortableItemWrapper = ({ id, dataID, children, ...props }) => {
+
+    const { setDraggableNodeRef, setDroppableNodeRef, transition, listeners, attributes, isDragging, transform } = useSortable({
+        id
     })
 
     const style = {
-        transform: CSS.Transform.toString(transform),
-        transition,
-        flex: 1,
-        position: "relative"
+        transform: CSS.Translate.toString(transform),
+        transition
     }
-    // const style = {
-    //     transform: CSS.Transform.toString(transform),
-    //     transition,
-    // };
-
-    const injectPropsIntoChildren = () => (
-        React.Children.map(children, (child => React.cloneElement(child, {listeners: listeners, attributes: attributes, ...props}))
-        ))
-
 
     return (
-        <div ref={setNodeRef} style={style}>
-            {injectPropsIntoChildren()}
-        </div>
+        <Item dataID={dataID} style={style}
+              ref={setDraggableNodeRef}
+              setDroppableRef={setDroppableNodeRef}
+              listeners={listeners}
+              attributes={attributes}
+              ghost={isDragging}
+              {...props}
+        >{children}</Item>
     )
 }
 
 export default SortableItemWrapper
-
-const useMountStatus = () => {
-    const [ isMounted, setIsMounted ] = useState(false)
-
-    useLayoutEffect(() => {
-        const clearTimeout = setTimeout(() => setIsMounted(true), 500)
-        return () => clearTimeout()
-    }, [])
-
-    return isMounted
-}

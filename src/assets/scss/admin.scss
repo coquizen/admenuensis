@@ -123,6 +123,10 @@ ul {
 	list-style: none;
 }
 
+li {
+	margin-left: $spacer;
+}
+
 #clock {
 	cursor: default;
 }

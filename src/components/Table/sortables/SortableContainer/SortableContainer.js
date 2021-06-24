@@ -1,65 +1,65 @@
 import React, {forwardRef} from "react"
-import {useDroppable} from '@dnd-kit/core'
-import {SortableContext, verticalListSortingStrategy} from "@dnd-kit/sortable";
+import {useSortable, SortableContext, verticalListSortingStrategy} from "@dnd-kit/sortable";
 import SortableItemWrapper from 'components/Table/sortables/SortableItem/SortableItemWrapper'
 import styles from "components/Table/sortables/SortableContainer/SortableContainer.module.scss"
-import MiniItemForm from "components/Table/sortables/MiniItemForm/MiniItemForm";
-import MiniSectionForm from "components/Table/sortables/MiniSectionForm";
+import classNames from "classnames";
 
 
-const Container = forwardRef(({children}, ref) => {
+const Container = forwardRef(({children, isSubSection}, ref) => {
     return (
-        <div className={styles.Container} ref={ref}>{children}</div>
+        <ul className={classNames(styles.Container, isSubSection && styles.SubSection)} ref={ref}>
+            {children}
+        </ul>
     )
 })
 
+
+const ConditionalContainer = ({condition, wrapper, children}) => condition ? wrapper(children) : children;
+
 const SortableContainer = ({nodes, id, menuData, isSubSection}) => {
-
-
     const itemIDs = nodes?.map((node) => node.id)
+    const {setNodeRef, over, isOver} = useSortable({id})
 
-
-    const {isOver, setNodeRef} = useDroppable({id})
     if (itemIDs === undefined) {
         return <></>
     }
-    if (isOver) {
-        console.log("is over", id)
-    }
+
+    const isOverContainer = isOver || (over ? nodes.includes(over.id) : false)
 
     return (
         <>
             {isSubSection
-                ? <Container ref={setNodeRef}>
+                ?
+                <>
                     {nodes.map((subsection) => (
-                        <SortableItemWrapper dataID={subsection.id}
+                        <ConditionalContainer condition={subsection.items.length > 0} wrapper={children => <Container ref={setNodeRef} isSubSection={isSubSection}>{children}</Container> }>
+                            <SortableItemWrapper dataID={subsection.id}
                                              key={subsection.id}
                                              id={subsection.id}
                                              menuData={menuData}
-                                             formType={'section'}>
-                            <MiniSectionForm uuid={subsection.id}/>
-                            {subsection.items &&
-                            <SortableContainer isSubSection={false} nodes={subsection.items} id={subsection.id}
-                                               menuData={menuData}/>}
-                        </SortableItemWrapper>
-                    ))}
-                </Container>
-                : <SortableContext id={menuData.id} items={itemIDs} strategy={verticalListSortingStrategy}>
-                    <Container ref={setNodeRef}>
-                        {nodes.map((item) => {
-                            return <SortableItemWrapper dataID={item.id}
-                                                        key={item.id}
-                                                        id={item.id}
-                                                        menuData={menuData}
-                                                        formType={'item'}>
-                                <MiniItemForm uuid={item.id}/>
+                                             >
+                                {subsection.items &&
+                                    <SortableContext id={subsection.id} items={subsection.items.map(({id}) => id) } strategy={verticalListSortingStrategy} >
+                                        <SortableContainer isSubSection={false} nodes={subsection.items} id={subsection.id} />
+                                    </SortableContext>}
                             </SortableItemWrapper>
-                        })}
-                    </Container>
-                </SortableContext>
+                        </ConditionalContainer>
+                    ))}
+                </>
+                :
+                <Container ref={setNodeRef} isSubSection={isSubSection}>
+                        {nodes.map((item) =>
+                            <SortableItemWrapper dataID={item.id}
+                                                 key={item.id}
+                                                 id={item.id}
+                                                 menuData={menuData}
+                                                 />
+                        )}
+                </Container>
+
             }
-        </>
-    )
+            </>
+   )
 }
 
 export default SortableContainer
