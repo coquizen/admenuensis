@@ -6,14 +6,14 @@ import usePositionAndDimension from "hooks/usePositionAndDimension";
 
 const NavBar = ({setActiveMenu, activeMenu, menus}) => {
     const {activeRef, setActiveRef} = usePositionAndDimension()
-
     return (
         <div className={styles.NavBar}>
             <AnimatingSelector activeRef={activeRef}/>
             <div className={styles.NavList}>
-                {menus?.map((menu) => <Tab setActiveRef={setActiveRef} menu={menu} activeMenu={activeMenu} key={menu.title} setActiveMenu={setActiveMenu} />)}
+                {menus && menus?.map((menu) => <Tab setActiveRef={setActiveRef} menu={menu} activeMenu={activeMenu} key={menu.title} setActiveMenu={setActiveMenu} />)}
             </div>
         </div>
     )
 }
+
 export default NavBar
