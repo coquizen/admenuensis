@@ -6,6 +6,9 @@
   align-self: stretch;
   flex-direction: column;
   margin: $spacer 0;
+  &.Container {
+    margin: $spacer 0;
+  }
 }
 
 .SubSection {

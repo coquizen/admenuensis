@@ -37,7 +37,9 @@ const SortableContainer = ({nodes, id, menuData, isSubSection}) => {
                     {nodes.map((subsection) => (
                         <ConditionalContainer
                             condition={subsection.items.length > 0}
-                            wrapper={children => <Container ref={setNodeRef} getStyle={defaultContainer({isOverContainer})} isSubSection={isSubSection}
+                            wrapper={children => <Container ref={setNodeRef}
+                                                            getStyle={defaultContainer({isOverContainer})}
+                                                            isSubSection={isSubSection}
                                                             isOver={isOver}
                                                             over={over}>
                                 {children}

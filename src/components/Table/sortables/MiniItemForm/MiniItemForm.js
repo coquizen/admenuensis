@@ -65,9 +65,9 @@ const MiniItemForm = ({ uuid, listeners, attributes }) => {
 							placeholder="Please type in a food item. E.g. French Fries"
 
 						/>
-						<button type="button" className="btn btn-sm">
+						<div className={styles.DollarSign}>
 							<FontAwesomeIcon icon={faDollarSign} fixedWidth />
-						</button>
+						</div>
 						<div style={{ textAlign: "right" }}>
 							<input
 								name="price"

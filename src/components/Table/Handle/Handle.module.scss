@@ -5,8 +5,6 @@
 .Handle {
   display: flex;
   flex: 0 0 auto;
-  border-width: 2px;
-  border: #000;
   cursor: var(--cursor, grab);
   font-size: medium;
   svg {
@@ -19,6 +17,6 @@
   &:focus {
     outline: none;
     border-radius: 0.5px;
-    box-shadow: 0 0 0 2px #fff, 0 0px 3px 4px $focused-outline-color;
+    //box-shadow: 0 0 0 2px #fff, 0 0 3px 4px $focused-outline-color;
   }
 }

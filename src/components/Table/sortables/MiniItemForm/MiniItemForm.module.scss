@@ -48,6 +48,12 @@ ul {
   display: inline-flex;
   padding: .25rem;
 }
+
+.DollarSign {
+  @extend .btn;
+  @extend .btn-sm;
+  padding-right: 0;
+}
 .PriceInput {
   border: none;
   appearance: none;

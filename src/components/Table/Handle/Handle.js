@@ -2,7 +2,6 @@
 
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { VscGripper } from 'react-icons/vsc'
 import { faGripLinesVertical } from '@fortawesome/free-solid-svg-icons'
 import styles from './Handle.module.scss'
 
