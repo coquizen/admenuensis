@@ -3,8 +3,13 @@
 
 .SideBar {
 	display: flex;
+	position: -webkit-sticky;
+	top: 0;
+	left: 0;
+	overflow-x: hidden;
 	flex-direction: column;
 	justify-content: flex-start;
+	height: 100%;
 	min-width: 48px;
 	max-width: 48px;
 	-webkit-transition: all 0.3s;
