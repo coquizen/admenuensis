@@ -35,28 +35,23 @@ const SortableContainer = ({ nodes, id, menuData, isSubSection }) => {
                 ?
                 <>
                     {nodes.map((subsection) => (
-                        <ConditionalContainer
-                            key={subsection.id}
-                            condition={subsection.items.length > 0}
-                            wrapper={children => <Container
-                                getStyle={defaultContainer({ isOverContainer })}
-                                isSubSection={isSubSection}
-                                isOver={isOver}
-                                over={over}>
-                                {children}
-                            </Container>}>
+                        <Container
+                            getStyle={defaultContainer({ isOverContainer })}
+                            isSubSection={isSubSection}
+                            isOver={isOver}
+                            over={over}>
                             <SortableItemWrapper
                                 dataID={subsection.id}
                                 key={subsection.id}
                                 id={subsection.id}
                                 menuData={menuData}
                             >
-                                {subsection.items &&
+                                {subsection?.items &&
                                     <SortableContext id={subsection.id} items={subsection.items.map(({ id }) => id)} strategy={verticalListSortingStrategy} >
                                         <SortableContainer isSubSection={false} nodes={subsection.items} id={subsection.id} />
                                     </SortableContext>}
                             </SortableItemWrapper>
-                        </ConditionalContainer>
+                        </Container>
                     ))}
                 </>
                 :

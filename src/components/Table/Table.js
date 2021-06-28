@@ -112,7 +112,6 @@ const Table = ({ data }) => {
 		}
 
 		if ((activeContainer === menuData.id) && (overContainer === menuData.id)) {
-
 			if (activeType === 'item') {
 				setMenuData((menuData) => {
 					const overIndex = getIndex(over.id, overType)
