@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, rectSwappingStrategy } from '@dnd-kit/sortable'
 import {
 	closestCorners,
 	DndContext,
@@ -16,17 +16,7 @@ import { createPortal } from "react-dom";
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import SortableContainer from 'components/Table/sortables/SortableContainer'
 
-const customCollisionDetectionStrategy = (rects, rect) => {
-	const rootRect = rects.filter(([id]) => id === 'root')
-	const intersectingRootRect = rectIntersection(rootRect, rect)
 
-	if (intersectingRootRect) {
-		return intersectingRootRect
-	}
-
-	const otherRects = rects.filter(([id]) => id !== 'root')
-	return closestCorners(otherRects, rect)
-}
 
 const Table = ({ data }) => {
 	// const orderedData = orderTree(data)
@@ -40,7 +30,18 @@ const Table = ({ data }) => {
 	}, [ data ])
 
 	if (menuData) {
-		rootID = menuData[ "id" ]
+		rootID = menuData.id
+	}
+	const customCollisionDetectionStrategy = (rects, rect) => {
+		const rootRect = rects.filter(([ id ]) => id === menuData.id)
+		const intersectingRootRect = rectIntersection(rootRect, rect)
+		console.log("rects: ", rects)
+		if (intersectingRootRect) {
+			return intersectingRootRect
+		}
+
+		const otherRects = rects.filter(([ id ]) => id !== 'root')
+		return closestCorners(otherRects, rect)
 	}
 
 	const sensors = useSensors(
@@ -57,39 +58,44 @@ const Table = ({ data }) => {
 		if (type === 'section') {
 			return rootID
 		} else if (type === 'item') {
-			return menuData?.subsections.find((section) => section.items.map(({ id }) => id)
-				.includes(soughtID)).id || rootID
+			if (menuData.items.length > 0) {
+				return rootID
+			} else {
+				return menuData?.subsections.find((section) => section.items.map(({ id }) => id)
+					.includes(soughtID)).id
+			}
 		}
 	}
-	const getIndex = (soughID, type) => {
-		const container = findContainer(soughID, type)
+
+	const getIndex = (soughtID, type) => {
+		const container = findContainer(soughtID, type)
 
 		if (!container) {
 			return -1
 		}
 
 		if (type === "section") {
-
-			return menuData.subsections.map(({ id }) => id).indexOf(soughID);
+			return menuData.subsections.map(({ id }) => id).indexOf(soughtID);
 		} else if (type === "item") {
 			if (container === rootID) {
-				return menuData.items.map(({ id }) => id).indexOf(soughID)
+				return menuData.items.map(({ id }) => id).indexOf(soughtID)
 			} else {
 				const subsection = menuData.subsections.find(
 					(subsection) => subsection.id === container
 				)
-				return subsection.items.map(({ id }) => id).indexOf(soughID)
+				return subsection.items.map(({ id }) => id).indexOf(soughtID)
 			}
 		}
 	};
-
 
 	const handleDragStart = ({ active }) => {
 		setActiveID(active.id)
 		setClonedItems(menuData)
 	}
 
-	const handleDragOver = ({ active, over, draggingRect }) => {
+	const handleDragOver = (props) => {
+		const { active, over } = props
+
 		if (!over || !active) return
 		const overType = over.data.current?.type
 		const activeType = active.data.current.type
@@ -104,22 +110,24 @@ const Table = ({ data }) => {
 		if (activeType !== overType) {
 			return
 		}
-		if (overContainer === activeContainer === menuData[ "id" ]) {
+
+		if ((activeContainer === menuData.id) && (overContainer === menuData.id)) {
+
 			if (activeType === 'item') {
 				setMenuData((menuData) => {
 					const overIndex = getIndex(over.id, overType)
 					const activeIndex = getIndex(active.id, activeType)
 					const { items } = menuData
+					console.dir("Before: ", menuData)
 					menuData.items = arrayMove(items, activeIndex, overIndex)
+					console.dir("After: ", menuData)
 					return menuData
 				})
-
-			} else {
+			} else if (activeType === 'section') {
 				setMenuData((menuData) => {
 					const overIndex = getIndex(over.id, overType)
 					const activeIndex = getIndex(active.id, activeType)
-					const { subsections } = menuData
-					menuData.subsections = arrayMove(subsections, activeIndex, overIndex)
+					menuData.subsections = arrayMove(menuData.subsections, activeIndex, overIndex)
 					return menuData
 				})
 			}
@@ -142,35 +150,38 @@ const Table = ({ data }) => {
 						const overIndex = getIndex(over.id, overType)
 						const activeIndex = getIndex(active.id, activeType)
 						let { items } = menuData
-						console.info("items: ", items)
 						items = arrayMove(items, activeIndex, overIndex)
-						console.info("items: ", items)
 						menuData.items = items
 						return menuData
 					})
 				}
 			} else {
+				if (overContainer === undefined) return
+				if (overType === 'section') return
+
+				const overContainerIndex = getIndex(overContainer, 'section')
+				const activeContainerIndex = getIndex(activeContainer, 'section')
+				const overIndex = getIndex(over.id, overType)
+				const activeIndex = getIndex(active.id, activeType)
+
 				setMenuData((menuData) => {
-					const overContainerIndex = getIndex(overContainer, 'section')
-					const activeContainerIndex = getIndex(activeContainer, 'section')
-					const overIndex = getIndex(over.id, overType)
-					const activeIndex = getIndex(active.id, activeType)
 
 					let newIndex
 
-					const isBelowLastItem = over &&
-						overIndex === menuData.subsections[ overContainerIndex ].items.length - 1 &&
-						draggingRect.offsetTop > over.rect.offsetTop + over.rect.height
+					const isBelowLastItem = over && (overIndex === menuData.subsections[ overContainerIndex ].items.length - 1) &&
+						active.rect.current.translated.offsetTop > over.rect.offsetTop
 
 					const modifier = isBelowLastItem ? 1 : 0
 
 					newIndex = overIndex >= 0 ? overIndex + modifier :
 						menuData.subsections[ overContainerIndex ].items.length + 1
 
-					menuData.subsections[ overContainerIndex ].items = [ menuData.subsections[ overContainerIndex ].items.slice(0, newIndex),
-					menuData.subsections[ activeContainerIndex ].items[ activeIndex ],
-					...menuData.subsections[ overContainerIndex ].items.slice(newIndex, menuData.subsections[ overContainerIndex ].items.length - 1) ]
-					menuData.subsections[ activeContainerIndex ].items = menuData.subsections[ activeContainerIndex ].items.filter((item) => item !== active.id)
+					if (newIndex === 0) {
+						menuData.subsections[ overContainerIndex ].items.unshift(menuData.subsections[activeContainerIndex].items[activeIndex])
+					} else {
+						menuData.subsections[ overContainerIndex ].items.splice(newIndex, 0, menuData.subsections[activeContainerIndex].items[activeIndex])
+					}
+					menuData.subsections[ activeContainerIndex ].items = menuData.subsections[ activeContainerIndex ].items.filter((item) => item.id !== active.id)
 					return menuData
 				})
 			}
@@ -182,37 +193,46 @@ const Table = ({ data }) => {
 		const overType = over.data.current.type
 		const activeType = active.data.current.type
 
-		const overContainer = findContainer(over.id, overType)
-		const activeContainer = findContainer(active.id, activeType)
+		const overContainerID = findContainer(over.id, overType)
+		const activeContainerID = findContainer(active.id, activeType)
 
 		const overIndex = getIndex(over.id, overType)
 		const activeIndex = getIndex(active.id, activeType)
 
-		if (!overContainer || !activeContainer) {
+		if (!overContainerID || !activeContainerID) {
 			return
 		}
 
 		if (activeType !== overType) {
 			return
 		}
-		if (overContainer === activeContainer === menuData[ "id" ]) {
+
+		if ((overContainerID === activeContainerID) && (overContainerID === rootID)) {
 			if (activeType === 'item') {
-				const containerIndex = getIndex(overContainer, 'section')
 				setMenuData((menuData) => {
-					const items = menuData.subsections.find((section) => section.id === overContainer).items
-					menuData.subsections[ containerIndex ].items = arrayMove(items, activeIndex, overIndex)
+					menuData.items = arrayMove(menuData.items, activeIndex, overIndex)
 					return menuData
 				})
 			} else {
+				const overContainerIndex = getIndex(overContainerID, 'section')
+				setMenuData((menuData) => {
+					const items = menuData.subsections.find((section) => section.id === overContainerID).items
+					menuData.subsections[overContainerIndex].items = arrayMove(items, activeIndex, overIndex)
+					return menuData
+				})
+			}
+		} else {
+				console.log("we are here: Sections")
 				setMenuData((menuData) => {
 					let { subsections } = menuData
-					menuData.subsections = arrayMove(subsections, activeIndex, overIndex)
+					subsections = arrayMove(subsections, activeIndex, overIndex)
+					menuData.subsections = subsections
 					return menuData
 				})
 			}
 			setActiveID(null)
 		}
-	}
+
 
 	const handleDragCancel = () => {
 		if (dragOverlaidItems) {
@@ -224,7 +244,6 @@ const Table = ({ data }) => {
 		setClonedItems(null)
 	}
 
-	console.info('menu: ', menuData)
 
 	return (
 		<DndContext
@@ -233,14 +252,14 @@ const Table = ({ data }) => {
 			onDragEnd={handleDragEnd}
 			onDragCancel={handleDragCancel}
 			sensors={sensors}
-			collisionDetection={customCollisionDetectionStrategy}
+			collisionDetection={closestCorners}
 			modifiers={[ restrictToVerticalAxis ]}
 		>
 			<div className={styles.Sections}>
 				{menuData && <SortableLists menuData={menuData} />}
 			</div>
 			{createPortal(
-				<DragOverlay wrapperElement={"ul"} modifiers={[ restrictToVerticalAxis ]} style={{paddingLeft: 0}}>
+				<DragOverlay wrapperElement={"ul"} modifiers={[ restrictToVerticalAxis ]} style={{ paddingLeft: 0 }}>
 					{activeID ?
 						<Item
 							dataID={activeID}
@@ -256,7 +275,7 @@ const SortableLists = ({ menuData }) => {
 	if (menuData.subsections?.length > 0) {
 		const sectionIDs = menuData.subsections.map(({ id }) => id)
 		return (
-			<SortableContext id='root' items={sectionIDs} strategy={verticalListSortingStrategy}>
+			<SortableContext id='root' items={sectionIDs} strategy={rectSwappingStrategy}>
 				<SortableContainer menuData={menuData} id={menuData.id} nodes={menuData.subsections} isSubSection={true} />
 			</SortableContext>
 		)
@@ -265,11 +284,11 @@ const SortableLists = ({ menuData }) => {
 
 		filteredItems.sort((a, b) => a.list_order - b.list_order)
 
-		const filteredItemIDs = filteredItems.map(({id}) => id)
+		const filteredItemIDs = filteredItems.map(({ id }) => id)
 
 		if (filteredItems.length > 0) {
 			return (
-				<SortableContext id='root' items={filteredItemIDs} strategy={verticalListSortingStrategy}>
+				<SortableContext id='root' items={filteredItemIDs} strategy={rectSwappingStrategy}>
 					<SortableContainer menuData={menuData} id={menuData.id} nodes={menuData.items} isSubSection={false} />
 				</SortableContext>
 			)

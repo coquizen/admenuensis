@@ -23,6 +23,16 @@
   }
 }
 
+@mixin delay($rule, $number, $value) {
+  @for $i from 0 to ($number + 1) {
+    &:nth-child(#{$i}) {
+      -webkit-#{$rule}-delay: (#{$i*$value});
+      #{$rule}-delay: (#{$i*$value});
+    }
+  }
+}
+
+
 .Wrapper {
   box-sizing: border-box;
   transform: translate3d(var(--translate-x, 0), var(--translate-y, 0), 0) scaleX(var(--scale-x, 1)) scaleY(var(--scale-y, 1));
