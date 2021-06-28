@@ -1,36 +1,36 @@
 /** @format */
 
-import React, {createContext, useCallback, useContext, useState, useEffect,} from 'react'
+import React, { createContext, useCallback, useContext, useState, useEffect, } from 'react'
 import useReactContextDevTool from 'hooks/useReactContextDevTool'
 import * as api from 'services/data'
 
 const DataContext = createContext(null)
 
 const DataProvider = ({ children }) => {
-	const [sections, setAllSectionsData] = useState(null)
-	const [menus, setMenusData] = useState(api.fetchMenus())
-	const [items, setAllItemsData] = useState(null)
-	const [isDirty, setIsDirty] = useState(true)
+	const [ sections, setAllSectionsData ] = useState(null)
+	const [ menus, setMenusData ] = useState(api.fetchMenus())
+	const [ items, setAllItemsData ] = useState(null)
+	const [ isDirty, setIsDirty ] = useState(true)
 
 	useEffect(() => {
-		api.fetchSections().then(({data}) => setAllSectionsData(data))
+		api.fetchSections().then(({ data }) => setAllSectionsData(data))
 	}, [])
 
-	useEffect(()=> {
-		api.fetchItems().then(({data}) => setAllItemsData(data))
-		},[])
+	useEffect(() => {
+		api.fetchItems().then(({ data }) => setAllItemsData(data))
+	}, [])
 
 	useEffect(() => {
-		api.fetchMenus().then(({data}) => setMenusData(data))
+		api.fetchMenus().then(({ data }) => setMenusData(data))
 	}, [])
 
 	const getSectionDataByID = useCallback((id) => {
 		return sections.find((section) => section.id === id)
-	}, [sections])
+	}, [ sections ])
 
 	const getItemDataByID = useCallback((id) => {
 		return items.find((item) => item.id === id)
-	}, [items])
+	}, [ items ])
 
 	const updateSection = useCallback((data) => {
 		api.updateSection(data).then(() => setIsDirty(true))
@@ -65,6 +65,7 @@ const DataProvider = ({ children }) => {
 			updateItem,
 			deleteItem,
 			deleteSection,
+			menus,
 		},
 	})
 

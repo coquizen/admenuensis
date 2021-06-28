@@ -177,9 +177,9 @@ const Table = ({ data }) => {
 						menuData.subsections[ overContainerIndex ].items.length + 1
 
 					if (newIndex === 0) {
-						menuData.subsections[ overContainerIndex ].items.unshift(menuData.subsections[activeContainerIndex].items[activeIndex])
+						menuData.subsections[ overContainerIndex ].items.unshift(menuData.subsections[ activeContainerIndex ].items[ activeIndex ])
 					} else {
-						menuData.subsections[ overContainerIndex ].items.splice(newIndex, 0, menuData.subsections[activeContainerIndex].items[activeIndex])
+						menuData.subsections[ overContainerIndex ].items.splice(newIndex, 0, menuData.subsections[ activeContainerIndex ].items[ activeIndex ])
 					}
 					menuData.subsections[ activeContainerIndex ].items = menuData.subsections[ activeContainerIndex ].items.filter((item) => item.id !== active.id)
 					return menuData
@@ -195,6 +195,8 @@ const Table = ({ data }) => {
 
 		const overContainerID = findContainer(over.id, overType)
 		const activeContainerID = findContainer(active.id, activeType)
+		const overContainerIndex = getIndex(overContainerID, 'section')
+		const activeContainerIndex = getIndex(activeContainerID, 'section')
 
 		const overIndex = getIndex(over.id, overType)
 		const activeIndex = getIndex(active.id, activeType)
@@ -207,31 +209,8 @@ const Table = ({ data }) => {
 			return
 		}
 
-		if ((overContainerID === activeContainerID) && (overContainerID === rootID)) {
-			if (activeType === 'item') {
-				setMenuData((menuData) => {
-					menuData.items = arrayMove(menuData.items, activeIndex, overIndex)
-					return menuData
-				})
-			} else {
-				const overContainerIndex = getIndex(overContainerID, 'section')
-				setMenuData((menuData) => {
-					const items = menuData.subsections.find((section) => section.id === overContainerID).items
-					menuData.subsections[overContainerIndex].items = arrayMove(items, activeIndex, overIndex)
-					return menuData
-				})
-			}
-		} else {
-				console.log("we are here: Sections")
-				setMenuData((menuData) => {
-					let { subsections } = menuData
-					subsections = arrayMove(subsections, activeIndex, overIndex)
-					menuData.subsections = subsections
-					return menuData
-				})
-			}
-			setActiveID(null)
-		}
+		setActiveID(null)
+	}
 
 
 	const handleDragCancel = () => {

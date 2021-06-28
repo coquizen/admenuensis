@@ -1,6 +1,6 @@
 /** @format */
-import React, {useEffect, useState} from 'react'
-import {PublishButton} from 'components/Table/PublishButton'
+import React, { useEffect, useState } from 'react'
+import { PublishButton } from 'components/Table/PublishButton'
 import styles from './Menu.module.scss'
 import NavBar from "components/NavBar/NavBar";
 import Table from 'components/Table/Table'
@@ -8,12 +8,12 @@ import SubHeader from 'components/layout/SubHeader'
 import { useData } from 'context/DataProvider'
 
 const Menu = () => (
-		<div className={styles.Menu}>
-			<SubHeader title={'Menu Management'} />
-			<MenuView  />
-			<PublishButton />
-		</div>
-	)
+	<div className={styles.Menu}>
+		<SubHeader title={'Menu Management'} />
+		<MenuView />
+		<PublishButton />
+	</div>
+)
 
 export default Menu
 
@@ -29,7 +29,7 @@ const filterData = (menus) => {
 		}
 	}
 
-	menus.sort((a,b) => a.list_order - b.list_order)
+	menus.sort((a, b) => a.list_order - b.list_order)
 
 	return menus
 }
@@ -43,9 +43,9 @@ const MenuView = () => {
 
 	useEffect(() => {
 		if (data) {
-			setActiveMenu(data[0])
+			setActiveMenu(data[ 0 ])
 		}
-	},[data])
+	}, [ data ])
 
 	return (
 		<>
