@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { createContext, useCallback, useContext, useState, useEffect, } from 'react'
+import React, {createContext, useCallback, useContext, useEffect, useState,} from 'react'
 import useReactContextDevTool from 'hooks/useReactContextDevTool'
 import * as api from 'services/data'
 
@@ -21,7 +21,22 @@ const DataProvider = ({ children }) => {
 	}, [])
 
 	useEffect(() => {
-		api.fetchMenus().then(({ data }) => setMenusData(data))
+		api.fetchMenus().then(({ data }) => {
+			for (let i = 0; i < data.length; i++) {
+					if (data[ i ].subsections) {
+						data[ i ].subsections.sort((a, b) => a.list_order - b.list_order)
+					}
+					if (data[ i ].items) {
+						data[ i ].items.sort((a, b) => a.list_order - b.list_order)
+					}
+			}
+			data.sort((a, b) => a.list_order - b.list_order)
+			setMenusData(data)
+		})
+	}, [])
+
+	const createSection = useCallback((data) => {
+		return api.createSection(data).then((data) => setIsDirty(true))
 	}, [])
 
 	const getSectionDataByID = useCallback((id) => {
@@ -50,9 +65,10 @@ const DataProvider = ({ children }) => {
 
 	const getMealByParentID = useCallback((id) => {
 		const section = sections.first((section) => section.id === id)
-		const meal = sections.first((meal) => meal.id === section.id)
-		return meal
-	})
+		return sections.first((meal) => meal.id === section.id)
+	}, [sections])
+
+	const meals = () => sections?.filter((section) => section.type === 'Meal')
 
 	useReactContextDevTool({
 		id: 'DataProvider',
@@ -73,9 +89,12 @@ const DataProvider = ({ children }) => {
 	return (
 		<DataContext.Provider
 			value={{
+				isDirty,
 				sections,
+				meals,
 				menus,
 				items,
+				createSection,
 				updateSection,
 				getItemDataByID,
 				getSectionDataByID,

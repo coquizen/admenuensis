@@ -1,26 +1,24 @@
 /** @format */
 
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import DropDownMenu from 'components/Form'
 import Switch from 'components/Form/Switch'
 import Spinner from 'components/Spinner'
 import styles from '../Form.module.scss'
 import { useData } from 'context/DataProvider'
+import classnames from "classnames";
 
 const Section = ({ data, reset, register }) => {
-	const { sections } = useData()
+	const { sections, meals } = useData()
 
 	reset({
-		id: data.id,
-		title: data.title,
-		description: data.description === undefined ? '' : data.description,
-		active: data.active === undefined ? true : data.active,
-		visible: data.visible === undefined ? true : data.visible,
-		section_id: data.section_id === undefined ? "" : data.section_id,
+		id: data?.id === undefined ? 'draft' : data.id,
+		title: data?.title === undefined ? '' : data.title,
+		description: data?.description === undefined ? '' : data.description,
+		active: data?.active === undefined ? true : data.active,
+		visible: data?.visible === undefined ? true : data.visible,
+		section_id: data?.section_id === undefined ? "" : data.section_id,
 	})
-
-	const meals = sections.filter((section) => section.type === 'Meal')
-
 
 	return (
 		<>
