@@ -17,39 +17,20 @@ const Menu = () => (
 
 export default Menu
 
-const filterData = (menus) => {
-	for (let i = 0; i < menus.length; i++) {
-		if (menus[ i ].subsections) {
-			menus[ i ].subsections = menus[ i ].subsections.filter((section) => section.type === 'Category')
-				.sort((a, b) => a.list_order - b.list_order)
-		}
-		if (menus[ i ].items) {
-			menus[ i ].items = menus[ i ].items.filter((item) => item.type === 'Plate')
-				.sort((a, b) => a.list_order - b.list_order)
-		}
-	}
 
-	menus.sort((a, b) => a.list_order - b.list_order)
-
-	return menus
-}
 const MenuView = () => {
 	const [ activeMenu, setActiveMenu ] = useState(null)
 	const { menus } = useData()
-	let data
-	if (menus) {
-		data = filterData(menus)
-	}
 
 	useEffect(() => {
-		if (data) {
-			setActiveMenu(data[ 0 ])
-		}
-	}, [ data ])
+		if (menus) {
+			setActiveMenu(menus[0])
+			}
+	}, [menus])
 
 	return (
 		<>
-			<NavBar menus={data} setActiveMenu={setActiveMenu} activeMenu={activeMenu} />
+			<NavBar setActiveMenu={setActiveMenu} activeMenu={activeMenu} />
 			<div className={styles.MenuContent}>
 				<Table data={activeMenu} />
 			</div>
