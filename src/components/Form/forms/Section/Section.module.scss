@@ -6,12 +6,11 @@
   @extend .input-group;
   flex-direction: row;
   justify-content: space-between;
-  .FormLabel {
-    @extend .form-label;
-
-    margin-right: $spacer;
+  .Label {
+	  @extend .form-check-label;
+	  margin-right: $spacer;
   }
-  .FormInput {
+  .Input {
     background-color: inherit;
     font-size: $input-font-size-xs;
     border: none;

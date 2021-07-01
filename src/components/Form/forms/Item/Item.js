@@ -1,7 +1,7 @@
 /** @format */
 
 import React from 'react'
-import { DropDownMenu, Switch } from 'components/Form'
+import { DropDownMenu } from 'components/Form'
 import { useData } from 'context/DataProvider'
 import styles from '../Form.module.scss'
 

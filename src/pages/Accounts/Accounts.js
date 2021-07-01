@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { useAccounts } from 'context/AccountsProvider'
+// import { useAccounts } from 'context/AccountsProvider'
 import * as api from "../../services/accounts";
 import styles from './Accounts.module.scss'
 const Accounts = () => {

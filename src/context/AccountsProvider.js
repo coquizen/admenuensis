@@ -1,6 +1,5 @@
-import React, {createContext, useContext, useState, useEffect} from 'react'
-import { useAuth } from 'context/AuthProvider'
-import * as api from 'services/accounts'
+import React, {createContext, useContext} from 'react'
+
 
 const AccountsContext = createContext(null)
 
@@ -13,8 +12,6 @@ const AccountsProvider = ({children}) => {
     )
 }
 
-export default AccountsProvider
-export { useAccounts }
 
 const useAccounts = () => {
     try {
@@ -23,3 +20,7 @@ const useAccounts = () => {
         console.log(e)
     }
 }
+
+
+export default AccountsProvider
+export { useAccounts }
