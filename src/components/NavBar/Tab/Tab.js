@@ -15,30 +15,16 @@ const Tab = ({ menu, activeMenu, setActiveMenu, setActiveRef }) => {
   );
 }
 
-export default Tab;
-// const TabList = ({ menusData, children }) => {
-//     const [ activeTab, setActiveTab ] = useState(menusData[ 0 ].title)
-//
-//     const onTabClick = (tab) => {
-//         setActiveTab(tab)
-//     }
-//
-//     console.info(menusData)
-//     return (
-//         <div className={styles.Tabs}>
-//             <ol className={styles.TabList}>
-//                 {menusData && menusData.map((menu) => <Tab data={menu} activeTab={activeTab} key={menu.title} label={menu.title} onClick={onTabClick} />)}
-//             </ol>
-//             <div className={styles.TabContent}>
-//                 {children.map((child) => {
-//                     if (child.props.label !== activeTab) {
-//                         return undefined
-//                     }
-//                     return child.props.children
-//                 })}
-//             </div>
-//         </div>
-//     )
-// }
-//
-// export { TabList }
+const TabButton = ({handleClick, menu, activeMenu, setActiveRef}) => {
+  const isActiveTab = menu?.id === activeMenu?.id
+  return (
+      <button
+          type={'button'}
+          ref={isActiveTab ? (node) => setActiveRef(node) : null}
+          className={classnames(styles.Tab, isActiveTab && styles.Active)}
+          onClick={handleClick}>+</button>
+  )
+}
+
+export default Tab
+export { TabButton }
