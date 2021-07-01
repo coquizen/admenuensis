@@ -38,6 +38,14 @@ export const fetchItem = (id) => {
         .then((response) => response.json())
 }
 
+export const createSection = (data) => {
+    return fetch(`/api/v1/sections`, {
+        method: 'POST',
+        headers: authHeader(),
+        body: JSON.stringify(data),
+    }).then((response) => response.json())
+}
+
 export const updateSection = (data) => {
     return fetch(`/api/v1/sections/${data.id}`, {
         method: 'PATCH',
