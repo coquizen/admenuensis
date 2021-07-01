@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, rectSwappingStrategy } from '@dnd-kit/sortable'
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, rectSwappingStrategy } from '@dnd-kit/sortable'
 import {
 	closestCorners,
 	DndContext,
 	DragOverlay,
 	KeyboardSensor,
 	PointerSensor,
-	rectIntersection,
 	useSensor,
 	useSensors,
 } from "@dnd-kit/core";
@@ -29,20 +28,33 @@ const Table = ({ data }) => {
 		if (data) setMenuData(data)
 	}, [ data ])
 
+	const blankSection = {
+		id: "000-aaa",
+		title: "",
+		description: "",
+		section_id: menuData?.id,
+		type: "Category",
+		active: true,
+		visible: true,
+		list_order: menuData?.subsections?.length,
+		subsections: [],
+		items: []
+	}
+
 	if (menuData) {
 		rootID = menuData.id
 	}
-	const customCollisionDetectionStrategy = (rects, rect) => {
-		const rootRect = rects.filter(([ id ]) => id === menuData.id)
-		const intersectingRootRect = rectIntersection(rootRect, rect)
-		console.log("rects: ", rects)
-		if (intersectingRootRect) {
-			return intersectingRootRect
-		}
-
-		const otherRects = rects.filter(([ id ]) => id !== 'root')
-		return closestCorners(otherRects, rect)
-	}
+	// const customCollisionDetectionStrategy = (rects, rect) => {
+	// 	const rootRect = rects.filter(([ id ]) => id === menuData.id)
+	// 	const intersectingRootRect = rectIntersection(rootRect, rect)
+	// 	console.log("rects: ", rects)
+	// 	if (intersectingRootRect) {
+	// 		return intersectingRootRect
+	// 	}
+	//
+	// 	const otherRects = rects.filter(([ id ]) => id !== 'root')
+	// 	return closestCorners(otherRects, rect)
+	// }
 
 	const sensors = useSensors(
 		useSensor(PointerSensor),
@@ -87,6 +99,23 @@ const Table = ({ data }) => {
 			}
 		}
 	};
+
+	const addSection = () => {
+		console.log("I have been clicked")
+		setMenuData((menuData) => {
+			menuData.subsections.push(blankSection)
+			console.log("menuData insider state: ", menuData)
+			return {...menuData}
+		})
+	}
+
+	// const addItem = (containerID) => {
+	// 	setMenuData((menuData) => {
+	// 		const containerIndex = getIndex(containerID, "section")
+	// 		menuData.subsections[containerIndex].items.push({"id": "000", "title": "", "description": "", "price": 0, "active": true, "type": "Plate", "list_order": menuData.subsections[containerIndex].items.length, "section_id": containerID, "add_ons": {}, "condiments": {}})
+	// 		return menuData
+	// 	})
+	// }
 
 	const handleDragStart = ({ active }) => {
 		setActiveID(active.id)
@@ -194,11 +223,11 @@ const Table = ({ data }) => {
 
 		const overContainerID = findContainer(over.id, overType)
 		const activeContainerID = findContainer(active.id, activeType)
-		const overContainerIndex = getIndex(overContainerID, 'section')
-		const activeContainerIndex = getIndex(activeContainerID, 'section')
-
-		const overIndex = getIndex(over.id, overType)
-		const activeIndex = getIndex(active.id, activeType)
+		// const overContainerIndex = getIndex(overContainerID, 'section')
+		// const activeContainerIndex = getIndex(activeContainerID, 'section')
+		//
+		// const overIndex = getIndex(over.id, overType)
+		// const activeIndex = getIndex(active.id, activeType)
 
 		if (!overContainerID || !activeContainerID) {
 			return
@@ -224,33 +253,45 @@ const Table = ({ data }) => {
 
 
 	return (
-		<DndContext
-			onDragStart={handleDragStart}
-			onDragOver={handleDragOver}
-			onDragEnd={handleDragEnd}
-			onDragCancel={handleDragCancel}
-			sensors={sensors}
-			collisionDetection={closestCorners}
-			modifiers={[ restrictToVerticalAxis ]}
-		>
-			<div className={styles.Sections}>
-				{menuData && <SortableLists menuData={menuData} />}
-			</div>
-			{createPortal(
-				<DragOverlay wrapperElement={"ul"} modifiers={[ restrictToVerticalAxis ]} style={{ paddingLeft: 0 }}>
-					{activeID ?
-						<Item
-							dataID={activeID}
-							menuData={menuData}
-							dragOverlay={true}
-						/> : null}
-				</DragOverlay>, document.body)}
-		</DndContext>
+		<>
+			<DndContext
+				onDragStart={handleDragStart}
+				onDragOver={handleDragOver}
+				onDragEnd={handleDragEnd}
+				onDragCancel={handleDragCancel}
+				sensors={sensors}
+				collisionDetection={closestCorners}
+				modifiers={[ restrictToVerticalAxis ]}
+			>
+				<div className={styles.Sections}>
+					{menuData && <SortableLists menuData={menuData} />}
+				</div>
+				{createPortal(
+					<DragOverlay wrapperElement={"ul"} modifiers={[ restrictToVerticalAxis ]} style={{ paddingLeft: 0 }}>
+						{activeID ?
+							<Item
+								dataID={activeID}
+								menuData={menuData}
+								dragOverlay={true}
+							/> : null}
+					</DragOverlay>, document.body)}
+			</DndContext>
+			<AddSection handleClick={addSection} />
+			</>
 	)
+}
+
+const AddSection = ({handleClick}) => {
+	return (
+		<div className={'position-relative'}>
+			<button type={'button'} className={'position-absolute bottom-0 end-0 btn btn-default'} onClick={handleClick}>+</button>
+		</div>
+		)
 }
 
 const SortableLists = ({ menuData }) => {
 	if (menuData.subsections?.length > 0) {
+		console.log("menuData subsection's length: ", menuData.subsections.length)
 		const sectionIDs = menuData.subsections.map(({ id }) => id)
 		return (
 			<SortableContext id='root' items={sectionIDs} strategy={rectSwappingStrategy}>

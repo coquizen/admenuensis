@@ -1,11 +1,13 @@
 /** @format */
 
-import React from 'react'
-
+import React, {useState} from 'react'
+import classnames from "classnames";
+import styles from './Home.module.scss'
 const Home = () => {
+
 	return (
-		<section className='Home'>
-			<h1>This is the homepage</h1>
+		<section className={styles.Home}>
+
 		</section>
 	)
 }

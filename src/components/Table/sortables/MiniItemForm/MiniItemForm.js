@@ -41,8 +41,12 @@ const MiniItemForm = ({ uuid, listeners, attributes }) => {
 
 	const onLostFocus = (event) => {
 		if (event.currentTarget === event.target && isChanged) {
-			updateItem({ id: uuid, title: itemData.title, price: itemData.pricennb * 100 })
-			setIsChanged(false)
+			if (uuid !== "blank-item") {
+				updateItem({id: uuid, title: itemData.title, price: itemData.price * 100})
+				setIsChanged(false)
+			} else {
+
+			}
 		}
 	}
 

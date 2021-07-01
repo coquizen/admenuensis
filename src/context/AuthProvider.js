@@ -1,7 +1,5 @@
 import React, { createContext, useContext, useState } from 'react'
-import { useHistory } from 'react-router'
 import useReactContextDevTool from "hooks/useReactContextDevTool";
-import { useInput } from 'hooks'
 const AuthContext = createContext()
 
 const AuthProvider = ({ children }) => {

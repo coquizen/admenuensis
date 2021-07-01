@@ -67,6 +67,10 @@
       background-color: transparent;
     }
   }
+  &.DeadGhost {
+    opacity: 0.25;
+    transition: all 500ms;
+  }
   &.focus {
     box-shadow: 0 0 4px 1px $focused-outline-color, $box-shadow;
   }

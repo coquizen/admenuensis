@@ -6,18 +6,23 @@ import Item from "../Item";
 
 const SortableItemWrapper = ({ id, dataID, children, ...props }) => {
     const { getSectionDataByID, getItemDataByID} = useData()
-    const data = getSectionDataByID(dataID) || getItemDataByID(dataID)
-    let type
-    switch (data.type) {
-        case 'Category':
-            type = 'section'
-            break;
-        case 'Plate':
-            type = 'item'
-            break
-        default:
-            type = undefined
+    let data, type
+    if (dataID !== "000-aaa") {
+        data = getSectionDataByID(dataID) || getItemDataByID(dataID)
+        switch (data.type) {
+            case 'Category':
+                type = 'section'
+                break;
+            case 'Plate':
+                type = 'item'
+                break
+            default:
+                type = undefined
+        }
+    } else if (dataID === "000-aaa") {
+        type = "section"
     }
+
     const { setDraggableNodeRef, setDroppableNodeRef, transition, listeners, attributes, isDragging, transform } = useSortable({
         id,
         data: {
@@ -30,15 +35,15 @@ const SortableItemWrapper = ({ id, dataID, children, ...props }) => {
         transition
     }
 
-    return (
-        <Item dataID={dataID} style={style}
+    return (<>
+        {dataID !== "blank-item" ? <Item dataID={dataID} style={style}
               ref={setDraggableNodeRef}
               setDroppableRef={setDroppableNodeRef}
               listeners={listeners}
               attributes={attributes}
               ghost={isDragging}
               {...props}
-        >{children}</Item>
+        >{children}</Item> : <Item dataID={dataID} style={style} ref={setDroppableNodeRef} {...props} /> }</>
     )
 }
 

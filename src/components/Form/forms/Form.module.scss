@@ -2,14 +2,14 @@
 @import "../../../assets/scss/custom";
 
 .Container {
-//  @include make-container();
+  @include make-container();
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: end;
+  align-items: flex-start;
+  margin-top: $spacer;
   .Label {
-    @extend .col-form-label;
-    @extend .col-form-label-sm;
+    @extend .form-label;
     color: $gray-500;
   }
   .Input {

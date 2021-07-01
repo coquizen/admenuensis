@@ -70,23 +70,24 @@
   @include border-radius($input-border-radius-sm);
   @extend .standard-transition;
   text-decoration: none;
-  padding: $input-btn-padding-x-sm $input-btn-padding-y-sm
-;
+  padding: $input-btn-padding-x-sm $input-btn-padding-y-sm;
   border: none;
-  margin: 0 $spacer/2;
+  margin: $spacer/2 $spacer/2;
+  height: 2rem;
   &.ButtonCancel {
     background-color: $red;
     color: $off-white;
+    transition: all 250ms ease-in;
     &:hover {
       background-color: darken($red, 5);
     }
   }
-
   &.ButtonSubmit {
     background-color: $green;
     color: $off-white;
+    transition: all 250ms ease-in;
     &:hover {
-      background-color: darken($light-grey, 5);
+      background-color: lighten($green, 5);
     }
   }
 }

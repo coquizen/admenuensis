@@ -31,4 +31,10 @@
 .BlankList {
 }
 
-
+.AddButton {
+  @extend .btn;
+  @extend .btn-sm;
+  @extend .bottom-0;
+  @extend .position-absolute;
+  @extend .end-0;
+}

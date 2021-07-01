@@ -18,6 +18,8 @@ const Form = ({form, label}) => {
 		closeModal()
 	}
 
+	if (form === undefined) return null
+
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
 			<div className={styles.FormContainer}>
