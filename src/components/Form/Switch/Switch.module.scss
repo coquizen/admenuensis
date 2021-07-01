@@ -1,91 +1,158 @@
-/** @format */
-@import '../../../assets/scss/admin.scss';
+@import '../../../assets/scss/admin';
+@import '../../../assets/scss/custom';
 
-.Switch {
-	@extend .custom-control-input;
-	.SwitchLabel {
-		margin-right: 10px;
+.OnOffSwitch {
+	position: relative;
+	width: 40px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+}
+.Checkbox {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+	&:checked + .Label .Inner {
+		margin-left: 0;
+	}
+	&:checked + .Label .Switch {
+		right: 0;
 	}
 }
 
-.toggle-switch {
-	position: relative;
-	width: 75px;
-	display: inline-block;
-	vertical-align: middle;
-	text-align: left;
-	&-checkbox {
-		display: none;
-	}
-	&-label {
+.Label {
+	display: block;
+	overflow: hidden;
+	cursor: pointer;
+	border: 2px solid $off-white;
+	border-radius: 50px;
+}
+
+.Inner {
+	display: block;
+	width: 200%;
+	margin-left: -100%;
+	transition: margin 0.3s ease-in 0s;
+
+	&:before, &:after {
+		content: "";
 		display: block;
-		overflow: hidden;
-		cursor: pointer;
-		border: 0 solid #bbb;
-		border-radius: 20px;
-		margin: 0;
+		float: left;
+		width: 50%;
+		height: 16px;
+		padding: 0;
+		line-height: 16px;
+		font-size: 16px;
+		font-family: Trebuchet, Arial, sans-serif;
+		font-weight: bold;
+		box-sizing: border-box;
 	}
-	&-inner {
-		display: block;
-		width: 200%;
-		margin-left: -100%;
-		transition: margin 0.3s ease-in 0s;
-		&:before,
-		&:after {
-			display: block;
-			float: left;
-			width: 50%;
-			height: 34px;
-			padding: 0;
-			line-height: 34px;
-			font-size: 14px;
-			color: white;
-			font-weight: bold;
-			box-sizing: border-box;
-		}
-		&:before {
-			content: 'Yes';
-			text-transform: uppercase;
-			padding-left: 10px;
-			background-color: #f90;
-			color: #fff;
-		}
+
+	&:before {
+		padding-left: 18px;
+		background-color: $green;
+
 	}
-	&-disabled {
-		background-color: #ddd;
-		cursor: not-allowed;
-		&:before {
-			background-color: #ddd;
-			cursor: not-allowed;
-		}
-	}
-	&-inner:after {
-		content: 'No';
-		text-transform: uppercase;
-		padding-right: 10px;
-		background-color: #bbb;
-		color: #fff;
+
+	&:after {
+		padding-right: 18px;
+		background-color: $red;
 		text-align: right;
 	}
-	&-switch {
-		display: block;
-		width: 24px;
-		margin: 5px;
-		background: #fff;
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		right: 40px;
-		border: 0 solid #bbb;
-		border-radius: 20px;
-		transition: all 0.3s ease-in 0s;
-	}
-	&-checkbox:checked + &-label {
-		.toggle-switch-inner {
-			margin-left: 0;
-		}
-		.toggle-switch-switch {
-			right: 0px;
-		}
-	}
 }
+
+.Switch {
+	display: block;
+	width: 24px;
+	margin: 1px 0 0 -6px;
+	background: $off-white;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 16px;
+	border: 2px solid $light-grey;
+	border-radius: 30px;
+	transition: all 0.3s ease-in-out;
+	transform: translateY(-2px) scale(-90%);
+}
+//.toggle-switch {
+//	position: relative;
+//	width: 75px;
+//	display: inline-block;
+//	vertical-align: middle;
+//	text-align: left;
+//	&-checkbox {
+//		display: none;
+//	}
+//	&-label {
+//		display: block;
+//		overflow: hidden;
+//		cursor: pointer;
+//		border: 0 solid #bbb;
+//		border-radius: 20px;
+//		margin: 0;
+//	}
+//	&-inner {
+//		display: block;
+//		width: 200%;
+//		margin-left: -100%;
+//		transition: margin 0.3s ease-in 0s;
+//		&:before,
+//		&:after {
+//			display: block;
+//			float: left;
+//			width: 50%;
+//			height: 34px;
+//			padding: 0;
+//			line-height: 34px;
+//			font-size: 14px;
+//			color: white;
+//			font-weight: bold;
+//			box-sizing: border-box;
+//		}
+//		&:before {
+//			content: 'Yes';
+//			text-transform: uppercase;
+//			padding-left: 10px;
+//			background-color: #f90;
+//			color: #fff;
+//		}
+//	}
+//	&-disabled {
+//		background-color: #ddd;
+//		cursor: not-allowed;
+//		&:before {
+//			background-color: #ddd;
+//			cursor: not-allowed;
+//		}
+//	}
+//	&-inner:after {
+//		content: 'No';
+//		text-transform: uppercase;
+//		padding-right: 10px;
+//		background-color: #bbb;
+//		color: #fff;
+//		text-align: right;
+//	}
+//	&-switch {
+//		display: block;
+//		width: 24px;
+//		margin: 5px;
+//		background: #fff;
+//		position: absolute;
+//		top: 0;
+//		bottom: 0;
+//		right: 40px;
+//		border: 0 solid #bbb;
+//		border-radius: 20px;
+//		transition: all 0.3s ease-in 0s;
+//	}
+//	&-checkbox:checked + &-label {
+//		.toggle-switch-inner {
+//			margin-left: 0;
+//		}
+//		.toggle-switch-switch {
+//			right: 0px;
+//		}
+//	}
+//}

@@ -42,27 +42,31 @@ const Section = ({ data, reset, register }) => {
 					<label htmlFor='description' className={styles.Label}>
 						Description
 					</label>
-					<input
-						type="text"
+					<textarea
 						className={styles.Input}
 						rows="3"
 						{...register("description")} />
 				</div>
-				<div className={styles.Container}>
+				{data?.type !== "Meal" && <div className={styles.Container}>
 					<DropDownMenu list={meals} register={register} label="section_id" title="Meals" />
+				</div>}
+				<div className={styles.Container}>
+					<div className={styles.Label}>Other Settings</div>
+				<div className={styles.SwitchGroup}>
+						<div className={styles.SwitchLabel}>Active?</div>
+						<Switch title="Active" name="active" register={register} />
 				</div>
-				<div classname={styles.container}>
-				<div classname={styles.label}>other settings</div>
-				<div classname={styles.switchgroup}>
-					<switch title="disable" name="disable" register={register} />
-					<switch title="visible" name="visible" register={register} />
-				</div>
-			</div>
+
+					<div className={styles.SwitchGroup}>
+						<div className={styles.SwitchLabel}>Visible?</div>
+						<Switch title="Visible" name="visible" register={register} />
+					</div>	</div>
 			</React.Fragment>
 			: <Spinner />}
 		</>
 	)
 }
+
 export default Section
 
 

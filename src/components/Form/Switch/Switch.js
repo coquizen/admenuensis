@@ -4,10 +4,11 @@ import React from 'react'
 import styles from './Switch.module.scss'
 
 const Switch = ({ register, title, name }) => {
-	return <div className={styles[ "toggle-switch" ]}>
-		<input type='checkbox' className={styles.Switch} {...register(name)} />
+	return <div className={styles.OnOffSwitch}>
+		<input id={name} name={name} type="checkbox" className={styles.Checkbox} {...register(name)} />
 		<label className={styles.Label} htmlFor={name}>
-			{title}
+			<span className={styles.Inner} />
+			<span className={styles.Switch}/>
 		</label>
 	</div>
 }
