@@ -20,6 +20,7 @@ export default Menu
 
 const MenuView = () => {
 	const [ activeMenu, setActiveMenu ] = useState(null)
+	const [ isDirty, setDirty ] = useState(false)
 	const { menus } = useData()
 
 	useEffect(() => {
@@ -28,11 +29,27 @@ const MenuView = () => {
 			}
 	}, [menus])
 
+	const addSection = (data) => {
+		setActiveMenu((activeMenu) => {
+			data.list_order = activeMenu.subsections.length
+			activeMenu.push(data)
+			return activeMenu
+		})
+	}
+
+	const addItem = (data) => {
+		setActiveMenu((activeMenu) => {
+			const section = activeMenu.find((section) => section.id === data.section_id)
+			const sectionIndex = activeMenu.subsections.indexOf(section)
+			data.list_order = activeMenu.subsections[sectionIndex].items.length
+			activeMenu.subsections[sectionIndex].items.push(data)
+		})
+	}
 	return (
 		<>
 			<NavBar setActiveMenu={setActiveMenu} activeMenu={activeMenu} />
 			<div className={styles.MenuContent}>
-				<Table data={activeMenu} />
+				<Table data={activeMenu} addItem={addItem} addSection={addSection} isDirty={isDirty} setDirty={setDirty} />
 			</div>
 		</>
 	)

@@ -3,8 +3,7 @@
 @import '../../../assets/scss/admin';
 
 .Handle {
-  display: flex;
-  flex: 0 0 auto;
+  flex-grow: 1;
   cursor: var(--cursor, grab);
   font-size: medium;
   svg {

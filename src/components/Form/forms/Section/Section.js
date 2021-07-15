@@ -6,10 +6,10 @@ import Switch from 'components/Form/Switch'
 import Spinner from 'components/Spinner'
 import styles from '../Form.module.scss'
 import { useData } from 'context/DataProvider'
-import classnames from "classnames";
 
-const Section = ({ data, reset, register }) => {
-	const { sections, meals } = useData()
+const Section = ({ type, data = undefined, reset, register }) => {
+
+	const { sections, menus } = useData()
 
 	reset({
 		id: data?.id === undefined ? 'draft' : data.id,
@@ -17,6 +17,7 @@ const Section = ({ data, reset, register }) => {
 		description: data?.description === undefined ? '' : data.description,
 		active: data?.active === undefined ? true : data.active,
 		visible: data?.visible === undefined ? true : data.visible,
+		type: type,
 		section_id: data?.section_id === undefined ? "" : data.section_id,
 	})
 
@@ -46,7 +47,7 @@ const Section = ({ data, reset, register }) => {
 						{...register("description")} />
 				</div>
 				{data?.type !== "Meal" && <div className={styles.Container}>
-					<DropDownMenu list={meals} register={register} label="section_id" title="Meals" />
+					<DropDownMenu list={menus} register={register} label="section_id" title="Meals" />
 				</div>}
 				<div className={styles.Container}>
 					<div className={styles.Label}>Other Settings</div>

@@ -1,3 +1,3 @@
 /** @format */
-import Item from 'components/Table/sortables/Item'
+import Item from 'components/Table/components/Item/Item'
 export { Item }

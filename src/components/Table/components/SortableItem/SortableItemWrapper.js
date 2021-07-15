@@ -1,15 +1,15 @@
 import React from 'react'
 import { CSS } from '@dnd-kit/utilities'
 import { useSortable } from '@dnd-kit/sortable'
-import { useData } from  'context/DataProvider'
-import Item from "../Item";
+import { useData } from 'context/DataProvider'
+import Item from "../Item/Item";
 
 const SortableItemWrapper = ({ id, dataID, children, ...props }) => {
-    const { getSectionDataByID, getItemDataByID} = useData()
+    const { getSectionDataByID, getItemDataByID } = useData()
     let data, type
     if (dataID !== "draft") {
         data = getSectionDataByID(dataID) || getItemDataByID(dataID)
-        switch (data.type) {
+        switch (data?.type) {
             case 'Category':
                 type = 'section'
                 break;
@@ -36,14 +36,14 @@ const SortableItemWrapper = ({ id, dataID, children, ...props }) => {
     }
 
     return (<>
-        {dataID !== "blank-item" ? <Item dataID={dataID} style={style}
-              ref={setDraggableNodeRef}
-              setDroppableRef={setDroppableNodeRef}
-              listeners={listeners}
-              attributes={attributes}
-              ghost={isDragging}
-              {...props}
-        >{children}</Item> : <Item dataID={dataID} style={style} ref={setDroppableNodeRef} {...props} /> }</>
+        { dataID !== "blank-item" ? <Item dataID={ dataID } style={ style }
+            ref={ setDraggableNodeRef }
+            setDroppableRef={ setDroppableNodeRef }
+            listeners={ listeners }
+            attributes={ attributes }
+            ghost={ isDragging }
+            { ...props }
+        >{ children }</Item> : <Item dataID={ dataID } style={ style } ref={ setDroppableNodeRef } { ...props } /> }</>
     )
 }
 

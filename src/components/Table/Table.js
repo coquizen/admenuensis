@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, rectSwappingStrategy } from '@dnd-kit/sortable'
+import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import {
 	closestCorners,
 	DndContext,
@@ -10,16 +10,16 @@ import {
 	useSensors,
 } from "@dnd-kit/core";
 import styles from './Table.module.scss'
-import Item from 'components/Table/sortables/Item'
+import Item from 'components/Table/components/Item/Item'
 import { createPortal } from "react-dom";
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
-import SortableContainer from 'components/Table/sortables/SortableContainer'
+import { SortableList } from "./components/SortableList/SortableList";
+import { AddSectionButtoon } from './AddSection';
 
 
-
-const Table = ({ data }) => {
+const Table = ({ data, isDirty, setDirty, addItem, addSection }) => {
 	// const orderedData = orderTree(data)
-	const [ menuData, setMenuData ] = useState(null)
+	const [ menuData, setMenuData ] = useState(data)
 	const [ activeID, setActiveID ] = useState(null)
 	const [ dragOverlaidItems, setClonedItems ] = useState(null)
 	let rootID
@@ -28,33 +28,9 @@ const Table = ({ data }) => {
 		if (data) setMenuData(data)
 	}, [ data ])
 
-	const blankSection = {
-		id: "000-aaa",
-		title: "",
-		description: "",
-		section_id: menuData?.id,
-		type: "Category",
-		active: true,
-		visible: true,
-		list_order: menuData?.subsections?.length,
-		subsections: [],
-		items: []
-	}
-
 	if (menuData) {
 		rootID = menuData.id
 	}
-	// const customCollisionDetectionStrategy = (rects, rect) => {
-	// 	const rootRect = rects.filter(([ id ]) => id === menuData.id)
-	// 	const intersectingRootRect = rectIntersection(rootRect, rect)
-	// 	console.log("rects: ", rects)
-	// 	if (intersectingRootRect) {
-	// 		return intersectingRootRect
-	// 	}
-	//
-	// 	const otherRects = rects.filter(([ id ]) => id !== 'root')
-	// 	return closestCorners(otherRects, rect)
-	// }
 
 	const sensors = useSensors(
 		useSensor(PointerSensor),
@@ -99,23 +75,6 @@ const Table = ({ data }) => {
 			}
 		}
 	};
-
-	const addSection = () => {
-		console.log("I have been clicked")
-		setMenuData((menuData) => {
-			menuData.subsections.push(blankSection)
-			console.log("menuData insider state: ", menuData)
-			return {...menuData}
-		})
-	}
-
-	// const addItem = (containerID) => {
-	// 	setMenuData((menuData) => {
-	// 		const containerIndex = getIndex(containerID, "section")
-	// 		menuData.subsections[containerIndex].items.push({"id": "000", "title": "", "description": "", "price": 0, "active": true, "type": "Plate", "list_order": menuData.subsections[containerIndex].items.length, "section_id": containerID, "add_ons": {}, "condiments": {}})
-	// 		return menuData
-	// 	})
-	// }
 
 	const handleDragStart = ({ active }) => {
 		setActiveID(active.id)
@@ -240,7 +199,6 @@ const Table = ({ data }) => {
 		setActiveID(null)
 	}
 
-
 	const handleDragCancel = () => {
 		if (dragOverlaidItems) {
 			// Reset items to their original state in case items have been
@@ -251,69 +209,33 @@ const Table = ({ data }) => {
 		setClonedItems(null)
 	}
 
-
 	return (
 		<>
 			<DndContext
-				onDragStart={handleDragStart}
-				onDragOver={handleDragOver}
-				onDragEnd={handleDragEnd}
-				onDragCancel={handleDragCancel}
-				sensors={sensors}
-				collisionDetection={closestCorners}
-				modifiers={[ restrictToVerticalAxis ]}
+				onDragStart={ handleDragStart }
+				onDragOver={ handleDragOver }
+				onDragEnd={ handleDragEnd }
+				onDragCancel={ handleDragCancel }
+				sensors={ sensors }
+				collisionDetection={ closestCorners }
+				modifiers={ [ restrictToVerticalAxis ] }
 			>
-				<div className={styles.Sections}>
-					{menuData && <SortableLists menuData={menuData} />}
+				<div className={ styles.Sections }>
+					<SortableList menuData={ menuData } />}
 				</div>
-				{createPortal(
-					<DragOverlay wrapperElement={"ul"} modifiers={[ restrictToVerticalAxis ]} style={{ paddingLeft: 0 }}>
-						{activeID ?
+				{ createPortal(
+					<DragOverlay wrapperElement={ "ul" } modifiers={ [ restrictToVerticalAxis ] } style={ { paddingLeft: 0 } }>
+						{ activeID ?
 							<Item
-								dataID={activeID}
-								menuData={menuData}
-								dragOverlay={true}
-							/> : null}
-					</DragOverlay>, document.body)}
+								dataID={ activeID }
+								menuData={ menuData }
+								dragOverlay
+							/> : null }
+					</DragOverlay>, document.body) }
 			</DndContext>
-			<AddSection handleClick={addSection} />
-			</>
+			<AddSectionButtoon handleClick={ addSection } />
+		</>
 	)
-}
-
-const AddSection = ({handleClick}) => {
-	return (
-		<div className={'position-relative'}>
-			<button type={'button'} className={'position-absolute bottom-0 end-0 btn btn-default'} onClick={handleClick}>+</button>
-		</div>
-		)
-}
-
-const SortableLists = ({ menuData }) => {
-	if (menuData.subsections?.length > 0) {
-		console.log("menuData subsection's length: ", menuData.subsections.length)
-		const sectionIDs = menuData.subsections.map(({ id }) => id)
-		return (
-			<SortableContext id='root' items={sectionIDs} strategy={rectSwappingStrategy}>
-				<SortableContainer menuData={menuData} id={menuData.id} nodes={menuData.subsections} isSubSection={true} />
-			</SortableContext>
-		)
-	} else if (menuData.items?.length > 0) {
-		let filteredItems = menuData.items.filter((item) => item.type === 'Plate')
-
-		filteredItems.sort((a, b) => a.list_order - b.list_order)
-
-		const filteredItemIDs = filteredItems.map(({ id }) => id)
-
-		if (filteredItems.length > 0) {
-			return (
-				<SortableContext id='root' items={filteredItemIDs} strategy={rectSwappingStrategy}>
-					<SortableContainer menuData={menuData} id={menuData.id} nodes={menuData.items} isSubSection={false} />
-				</SortableContext>
-			)
-		}
-	}
-	return null
 }
 
 export default Table

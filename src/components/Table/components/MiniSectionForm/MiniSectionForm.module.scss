@@ -21,26 +21,13 @@ button {
 
 .NodeWrapper {
   display: flex;
-  flex-wrap: nowrap;
-  flex-grow: 1;
+  flex-flow: row nowrap;
+  justify-content: space-between;
   align-items: center;
-}
-
-.Node {
-  display: contents;
-  flex-direction: column;
-  margin: ($spacer/2) 0;
-  align-items: center;
-  &.child {
-    margin-left: 2rem;
-  }
-  &.NodeNew {
-    background-color: rgba(10, 10, 10, 0.45);
-  }
 }
 
 .NodeInput {
-  flex-grow: 1;
+  flex-basis: 80%;
   @extend .input-transition;
   width: 100%;
   outline: none;
@@ -52,6 +39,7 @@ button {
 }
 
 .ButtonGroup {
+  flex-grow: 1;
   display: inline-flex;
   padding: 0.25rem;
 }
