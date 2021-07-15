@@ -7,7 +7,7 @@ import Handle from 'components/Table/Handle'
 import {useData} from 'context/DataProvider'
 import {useModal} from 'context/ModalProvider'
 import Form from 'components/Form'
-import {Section} from 'components/Form/forms'
+import {Item, Section} from 'components/Form/forms'
 import classnames from 'classnames'
 import styles from './MiniSectionForm.module.scss'
 

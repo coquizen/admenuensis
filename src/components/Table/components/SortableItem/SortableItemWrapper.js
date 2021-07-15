@@ -7,7 +7,7 @@ import Item from "../Item";
 const SortableItemWrapper = ({ id, dataID, children, ...props }) => {
     const { getSectionDataByID, getItemDataByID} = useData()
     let data, type
-    if (dataID !== "000-aaa") {
+    if (dataID !== "draft") {
         data = getSectionDataByID(dataID) || getItemDataByID(dataID)
         switch (data.type) {
             case 'Category':
@@ -19,7 +19,7 @@ const SortableItemWrapper = ({ id, dataID, children, ...props }) => {
             default:
                 type = undefined
         }
-    } else if (dataID === "000-aaa") {
+    } else if (dataID === "draft") {
         type = "section"
     }
 

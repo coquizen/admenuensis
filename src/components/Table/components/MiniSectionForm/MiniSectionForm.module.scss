@@ -65,7 +65,6 @@ button {
   background: #f6f7f8;
   background: linear-gradient(to right, #fafafa 8%, #f4f4f4 38%, #fafafa 54%);
   background-size: 1000px 640px;
-
   position: relative;
 
 }
@@ -77,4 +76,16 @@ button {
   100%{
     background-position: 468px 0
   }
+}
+
+.Line {
+  display: inline-flex;
+  flex: auto;
+}
+
+.AddButton {
+  @extend .btn;
+  @extend .btn-sm;
+  position: absolute;
+  right: 1rem;
 }
