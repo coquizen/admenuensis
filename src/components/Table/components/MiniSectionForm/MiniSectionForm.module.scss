@@ -1,7 +1,7 @@
 /** @format */
 
 @import "../../../../assets/scss/admin";
-
+@import '../../../../assets/scss/custom';
 ul {
   display: inline;
   flex-wrap: wrap;
@@ -22,16 +22,26 @@ button {
 .NodeWrapper {
   display: flex;
   flex-flow: row nowrap;
-  justify-content: space-between;
   align-items: center;
+  border: rgba(47, 48, 47, 0.946);
+}
+.Node {
+  display: contents;
+  margin: ($spacer/4) 0;
+  font-size: $input-font-size-xs;
+  &.NodeNew {
+    color: $gray-400;
+    font-style: italic;
+  }
 }
 
 .NodeInput {
-  flex-basis: 80%;
+  flex-grow: 1;
   @extend .input-transition;
-  width: 100%;
+  font-size: $input-font-size-xs;
   outline: none;
   border: none;
+  width: 100%;
   &:focus-within {
     background-color: $gray-900;
     border: rgba(10, 10, 10, 0.946);
@@ -39,9 +49,13 @@ button {
 }
 
 .ButtonGroup {
-  flex-grow: 1;
   display: inline-flex;
-  padding: 0.25rem;
+}
+
+.Margin{
+  @extend .btn;
+  @extend .btn-sm;
+  margin-right: -9rem;
 }
 
 .Gradient {

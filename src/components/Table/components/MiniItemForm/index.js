@@ -1,3 +1,2 @@
-import MiniItemForm from "./MiniItemForm";
-
+import MiniItemForm from './MiniItemForm'
 export default MiniItemForm

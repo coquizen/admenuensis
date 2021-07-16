@@ -17,21 +17,21 @@
 		color: black;
 		transition: all 0.7s;
 	}
-	&:not(:only-child):after {
-		content: '\f105';
-		position: absolute;
-		right: 20px;
-		top: 10px;
-		font-size: $font-size-sm;
-		font-family: "Font Awesome 5 Free";
-		display: inline-block;
-		padding: 3px;
-		vertical-align: middle;
-		transition: 0.5s;
-		&.Active {
-			transform: rotate(90deg);
-		}
-	}
+	// &:not(:only-child):after {
+	// 	content: '\f105';
+	// 	position: absolute;
+	// 	right: 20px;
+	// 	top: 10px;
+	// 	font-size: $font-size-sm;
+	// 	font-family: "Font Awesome 5 Free";
+	// 	display: inline-block;
+	// 	padding: 3px;
+	// 	vertical-align: middle;
+	// 	transition: 0.5s;
+	// 	&.Active {
+	// 		transform: rotate(90deg);
+	// 	}
+	// }
 }
 
 

@@ -1,24 +1,23 @@
-import React, {forwardRef} from "react";
+import React, { forwardRef } from "react";
 import styles from "./Item.module.scss";
-import {useData} from 'context/DataProvider'
-import MiniItemForm from "../MiniItemForm";
-import MiniSectionForm from "../MiniSectionForm";
+import { useData } from 'context/DataProvider'
+import { MiniItemForm, MiniSectionForm } from "components/Table/components";
 import classnames from "classnames";
 
 
 const Item = forwardRef(({
-                             setDroppableRef,
-                             children,
-                             dataID,
-                             menuData,
-                             listeners,
-                             dragOverlay,
-                             attributes,
-                             style,
-                             ghost,
-                             ...props
-                         }, ref) => {
-    const {getSectionDataByID, getItemDataByID, draft_createItem} = useData()
+    setDroppableRef,
+    children,
+    dataID,
+    menuData,
+    listeners,
+    dragOverlay,
+    attributes,
+    style,
+    ghost,
+    ...props
+}, ref) => {
+    const { getSectionDataByID, getItemDataByID } = useData()
 
     let data
 
@@ -43,7 +42,7 @@ const Item = forwardRef(({
         if (dataID === "draft") return
         return (
             <li className={classnames(styles.Wrapper, dragOverlay && styles.DragOverlay)}
-                style={{marginLeft: 0}} {...props}>
+                style={{ marginLeft: 0 }} {...props}>
                 <div className={styles.Item} style={style}>
                     {data.type === 'Category' && <MiniSectionForm uuid={dataID} {...props} />}
                     {data.type === 'Plate' && <MiniItemForm uuid={dataID} {...props} />}
@@ -55,7 +54,7 @@ const Item = forwardRef(({
     if (dataID === "draft") {
         return (
             <li className={classnames(styles.Wrapper, ghost && styles.Ghost)} ref={setDroppableRef}
-                style={{marginLeft: 0}} {...props}>
+                style={{ marginLeft: 0 }} {...props}>
                 <div className={styles.Item} ref={ref} style={style}>
                     <MiniSectionForm uuid={dataID} listeners={listeners} attributes={attributes} {...props} />
                     {children}
@@ -64,37 +63,31 @@ const Item = forwardRef(({
         )
     }
     if (getSectionDataByID(dataID)) {
-        console.log("Item :: ", dataID)
-        let data = {
-            section_id: dataID,
-            type: "Plate",
-            id: "draft",
-        }
         return (
             <li className={classnames(styles.Wrapper, ghost && styles.Ghost)} ref={setDroppableRef}
-                style={{marginLeft: 0}} {...props}>
+                style={{ marginLeft: 0 }} {...props}>
                 <div className={styles.Item} ref={ref} style={style}>
-                    <div className={"styles.InLine"}><MiniSectionForm uuid={dataID} listeners={listeners} attributes={attributes} {...props} />
-                        <button onClick={() => draft_createItem(data, menuData.id)}>+</button>
+                    <div className={"styles.InLine"}>
+                        <MiniSectionForm uuid={dataID} listeners={listeners} attributes={attributes} {...props} />
                     </div>
-                    { children }
+                    {children}
                 </div>
             </li>
         )
     } else if (getItemDataByID(dataID)) {
         return (
-            <li className={ classnames(styles.Wrapper, ghost && styles.Ghost) } ref={ setDroppableRef }
-                style={ { marginLeft: 0 } } { ...props }>
-                <div className={ styles.Item } ref={ ref } style={ style }>
-                    <MiniItemForm uuid={ dataID } listeners={ listeners } attributes={ attributes } { ...props } />
+            <li className={classnames(styles.Wrapper, ghost && styles.Ghost)} ref={setDroppableRef}
+                style={{ marginLeft: 0 }} {...props}>
+                <div className={styles.Item} ref={ref} style={style}>
+                    <MiniItemForm uuid={dataID} listeners={listeners} attributes={attributes} {...props} />
                 </div>
             </li>
         )
     } else if (dataID === "draft") {
         return (
-            <li className={ classnames(styles.Wrapper, ghost && styles.DeadGhost) } ref={ setDroppableRef } { ...props }>
-                <div className={ styles.Item } style={ style }>
-                    <MiniItemForm uuid={ dataID } { ...props } />
+            <li className={classnames(styles.Wrapper, ghost && styles.DeadGhost)} ref={setDroppableRef} {...props}>
+                <div className={styles.Item} style={style}>
+                    <MiniItemForm uuid={dataID} {...props} />
                 </div>
             </li>
         )

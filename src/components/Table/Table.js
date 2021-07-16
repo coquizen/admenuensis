@@ -18,7 +18,6 @@ import { AddSectionButtoon } from './AddSection';
 
 
 const Table = ({ data, isDirty, setDirty, addItem, addSection }) => {
-	// const orderedData = orderTree(data)
 	const [ menuData, setMenuData ] = useState(data)
 	const [ activeID, setActiveID ] = useState(null)
 	const [ dragOverlaidItems, setClonedItems ] = useState(null)

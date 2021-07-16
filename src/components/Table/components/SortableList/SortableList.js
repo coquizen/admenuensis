@@ -1,5 +1,5 @@
 import { rectSwappingStrategy, SortableContext } from "@dnd-kit/sortable";
-import SortableContainer from "../SortableContainer";
+import { SortableContainer } from "components/Table/components";
 import React from "react";
 
 export const SortableList = ({ menuData }) => {
@@ -27,3 +27,5 @@ export const SortableList = ({ menuData }) => {
         </SortableContext>
     )
 }
+
+export default SortableList

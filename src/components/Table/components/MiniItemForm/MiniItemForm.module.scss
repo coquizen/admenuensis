@@ -17,13 +17,14 @@ ul {
 
 .NodeWrapper {
   display: flex;
-  flex-wrap: nowrap;
+  flex-flow: row nowrap;
   align-items: center;
+  border: rgba(10, 10, 10, 0.946);
 }
 
 .Node {
   display: contents;
-  margin: ($spacer/2) 0;
+  margin: ($spacer/4) 0;
   font-size: $input-font-size-xs;
   &.NodeNew {
     color: $gray-400;

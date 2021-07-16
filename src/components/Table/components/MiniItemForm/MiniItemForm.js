@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useState } from "react"
+import React, { useState, memo} from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faDollarSign, faDotCircle, faEdit, faEllipsisH } from "@fortawesome/free-solid-svg-icons"
 import Handle from "components/Table/Handle"
@@ -11,7 +11,7 @@ import Form from "components/Form"
 import styles from "./MiniItemForm.module.scss"
 import classnames from "classnames";
 
-const MiniItemForm = ({ uuid, listeners, attributes }) => {
+const MiniItemForm = memo(({ uuid, listeners, attributes }) => {
 	const { updateItem, getItemDataByID } = useData()
 	const [ itemData, setItemData ] = useState(getItemDataByID(uuid))
 	const [ isChanged, setIsChanged ] = useState(false)
@@ -108,6 +108,6 @@ const MiniItemForm = ({ uuid, listeners, attributes }) => {
 				</div>}
 		</>
 	)
-}
+})
 
-export default React.memo(MiniItemForm)
+export default MiniItemForm

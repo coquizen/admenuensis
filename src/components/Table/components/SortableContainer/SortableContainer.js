@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react"
 import { useSortable, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import SortableItemWrapper from 'components/Table/components/SortableItem/SortableItemWrapper'
+import { SortableItemWrapper } from 'components/Table/components'
 import styles from "components/Table/components/SortableContainer/SortableContainer.module.scss"
 import classNames from "classnames";
 
@@ -17,8 +17,6 @@ const defaultContainer = ({ isOverContainer }) => ({
     marginTop: 40,
     backgroundColor: isOverContainer ? 'rgb(235,235,235,1)' : 'rgba(246,246,246,1)',
 })
-
-// const ConditionalContainer = ({ condition, wrapper, children }) => condition ? wrapper(children) : children;
 
 const SortableContainer = ({ items, itemIDs, isSubSection, menuData, nodeType, id }) => {
     const { setNodeRef, setDroppableNodeRef, over, isOver } = useSortable({ id })
