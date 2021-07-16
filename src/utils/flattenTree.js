@@ -1,31 +1,48 @@
 /** @format */
 
-export default (tree) => {
-	let flattenedTree = []
-	flattenedTree.push({ ...tree, depth: 0, index: -1 })
-	tree.subsections &&
+const flattenTree = (tree) => {
+	let newTree = {}
+	let sectionsArray = []
+	if (tree.subsections) {
+		sectionsArray = tree.subsections.filter((section) => section.type === 'Category').sort((a, b) => a.list_order - b.list_order)
+		var rootObj = {...tree, subsections: sectionsArray}
 		tree.subsections
-			.sort((a, b) => a.list_order < b.list_order)
 			.forEach((subsection, index) => {
-				flattenedTree.push({ ...subsection, depth: 1, index })
-
+				if (subsection.type !== 'Category') return
+				let items = []
 				subsection.items &&
-					subsection.items
-						.sort((a, b) => a.list_order < b.list_order)
-						.forEach((item, index) => {
-							flattenedTree.push({
-								...item,
-								depth: 2,
-								type: 'item',
-								index,
-							})
-						})
+				subsection.items
+					.sort((a, b) => a.list_order - b.list_order)
+					.forEach((item) => {
+						items.push(item)
+					})
+				newTree[ subsection.id ] = items
 			})
-	tree.items &&
-		tree.items
-			.sort((a, b) => a.list_order > b.list_order)
-			.forEach((item, index) => {
-				flattenedTree.push({ ...item, depth: 1, type: 'section', index })
-			})
-	return flattenedTree
+	}
+		if (tree.items?.length > 0) {
+			let items = []
+			tree.items
+				.sort((a, b) => a.list_order - b.list_order)
+				.forEach((item, index) => {
+					if (item.type !== 'Plate') return
+					items.push(item.id)
+				})
+			newTree[ tree.id ] = items
+		}
+	return {newTree, sectionsArray}
 }
+
+const orderTree = (tree) => {
+	let subSections = []
+	if (tree.subsections) {
+		subSections = tree.subsections?.filter((section) => section.type === 'Category').sort((a, b) => a.list_order - b.list_order)
+		tree.subsections = subSections
+	}
+	let itemsArray = []
+	if (tree.items) {
+		itemsArray = tree.items?.filter((item) => item.type === 'Plate').sort((a, b) => a.list_order - b.list_order)
+		tree.items = itemsArray
+	}
+	return tree
+}
+export {flattenTree, orderTree}

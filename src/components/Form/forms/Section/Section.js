@@ -1,84 +1,71 @@
 /** @format */
 
-import React, { useEffect } from 'react'
+import React from 'react'
+import DropDownMenu from 'components/Form'
+import Switch from 'components/Form/Switch'
+import Spinner from 'components/Spinner'
+import styles from '../Form.module.scss'
 import { useData } from 'context/DataProvider'
-import { Switch } from 'components/Form'
-import { DropDownMenu } from 'components/Form'
-import styles from './Section.module.scss'
 
-const defaultValues = {
-	id: '',
-	uuid: '',
-	title: '',
-	description: '',
-	active: true,
-	visible: true,
-	section_parent_id: null,
-}
+const Section = ({ type, data = undefined, reset, register }) => {
 
-const Section = ({ uuid, setValue, reset, register }) => {
-	const { getSectionDataByID } = useData()
+	const { sections, menus } = useData()
 
-	useEffect(() => {
-		if (uuid === undefined) {
-			setValue(defaultValues)
-		} else {
-			const data = getSectionDataByID(uuid)
-			const parsedData = {
-				id: data.id,
-				title: data.title,
-				description: data.description === undefined ? '' : data.description,
-				active: data.active === undefined ? true : data.active,
-				visible: data.visible === undefined ? true : data.visible,
-				section_parent_id: data.section_parent_id === undefined ? '' : data.section_parent_id,
-			}
-			reset(parsedData)
-		}
-	}, [getSectionDataByID, reset, setValue, uuid])
+	reset({
+		id: data?.id === undefined ? 'draft' : data.id,
+		title: data?.title === undefined ? '' : data.title,
+		description: data?.description === undefined ? '' : data.description,
+		active: data?.active === undefined ? true : data.active,
+		visible: data?.visible === undefined ? true : data.visible,
+		type: type,
+		section_id: data?.section_id === undefined ? "" : data.section_id,
+	})
 
 	return (
-		<React.Fragment>
-			<input name='id' ref={register} type='hidden'/>
-			<div className={styles.container}>
-				<div className={styles['form-row']}>
-					<label htmlFor='title' className={styles['form-label']}>
+		<>
+		{(sections !== null) ?
+			<React.Fragment>
+				<input {...register("id")} type='hidden' />
+				<div className={styles.Container}>
+					<label htmlFor="title" className={styles.Label}>
 						Name
-					</label>
+						</label>
 					<input
-						name='title'
-						ref={register}
-						type='text'
-						className={styles['form-input']}
-						id='title'
-						placeholder='Please enter section name e.g. Desserts'/>
+						{...register("title", { required: true, minLength: 1 })}
+						type="text"
+						className={styles.Input}
+						id="title"
+						placeholder="Please enter section name e.g. Desserts" />
 				</div>
-				<hr />
-				<div className={styles['form-row']}>
-					<label htmlFor='description' className={styles['form-label']}>
+				<div className={styles.Container}>
+					<label htmlFor='description' className={styles.Label}>
 						Description
 					</label>
-					<input
-						type='text'
-						name='description'
-						className={styles['form-input']}
-						id='description'
-						rows='3'
-						ref={register}/>
+					<textarea
+						className={styles.Input}
+						rows="3"
+						{...register("description")} />
 				</div>
-				<hr />
-				<div className={styles['form-row']}>
-					<div>Other Settings</div>
-					<div className={styles['form-switch-group']}>
-						<Switch label='Disable' name='active' ref={register} />
-						<Switch label='Visible' name='visible' ref={register} />
-					</div>
+				{data?.type !== "Meal" && <div className={styles.Container}>
+					<DropDownMenu list={menus} register={register} label="section_id" title="Meals" />
+				</div>}
+				<div className={styles.Container}>
+					<div className={styles.Label}>Other Settings</div>
+				<div className={styles.SwitchGroup}>
+						<div className={styles.SwitchLabel}>Active?</div>
+						<Switch title="Active" name="active" register={register} />
 				</div>
-				<hr />
-				<div className={styles['form-row']}>
-					<DropDownMenu name='section_parent_id' ref={register} itemID={uuid} />
-				</div>
-			</div>
-		</React.Fragment>
+
+					<div className={styles.SwitchGroup}>
+						<div className={styles.SwitchLabel}>Visible?</div>
+						<Switch title="Visible" name="visible" register={register} />
+					</div>	</div>
+			</React.Fragment>
+			: <Spinner />}
+		</>
 	)
 }
+
 export default Section
+
+

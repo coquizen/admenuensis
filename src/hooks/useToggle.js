@@ -1,12 +1,12 @@
 /** @format */
 
-import { useState, useCallback } from 'react'
+import {useCallback, useState} from 'react'
 
 // Toggles between true or false
 function useToggle(initialValue = false) {
-	const [toggle, setToggle] = useState(initialValue)
+	const [open, setOpen] = useState(initialValue)
 
-	return [toggle, useCallback(() => setToggle((status) => !status), [])]
+	return [open, useCallback(() => setOpen((status) => !status), [])]
 }
 
 export default useToggle

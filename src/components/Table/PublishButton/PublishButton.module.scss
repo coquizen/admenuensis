@@ -1,0 +1,7 @@
+@import '../../../assets/scss/admin';
+
+.PublishButton {
+  @extend .btn;
+  @extend .btn-sm;
+  @extend .float-end;
+}

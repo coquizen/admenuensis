@@ -2,14 +2,14 @@
 
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { VscGripper } from 'react-icons/vsc'
-import { faGripVertical } from '@fortawesome/free-solid-svg-icons'
+import { faGripLinesVertical } from '@fortawesome/free-solid-svg-icons'
 import styles from './Handle.module.scss'
+
 
 const Handle = ({ listeners, attributes }) => {
 	return (
 		<div {...listeners} {...attributes} className={styles.Handle}>
-			<VscGripper size='1.25em' />
+			<FontAwesomeIcon icon={faGripLinesVertical} fixedWidth />
 		</div>
 	)
 }

@@ -1,0 +1,93 @@
+/** @format */
+
+@import '../../../../assets/scss/admin';
+
+ul {
+  display: inline;
+  flex-wrap: wrap;
+  list-style: none;
+}
+
+.input-transition {
+  -webkit-transition: all 300ms ease;
+  -moz-transition: all 300s ease;
+  -o-transition: all 300s ease;
+  transition: all 300s ease;
+}
+
+.NodeWrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  border: rgba(10, 10, 10, 0.946);
+}
+
+.Node {
+  display: contents;
+  margin: ($spacer/4) 0;
+  font-size: $input-font-size-xs;
+  &.NodeNew {
+    color: $gray-400;
+    font-style: italic;
+  }
+}
+
+.NodeInput {
+  flex-grow: 1;
+  @extend .input-transition;
+  font-size: $input-font-size-xs;
+  outline: none;
+  border: none;
+  width: 100%;
+  &:focus-within {
+    background-color: $gray-900;
+    border: rgba(10, 10, 10, 0.946);
+  }
+}
+
+.ButtonGroup {
+  display: inline-flex;
+  padding: .25rem;
+}
+
+.DollarSign {
+  @extend .btn;
+  @extend .btn-sm;
+  padding-right: 0;
+}
+.PriceInput {
+  border: none;
+  appearance: none;
+  width: 8ch;
+  display: flex;
+  align-items: flex-end;
+}
+
+.Gradient {
+  animation-duration: 1.8s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: placeHolderShimmer;
+  animation-timing-function: linear;
+  background: #f6f7f8;
+  background: linear-gradient(to right, #fafafa 8%, #f4f4f4 38%, #fafafa 54%);
+  background-size: 1000px 640px;
+
+  position: relative;
+
+}
+
+@keyframes placeHolderShimmer{
+  0%{
+    background-position: -468px 0
+  }
+  100%{
+    background-position: 468px 0
+  }
+}
+
+.Blank {
+  height: 1rem;
+  width: 100%;
+  background-color: #ffffff;
+}

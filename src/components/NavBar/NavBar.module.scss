@@ -1,0 +1,16 @@
+/** @format */
+
+@import '../../assets/scss/admin';
+
+.NavBar {
+  background-color: $gray-200;
+  display: inline-flex;
+  flex-direction: row;
+  margin: 0 map-get($map: $spacers, $key: 5) 0 map-get($map: $spacers, $key: 5);
+}
+
+.NavList {
+  display: inline-flex;
+  margin: 0 $spacer 0 $spacer;
+  cursor: pointer;
+}

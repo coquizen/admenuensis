@@ -1,0 +1,18 @@
+@import '../../../../assets/scss/admin';
+
+.Container {
+  background-color: transparent;
+  display: flex;
+  align-self: stretch;
+  flex-direction: column;
+  margin: $spacer 0;
+  &.Container {
+    margin: $spacer 0;
+  }
+}
+
+.SubSection {
+  background-color: transparent;
+  min-height: 2rem;
+  max-height: fit-content;
+}

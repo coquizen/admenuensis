@@ -1,9 +1,10 @@
 /** @format */
 
 import React from 'react'
+import styles from './PublishButton.module.scss'
 
 const PublishButton = () => (
-	<button className='float btn-primary btn-sm' type='button'>
+	<button className={styles.PublishButton} type='button'>
 		Publish
 	</button>
 )

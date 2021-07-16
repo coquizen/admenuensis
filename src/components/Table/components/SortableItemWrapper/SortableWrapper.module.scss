@@ -1,0 +1,65 @@
+/** @format */
+
+@import '../../../../assets/scss/admin';
+
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+@keyframes fadeOut {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+.Wrapper {
+	display: flex;
+	box-sizing: border-box;
+	transform: translate3d(var(--translate-x, 0), var(--translate-y, 0), 0) scaleX(var(--scale-x, 1))
+		scaleY(var(--scale-y, 1));
+	transform-origin: 0 0;
+	touch-action: manipulation;
+	margin-left: var(--margin-left);
+	// transition: margin-left 500ms ease;
+
+	&.fadeIn {
+		animation: fadeIn 500ms ease;
+	}
+	&.fadeOut {
+		animation: fadeOut 500ms ease;
+	}
+
+	&.dragOverlay {
+		--scale: 1;
+		--box-shadow: $box-shadow;
+		--box-shadow-picked-up: $box-shadow-border, -1px 0 15px 0 rgba(34, 33, 81, 0.01),
+			0px 15px 15px 0 rgba(34, 33, 81, 0.25);
+		z-index: 999;
+	}
+}
+
+.Section {
+	margin: $spacer;
+	padding: $spacer;
+	border: 1px solid #ccc;
+	border-bottom: 2px solid #bbb;
+	border-top: 1px solid #ddd;
+	border-radius: 2px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+}
+
+.SectionTitle {
+	color: $dark;
+}
+
+.SectionDescription {
+	font-style: italic;
+}

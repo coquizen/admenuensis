@@ -1,42 +1,27 @@
-@import '../../../../assets/scss/admin';
+@import "../../../../assets/scss/admin";
+@import "../../../../assets/scss/custom";
 
-.container {
-  position: relative;
-  flex: 1 1 auto;
-  border-radius: 12px;
-}
 
-.form-label {
-  //margin-right: 5rem;
-}
-
-.form-row {
-  display: flex;
-  align-items: center;
+.Container {
+  @extend .input-group;
+  flex-direction: row;
   justify-content: space-between;
-}
+  .Label {
+	  @extend .form-check-label;
+	  margin-right: $spacer;
+  }
+  .Input {
+    background-color: inherit;
+    font-size: $input-font-size-xs;
+    border: none;
+    @extend .standard-transition;
+    &:focus, &:hover {
+      background-color: $gray-900;
+      color: lighten($off-white, 5);
+      border: $light-blue;
 
-.form-input {
-  // background: rgba(0, 0, 0, 0.2);
-  //color: $gray-800;
-  // text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
-  //display: block;
-  //width: 269px;
-  //height: 1rem;
-  //padding: 15px;
-  //margin-bottom: 10px;
-  //outline: none;
-  //border: none;
-  @extend .input-transition;
-  @extend .rounded;
-  &:focus {
-    background: rgba(0, 0, 0, 0.1);
+    }
   }
 }
 
-.form-switch-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    margin-left: $spacer * 5;
-}
+

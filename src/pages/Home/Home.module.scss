@@ -1,0 +1,21 @@
+//@mixin delay($rule, $number, $value) {
+//  @for $i from 1 to ($number + 1) {
+//    &:nth-child(#{$i}) {
+//      -webkit-#{$rule}-delay: (#{$i*$value});
+//      #{$rule}-delay: (#{$i*$value});
+//    }
+//  }
+//}
+@import '../../assets/scss/admin';
+
+  //.List {
+  //  height: 2rem;
+  //  transition: all 200ms;
+  //  @include delay(transition, 12, 1s);
+  //    &.Activated {
+  //      height: 0;
+  //   }
+  //}
+.Home {
+  background-color: $gray-600;
+}

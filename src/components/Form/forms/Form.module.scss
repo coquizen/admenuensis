@@ -1,0 +1,38 @@
+@import '../../../assets/scss/admin';
+@import "../../../assets/scss/custom";
+
+.Container {
+  @include make-container();
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: $spacer;
+  .Label {
+    @extend .form-label;
+    color: $gray-500;
+  }
+  .Input {
+    @extend .form-control;
+    @extend .form-control-sm;
+    @extend .standard-transition;
+  }
+}
+
+//.SwitchGroup {
+//  @extend .input-group;
+//  @extend .input-group-xs;
+//  flex-direction: column;
+//  justify-content: flex-end;
+//  .Switch {
+//    margin-right: 0.5rem;
+//  }
+//}
+
+.SwitchGroup {
+  display: inline-flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.SwitchLabel {
+}
