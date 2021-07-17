@@ -5,10 +5,10 @@ import { useData } from 'context/DataProvider'
 import Item from "../Item/Item";
 
 const SortableItemWrapper = ({ id, dataID, children, ...props }) => {
-    const { getSectionDataByID, getItemDataByID } = useData()
+    const { fetchSection, fetchItem } = useData()
     let data, type
     if (dataID !== "draft") {
-        data = getSectionDataByID(dataID) || getItemDataByID(dataID)
+        data = fetchSection(dataID) || fetchItem(dataID)
         switch (data?.type) {
             case 'Category':
                 type = 'section'

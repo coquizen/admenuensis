@@ -12,8 +12,8 @@ import styles from "./MiniItemForm.module.scss"
 import classnames from "classnames";
 
 const MiniItemForm = memo(({ uuid, listeners, attributes }) => {
-	const { updateItem, getItemDataByID } = useData()
-	const [ itemData, setItemData ] = useState(getItemDataByID(uuid))
+	const { updateItem, fetchItem } = useData()
+	const [ itemData, setItemData ] = useState(fetchItem(uuid))
 	const [ isChanged, setIsChanged ] = useState(false)
 	const { insertComponent } = useModal()
 

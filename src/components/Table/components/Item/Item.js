@@ -17,12 +17,12 @@ const Item = forwardRef(({
     ghost,
     ...props
 }, ref) => {
-    const { getSectionDataByID, getItemDataByID } = useData()
+    const { fetchSection, fetchItem } = useData()
 
     let data
 
     if (dataID !== "draft") {
-        data = getSectionDataByID(dataID) || getItemDataByID(dataID)
+        data = fetchSection(dataID) || fetchItem(dataID)
     } else {
         data = {
             id: "draft",
@@ -62,7 +62,7 @@ const Item = forwardRef(({
             </li>
         )
     }
-    if (getSectionDataByID(dataID)) {
+    if (fetchSection(dataID)) {
         return (
             <li className={classnames(styles.Wrapper, ghost && styles.Ghost)} ref={setDroppableRef}
                 style={{ marginLeft: 0 }} {...props}>
@@ -74,7 +74,7 @@ const Item = forwardRef(({
                 </div>
             </li>
         )
-    } else if (getItemDataByID(dataID)) {
+    } else if (fetchItem(dataID)) {
         return (
             <li className={classnames(styles.Wrapper, ghost && styles.Ghost)} ref={setDroppableRef}
                 style={{ marginLeft: 0 }} {...props}>

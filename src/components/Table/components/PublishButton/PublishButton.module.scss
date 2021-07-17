@@ -1,0 +1,11 @@
+@import '../../../../assets/scss/admin';
+
+.Publish {
+  @extend .btn;
+  @extend .btn-primary;
+  opacity: 0;
+  transition: $transition-fade;
+  &.Active {
+    opacity: 1;
+  }
+}

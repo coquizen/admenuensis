@@ -12,8 +12,8 @@ import classnames from 'classnames'
 import styles from './MiniSectionForm.module.scss'
 
 const MiniSectionForm = memo(({ uuid, containerID, listeners, attributes }) => {
-	const { getSectionDataByID, updateSection } = useData()
-	const [ sectionData, setSectionData ] = useState(getSectionDataByID(uuid))
+	const { fetchSection, updateSection } = useData()
+	const [ sectionData, setSectionData ] = useState(fetchSection(uuid))
 	const [ isChanged, setIsChanged ] = useState(false)
 	const { insertComponent } = useModal()
 
@@ -37,14 +37,14 @@ const MiniSectionForm = memo(({ uuid, containerID, listeners, attributes }) => {
 
 	const handleDataChange = (event) => {
 		if (event.charCode === 13 && isChanged) {
-			updateSection({ ...sectionData })
+			updateSection(sectionData)
 			setIsChanged(false)
 		}
 	}
 
 	const onLostFocus = (event) => {
 		if (event.currentTarget === event.target && isChanged) {
-			updateSection({ id: uuid, title: sectionData.title })
+			updateSection(sectionData)
 			setIsChanged(false)
 		}
 	}

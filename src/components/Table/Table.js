@@ -13,8 +13,8 @@ import styles from './Table.module.scss'
 import Item from 'components/Table/components/Item/Item'
 import { createPortal } from "react-dom";
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
-import { SortableList } from "./components/SortableList/SortableList";
-import { AddSectionButtoon } from './AddSection';
+import { SortableList } from "./components/SortableList/SortableList"
+import {PublishButton} from 'components/Table/components'
 
 
 const Table = ({ data, isDirty, setDirty, addItem, addSection }) => {
@@ -191,10 +191,13 @@ const Table = ({ data, isDirty, setDirty, addItem, addSection }) => {
 			return
 		}
 
+
 		if (activeType !== overType) {
 			return
 		}
-
+		if (checkContent(menuData, dragOverlaidItems)) {
+			setDirty(true)
+		}
 		setActiveID(null)
 	}
 
@@ -232,9 +235,13 @@ const Table = ({ data, isDirty, setDirty, addItem, addSection }) => {
 							/> : null }
 					</DragOverlay>, document.body) }
 			</DndContext>
-			<AddSectionButtoon handleClick={ addSection } />
+			{ <PublishButton active={isDirty} />}
 		</>
 	)
 }
 
 export default Table
+
+const checkContent = (newData, oldData) => {
+	return JSON.stringify(newData) === JSON.stringify(oldData)
+}
