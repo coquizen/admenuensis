@@ -1,9 +1,8 @@
-
 # Admenuensis
+
 <sub>(a play on the word: aman-u-en-sis: a person employed to transcibe dictation.)</sub>
 
-
-A React-based Content Management System (CMS) for generating and editing a restaurant's menu. It is intended to be used in combination with [servercarte](https://github.com/CaninoDev/gastr-backend) (a data repository API server implementation) and [Tribeca Grill](https://github.com/CaninoDev/restaurant-template) (a customer-facing e-commerce store).
+A React-based Content Management System (CMS) for generating and editing a restaurant's menu. It is intended to be used in combination with [servercarte](https://github.com/coquizen/gastr-backend) (a data repository API server implementation) and [Tribeca Grill](https://github.com/CaninoDev/restaurant-template) (a customer-facing e-commerce store).
 
 ## Features
 
@@ -44,6 +43,9 @@ Start the server
   npm run start
 ```
 
+## Notes
+
+If serercarte's database was preseeded with default sample data (executed using `-s` flag), the default credentials are `admin`:`password`)
 
 ## Roadmap
 
