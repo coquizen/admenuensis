@@ -45,7 +45,8 @@ Start the server
 
 ## Notes
 
-If serercarte's database was preseeded with default sample data (executed using `-s` flag), the default credentials are `admin`:`password`)
+- If serercarte's database was preseeded with default sample data (executed using `-s` flag), the default credentials are `admin`:`password`)
+- Use Node version v14.20.0 (Fermium).
 
 ## Roadmap
 
