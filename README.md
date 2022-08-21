@@ -2,7 +2,7 @@
 
 <sub>(a play on the word: aman-u-en-sis: a person employed to transcibe dictation.)</sub>
 
-A React-based Content Management System (CMS) for generating and editing a restaurant's menu. It is intended to be used in combination with [servercarte](https://github.com/coquizen/gastr-backend) (a data repository API server implementation) and [Tribeca Grill](https://github.com/CaninoDev/restaurant-template) (a customer-facing e-commerce store).
+A React-based Content Management System (CMS) for generating and editing a restaurant's menu. It is intended to be used in combination with [servercarte](https://github.com/coquizen/gastr-backend) (a data repository API server implementation) and [Tribeca Grill](https://github.com/coquizen/restaurant-template) (a customer-facing e-commerce store).
 
 ## Features
 
