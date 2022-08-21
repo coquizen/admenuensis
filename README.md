@@ -22,13 +22,13 @@ A React-based Content Management System (CMS) for generating and editing a resta
 Clone the project
 
 ```bash
-  git clone https://github.com/CaninoDev/admin-cra admenuensis
+  git clone https://github.com/coquizen/admenuensis
 ```
 
 Go to the project directory
 
 ```bash
-  cd wadmenuensis
+  cd admenuensis
 ```
 
 Install dependencies
